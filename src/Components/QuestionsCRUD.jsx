@@ -21,7 +21,9 @@ const QuestionsList = (props) => (
 		<FieldGuesser source="question" />
 		<NumberField source="timer" />
 		<NumberField source="level" />
-		<FieldGuesser source="media" /> */ /*{" "}
+		<ReferenceField label="Media" source="media" reference="media" link="show">
+			<ChipField source="contentUrl" />
+		</ReferenceField>
 		<ReferenceField
 			label="Answer"
 			source="answer"
@@ -39,7 +41,9 @@ const QuestionShow = (props) => (
 		<FieldGuesser source="question" />
 		<NumberField source="timer" />
 		<NumberField source="level" />
-		<FieldGuesser source="media" /> */ /*{" "}
+		<ReferenceField label="Media" source="media" reference="media" link="show">
+			<ChipField source="contentUrl" />
+		</ReferenceField>
 		<ReferenceField label="Answer" source="answer" reference="answers">
 			<TextField source="answer" />
 		</ReferenceField>
@@ -51,7 +55,13 @@ const QuestionCreate = (props) => (
 		<InputGuesser source="question" />
 		<InputGuesser source="timer" />
 		<InputGuesser source="level" />
-		{/* <InputGuesser source="media" />  */}
+		<ReferenceInput source="media" reference="media">
+			<AutocompleteInput
+				filterToQuery={(searchText) => ({ answer: searchText })}
+				optionText="contentUrl"
+				label="Media"
+			/>
+		</ReferenceInput>
 		<ReferenceInput source="answer" reference="answers">
 			<AutocompleteInput
 				filterToQuery={(searchText) => ({ answer: searchText })}
@@ -67,7 +77,13 @@ const QuestionEdit = (props) => (
 		<InputGuesser source="question" />
 		<InputGuesser source="timer" />
 		<InputGuesser source="level" />
-		{/* <InputGuesser source="answer" /> */}
+		<ReferenceInput source="media" reference="media">
+			<AutocompleteInput
+				filterToQuery={(searchText) => ({ answer: searchText })}
+				optionText="contentUrl"
+				label="Media"
+			/>
+		</ReferenceInput>
 		<ReferenceInput source="answer" reference="answers">
 			<AutocompleteInput
 				filterToQuery={(searchText) => ({ answer: searchText })}

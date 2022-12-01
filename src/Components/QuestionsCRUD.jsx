@@ -1,4 +1,4 @@
-import {	
+import {
 	ListGuesser,
 	FieldGuesser,
 	ShowGuesser,
@@ -10,12 +10,10 @@ import {
 	TextField,
 	ReferenceField,
 	NumberField,
-		ChipField,
+	ChipField,
 	ReferenceInput,
 	AutocompleteInput,
 } from "react-admin";
-
-
 
 const QuestionsList = (props) => (
 	<ListGuesser {...props}>

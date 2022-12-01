@@ -21,6 +21,8 @@ import {
 	Datagrid,
 	EditButton,
 	ChipField,
+	ReferenceInput,
+	AutocompleteInput,
 } from "react-admin";
 import { parseHydraDocumentation } from "@api-platform/api-doc-parser";
 
@@ -57,7 +59,12 @@ const QuestionsList = (props) => (
 		<NumberField source="timer" />
 		<NumberField source="level" />
 		<FieldGuesser source="media" /> */ /*{" "}
-		<ReferenceField label="Answer" source="answer" reference="answers">
+		<ReferenceField
+			label="Answer"
+			source="answer"
+			reference="answers"
+			link="show"
+		>
 			<TextField source="answer" />
 		</ReferenceField>
 	</ListGuesser>
@@ -70,13 +77,9 @@ const QuestionsList = (props) => (
 // 			<TextField source="question" />
 // 			<NumberField source="timer" />
 // 			<NumberField source="level" />
-// 			{/* <TextField label="Answer" source="answer.answer" /> */}
-// 			{/* <TextField label="Answer" source="answer.answer" /> */}
-// 			{/* <FieldGuesser source="media" /> */}
-// 			<ReferenceField label="Answer" source="answer" reference="answer">
+// 			<ReferenceField label="Answer" source="answer" reference="answers">
 // 				<TextField source="answer" />
-// 			</ReferenceField>{" "}
-// 			*/
+// 			</ReferenceField>
 // 		</Datagrid>
 // 	</List>
 // );
@@ -88,7 +91,7 @@ const QuestionShow = (props) => (
 		<NumberField source="timer" />
 		<NumberField source="level" />
 		<FieldGuesser source="media" /> */ /*{" "}
-		<ReferenceField label="Answer" source="answer" reference="answer">
+		<ReferenceField label="Answer" source="answer" reference="answers">
 			<TextField source="answer" />
 		</ReferenceField>
 	</ShowGuesser>
@@ -100,9 +103,13 @@ const QuestionCreate = (props) => (
 		<InputGuesser source="timer" />
 		<InputGuesser source="level" />
 		{/* <InputGuesser source="media" />  */}
-		{/* <ReferenceField label="Answer" source="answer" reference="answer">
-			<TextField source="answer" />
-		</ReferenceField> */}
+		<ReferenceInput source="answer" reference="answers">
+			<AutocompleteInput
+				filterToQuery={(searchText) => ({ answer: searchText })}
+				optionText="answer"
+				label="Answers"
+			/>
+		</ReferenceInput>
 	</CreateGuesser>
 );
 
@@ -111,10 +118,14 @@ const QuestionEdit = (props) => (
 		<InputGuesser source="question" />
 		<InputGuesser source="timer" />
 		<InputGuesser source="level" />
-		{/* <InputGuesser source="media" />  */}
-		{/* <ReferenceField label="Answer" source="answer" reference="answer">
-			<TextField source="answer" />
-		</ReferenceField> */}
+		{/* <InputGuesser source="answer" /> */}
+		<ReferenceInput source="answer" reference="answers">
+			<AutocompleteInput
+				filterToQuery={(searchText) => ({ answer: searchText })}
+				optionText="answer"
+				label="Answers"
+			/>
+		</ReferenceInput>
 	</EditGuesser>
 );
 

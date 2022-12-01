@@ -19,6 +19,7 @@ import {
 } from "./AnswersCRUD";
 import { UsersList, UserShow, UserCreate, UserEdit } from "./UsersCRUD";
 import { MediaList, MediaShow, MediaCreate } from "./MediaCRUD";
+import { CustomLayout } from "./Layout";
 
 function Admin() {
 	const entrypoint = import.meta.env.VITE_API_ENTRYPOINT;
@@ -32,7 +33,11 @@ function Admin() {
 	});
 
 	return (
-		<HydraAdmin entrypoint={entrypoint} dataProvider={dataProvider}>
+		<HydraAdmin
+			entrypoint={entrypoint}
+			dataProvider={dataProvider}
+			layout={CustomLayout}
+		>
 			<ResourceGuesser
 				name="users"
 				list={UsersList}

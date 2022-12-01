@@ -15,10 +15,11 @@ import {
 	AutocompleteInput,
 	DateField,
 	ReferenceArrayInput,
+	AutocompleteArrayInput,
 } from "react-admin";
 
 const AnswerList = (props) => (
-	<ListGuesser {...props}>
+	<ListGuesser {...props} pagination={false}>
 		<TextField source="id" />
 		<FieldGuesser source="answer" />
 		<ReferenceField
@@ -35,7 +36,7 @@ const AnswerList = (props) => (
 );
 
 const AnswerShow = (props) => (
-	<ShowGuesser {...props}>
+	<ShowGuesser {...props} sx={{ width: "85vw" }}>
 		<TextField source="id" />
 		<FieldGuesser source="answer" />
 		<ReferenceField
@@ -52,28 +53,28 @@ const AnswerShow = (props) => (
 );
 
 const AnswerCreate = (props) => (
-	<CreateGuesser {...props}>
+	<CreateGuesser {...props} sx={{ width: "85vw" }}>
 		<InputGuesser source="answer" />
-		<ReferenceInput source="questions" reference="questions">
-			<AutocompleteInput
+		<ReferenceArrayInput source="questions" reference="questions">
+			<AutocompleteArrayInput
 				filterToQuery={(searchText) => ({ question: searchText })}
 				optionText="question"
 				label="Question"
 			/>
-		</ReferenceInput>
+		</ReferenceArrayInput>
 	</CreateGuesser>
 );
 
 const AnswerEdit = (props) => (
-	<EditGuesser {...props}>
+	<EditGuesser {...props} sx={{ width: "85vw" }}>
 		<InputGuesser source="answer" />
-		<ReferenceInput source="questions" reference="questions">
-			<AutocompleteInput
+		<ReferenceArrayInput source="questions" reference="questions">
+			<AutocompleteArrayInput
 				filterToQuery={(searchText) => ({ question: searchText })}
 				optionText="question"
 				label="Question"
 			/>
-		</ReferenceInput>
+		</ReferenceArrayInput>
 	</EditGuesser>
 );
 

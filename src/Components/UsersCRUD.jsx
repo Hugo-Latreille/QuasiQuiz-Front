@@ -20,7 +20,7 @@ import {
 } from "react-admin";
 
 const UsersList = (props) => (
-	<ListGuesser {...props}>
+	<ListGuesser {...props} pagination={false}>
 		<TextField source="id" />
 		<EmailField source="email" />
 		<FieldGuesser source="pseudo" />
@@ -31,7 +31,7 @@ const UsersList = (props) => (
 );
 
 const UserShow = (props) => (
-	<ShowGuesser {...props}>
+	<ShowGuesser {...props} sx={{ width: "85vw" }}>
 		<TextField source="id" />
 		<EmailField source="email" />
 		<FieldGuesser source="pseudo" />
@@ -42,7 +42,7 @@ const UserShow = (props) => (
 );
 
 const UserCreate = (props) => (
-	<CreateGuesser {...props}>
+	<CreateGuesser {...props} sx={{ width: "85vw" }}>
 		<InputGuesser source="email" />
 		<InputGuesser source="pseudo" />
 		<PasswordInput source="password" />
@@ -50,7 +50,7 @@ const UserCreate = (props) => (
 );
 
 const UserEdit = (props) => (
-	<EditGuesser {...props}>
+	<EditGuesser {...props} sx={{ width: "85vw" }}>
 		<InputGuesser source="email" />
 		<InputGuesser source="pseudo" />
 		<PasswordInput source="password" />

@@ -13,10 +13,12 @@ import {
 	ChipField,
 	ReferenceInput,
 	AutocompleteInput,
+	ReferenceArrayInput,
+	AutocompleteArrayInput,
 } from "react-admin";
 
 const QuestionsList = (props) => (
-	<ListGuesser {...props}>
+	<ListGuesser {...props} pagination={false}>
 		<TextField source="id" />
 		<FieldGuesser source="question" />
 		<NumberField source="timer" />
@@ -36,7 +38,7 @@ const QuestionsList = (props) => (
 );
 
 const QuestionShow = (props) => (
-	<ShowGuesser {...props}>
+	<ShowGuesser {...props} sx={{ width: "85vw" }}>
 		<TextField source="id" />
 		<FieldGuesser source="question" />
 		<NumberField source="timer" />
@@ -51,44 +53,48 @@ const QuestionShow = (props) => (
 );
 
 const QuestionCreate = (props) => (
-	<CreateGuesser {...props}>
+	<CreateGuesser {...props} sx={{ width: "85vw" }}>
 		<InputGuesser source="question" />
 		<InputGuesser source="timer" />
 		<InputGuesser source="level" />
-		<ReferenceInput source="media" reference="media">
-			<AutocompleteInput
-				filterToQuery={(searchText) => ({ answer: searchText })}
+		<ReferenceArrayInput source="media" reference="media">
+			<AutocompleteArrayInput
+				filterToQuery={(searchText) => ({ contentUrl: searchText })}
 				optionText="contentUrl"
 				label="Media"
+				sx={{ width: "35vw" }}
 			/>
-		</ReferenceInput>
+		</ReferenceArrayInput>
 		<ReferenceInput source="answer" reference="answers">
 			<AutocompleteInput
 				filterToQuery={(searchText) => ({ answer: searchText })}
 				optionText="answer"
 				label="Answers"
+				sx={{ width: "35vw" }}
 			/>
 		</ReferenceInput>
 	</CreateGuesser>
 );
 
 const QuestionEdit = (props) => (
-	<EditGuesser {...props}>
+	<EditGuesser {...props} sx={{ width: "85vw" }}>
 		<InputGuesser source="question" />
 		<InputGuesser source="timer" />
 		<InputGuesser source="level" />
-		<ReferenceInput source="media" reference="media">
-			<AutocompleteInput
-				filterToQuery={(searchText) => ({ answer: searchText })}
+		<ReferenceArrayInput source="media" reference="media">
+			<AutocompleteArrayInput
+				filterToQuery={(searchText) => ({ contentUrl: searchText })}
 				optionText="contentUrl"
 				label="Media"
+				sx={{ width: "35vw" }}
 			/>
-		</ReferenceInput>
+		</ReferenceArrayInput>
 		<ReferenceInput source="answer" reference="answers">
 			<AutocompleteInput
 				filterToQuery={(searchText) => ({ answer: searchText })}
 				optionText="answer"
 				label="Answers"
+				sx={{ width: "35vw" }}
 			/>
 		</ReferenceInput>
 	</EditGuesser>

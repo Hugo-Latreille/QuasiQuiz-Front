@@ -21,9 +21,9 @@ import {
 } from "react-admin";
 
 const MediaList = (props) => (
-	<ListGuesser {...props}>
+	<ListGuesser {...props} pagination={false}>
 		<TextField source="id" />
-		<UrlField source="contentUrl" />
+		<FileField source="contentUrl" title="contentUrl" target="_blank" />
 		<ReferenceField
 			label="Question"
 			source="question"
@@ -38,9 +38,9 @@ const MediaList = (props) => (
 );
 
 const MediaShow = (props) => (
-	<ShowGuesser {...props}>
+	<ShowGuesser {...props} sx={{ width: "85vw" }}>
 		<TextField source="id" />
-		<UrlField source="contentUrl" />
+		<FileField source="contentUrl" title="contentUrl" target="_blank" />
 		<ReferenceField
 			label="Question"
 			source="question"
@@ -55,7 +55,7 @@ const MediaShow = (props) => (
 );
 
 const MediaCreate = (props) => (
-	<CreateGuesser {...props}>
+	<CreateGuesser {...props} sx={{ width: "85vw" }}>
 		<FileInput source="file">
 			<FileField source="src" title="title" />
 		</FileInput>
@@ -64,6 +64,7 @@ const MediaCreate = (props) => (
 				filterToQuery={(searchText) => ({ question: searchText })}
 				optionText="question"
 				label="Question"
+				sx={{ width: "35vw" }}
 			/>
 		</ReferenceInput>
 	</CreateGuesser>

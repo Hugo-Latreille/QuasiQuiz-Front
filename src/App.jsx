@@ -1,8 +1,9 @@
-import "./App.css";
-import Admin from "./Components/Admin";
+import Admin from "./Pages/BackOffice/Admin";
+import Test from "./Pages/Test";
 
 function App() {
-	return <Admin />;
+	// return <Admin />;
+	return <Test />;
 }
 
 export default App;

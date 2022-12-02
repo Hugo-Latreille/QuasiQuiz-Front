@@ -10,16 +10,25 @@ import {
 	QuestionCreate,
 	QuestionShow,
 	QuestionEdit,
-} from "./QuestionsCRUD";
+} from "../../Components/BackOffice/QuestionsCRUD";
 import {
 	AnswerList,
 	AnswerShow,
 	AnswerCreate,
 	AnswerEdit,
-} from "./AnswersCRUD";
-import { UsersList, UserShow, UserCreate, UserEdit } from "./UsersCRUD";
-import { MediaList, MediaShow, MediaCreate } from "./MediaCRUD";
-import { CustomLayout } from "./Layout";
+} from "../../Components/BackOffice/AnswersCRUD";
+import {
+	UsersList,
+	UserShow,
+	UserCreate,
+	UserEdit,
+} from "../../Components/BackOffice/UsersCRUD";
+import {
+	MediaList,
+	MediaShow,
+	MediaCreate,
+} from "../../Components/BackOffice/MediaCRUD";
+import { CustomLayout } from "../../Components/BackOffice/Layout";
 
 function Admin() {
 	const entrypoint = import.meta.env.VITE_API_ENTRYPOINT;

@@ -1,7 +1,11 @@
-import Admin from "./Pages/BackOffice/Admin";
+// import Admin from "./Pages/BackOffice/Admin";
+import Home from "./Pages/Home";
 
 function App() {
-	return <Admin />;
+  return (
+    //  <Admin />
+    <Home />
+  );
 }
 
 export default App;

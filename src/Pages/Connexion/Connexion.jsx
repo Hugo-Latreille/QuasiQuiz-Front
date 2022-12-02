@@ -1,5 +1,5 @@
 import "./Connexion.scss";
-import Logo from "./../../assets/logo.png";
+// import Logo from "./../../assets/logo2.png";
 import { useState } from "react";
 import Register from "./Register.jsx";
 import Login from "./Login";
@@ -11,7 +11,7 @@ const Connexion = () => {
 		<div className="connexion">
 			<div className="connexion-container">
 				<div className="connexion-container-navigation">
-					<img className="connexion-logo" src={Logo} alt="logo QuasiQuiz" />
+					{/* <img className="connexion-logo" src={Logo} alt="logo QuasiQuiz" /> */}
 					<div className="navigation-links">
 						<span
 							className={isLoggingActive ? "link-is-active" : ""}
@@ -38,7 +38,9 @@ const Connexion = () => {
 						<i className="fas fa-times-circle"></i>
 					</button>
 					{isLoggingActive && <Login />}
-					{!isLoggingActive && <Register />}
+					{!isLoggingActive && (
+						<Register setIsLoggingActive={setIsLoggingActive} />
+					)}
 				</div>
 			</div>
 		</div>

@@ -1,0 +1,80 @@
+@use "./../../styles/vars";
+
+.register-container {
+	margin: 3.4rem 3.4rem 0 3.4rem;
+	width: 80%;
+	height: 100%;
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.content {
+	padding-top: 2rem;
+}
+
+.inputs-container {
+	display: flex;
+	justify-content: space-between;
+}
+.inputs-container .form-group {
+	width: 48%;
+}
+
+.eye_register_pass {
+	position: absolute;
+	top: 19.3rem;
+	right: 0.1rem;
+}
+
+.eye_register_confirm {
+	position: absolute;
+	top: 14.9rem;
+	right: 0.1rem;
+}
+
+.password-safety {
+	font-size: 0.8rem;
+	margin-top: -1.2rem;
+	margin-bottom: 2rem;
+
+	&-container {
+		width: 100%;
+		height: 0.6rem;
+		background-color: vars.$backgroundLight;
+		border-radius: 8px;
+	}
+
+	&-quart {
+		width: 25%;
+		height: 0.6rem;
+		background-color: rgb(253, 224, 143);
+		border-radius: 0 8px 8px 0;
+	}
+
+	&-middle {
+		width: 50%;
+		height: 0.6rem;
+		background-color: rgb(253, 224, 143);
+		border-radius: 0 8px 8px 0;
+	}
+
+	&-3quart {
+		width: 75%;
+		height: 0.6rem;
+		background-color: rgb(253, 224, 143);
+		border-radius: 0 8px 8px 0;
+	}
+
+	&-full {
+		width: 100%;
+		height: 0.6rem;
+		background-color: rgb(112, 232, 180);
+		border-radius: 0 8px 8px 0;
+	}
+
+	& span {
+		font-size: 0.6rem;
+	}
+}

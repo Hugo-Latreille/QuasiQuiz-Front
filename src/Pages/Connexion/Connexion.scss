@@ -116,6 +116,7 @@
 	background: vars.$linearGradient;
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
+	background-clip: text;
 	opacity: 0.9;
 	font-size: 1.5rem;
 	position: absolute;

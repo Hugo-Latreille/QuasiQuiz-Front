@@ -20,12 +20,6 @@ const Input = ({
 							setValue(e.target.value);
 							checkPasswordValidity();
 						}}
-						onFocus={() => {
-							// dispatch(handleChange({ name: "passwordFocus", value: true }));
-						}}
-						onBlur={() => {
-							// dispatch(handleChange({ name: "passwordFocus", value: false }));
-						}}
 					/>
 					<div className="label">{label}</div>
 				</>

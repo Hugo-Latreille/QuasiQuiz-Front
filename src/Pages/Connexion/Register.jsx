@@ -1,17 +1,17 @@
 /* eslint-disable react/no-unescaped-entities */
 import Input from "../../Components/Input/Input";
 import "./Register.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdOutlineVisibility, MdOutlineVisibilityOff } from "react-icons/md";
 
 const Register = ({ setIsLoggingActive }) => {
 	const [pseudo, setPseudo] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const [passwordConfirm, setPasswordConfirm] = useState("");
+	// const [passwordConfirm, setPasswordConfirm] = useState("");
 	const [passwordVisibility, setPasswordVisibility] = useState(false);
 	const [passwordValidity, setPasswordValidity] = useState({});
-	const [passwordValidationWidth, setPassordValidationWidth] = useState(0);
+	const [passwordValidationWidth, setPasswordValidationWidth] = useState(0);
 
 	const isNumberRegex = /\d/;
 	const specialCharacterRegex = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/;
@@ -25,6 +25,57 @@ const Register = ({ setIsLoggingActive }) => {
 			specialChar: specialCharacterRegex.test(password) ? true : false,
 		});
 	};
+
+	useEffect(() => {
+		countPasswordValidationWidth();
+	}, [passwordValidity]);
+
+	function countPasswordValidationWidth() {
+		setPasswordValidationWidth(0);
+
+		if (
+			passwordValidity.uppercase ||
+			passwordValidity.number ||
+			passwordValidity.specialChar ||
+			passwordValidity.minChar
+		) {
+			setPasswordValidationWidth(25);
+		}
+		if (
+			(passwordValidity.uppercase && passwordValidity.number) ||
+			(passwordValidity.uppercase && passwordValidity.specialChar) ||
+			(passwordValidity.uppercase && passwordValidity.minChar) ||
+			(passwordValidity.number && passwordValidity.specialChar) ||
+			(passwordValidity.number && passwordValidity.minChar) ||
+			(passwordValidity.specialChar && passwordValidity.minChar)
+		) {
+			setPasswordValidationWidth(50);
+		}
+		if (
+			(passwordValidity.uppercase &&
+				passwordValidity.number &&
+				passwordValidity.specialChar) ||
+			(passwordValidity.uppercase &&
+				passwordValidity.specialChar &&
+				passwordValidity.minChar) ||
+			(passwordValidity.uppercase &&
+				passwordValidity.number &&
+				passwordValidity.minChar) ||
+			(passwordValidity.specialChar &&
+				passwordValidity.number &&
+				passwordValidity.minChar)
+		) {
+			setPasswordValidationWidth(75);
+		}
+		if (
+			passwordValidity.uppercase &&
+			passwordValidity.number &&
+			passwordValidity.specialChar &&
+			passwordValidity.minChar
+		) {
+			setPasswordValidationWidth(100);
+		}
+	}
 
 	return (
 		<div className="register-container">
@@ -104,21 +155,31 @@ const Register = ({ setIsLoggingActive }) => {
 							</div>
 							<span>
 								Au moins{" "}
-								<span className={passwordValidity.minChar ? "success" : ""}>
+								<span
+									className={passwordValidity.minChar ? "success" : "warning"}
+								>
 									8 caractères
 								</span>
 								, dont une{" "}
-								<span className={passwordValidity.uppercase ? "success" : ""}>
+								<span
+									className={passwordValidity.uppercase ? "success" : "warning"}
+								>
 									{" "}
 									majuscule
 								</span>
 								, un{" "}
-								<span className={passwordValidity.number ? "success" : ""}>
+								<span
+									className={passwordValidity.number ? "success" : "warning"}
+								>
 									{" "}
 									chiffre
 								</span>
 								, et un
-								<span className={passwordValidity.specialChar ? "success" : ""}>
+								<span
+									className={
+										passwordValidity.specialChar ? "success" : "warning"
+									}
+								>
 									{" "}
 									caractère spécial
 								</span>

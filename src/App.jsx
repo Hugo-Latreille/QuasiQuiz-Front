@@ -1,10 +1,12 @@
 // import Admin from "./Pages/BackOffice/Admin";
-import Home from "./Pages/Home";
+// import Home from "./Pages/Home";
+import Lobby from "./Pages/Lobby";
 
 function App() {
   return (
     //  <Admin />
-    <Home />
+    // <Home />
+    <Lobby />
   );
 }
 

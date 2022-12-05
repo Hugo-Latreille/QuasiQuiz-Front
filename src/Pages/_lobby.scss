@@ -1,0 +1,116 @@
+@import url("https://fonts.googleapis.com/css2?family=Iceland&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap");
+
+body {
+  background-color: #f03670;
+  .lobby-content {
+    color: white;
+
+    .lobby-title {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 3rem 3rem 0 3rem;
+      h1 {
+        font-family: "Iceland", sans-serif;
+        color: #1c1c1c;
+        font-weight: bolder;
+        font-size: 2rem;
+      }
+    }
+    .lobby-gamer {
+      font-family: "Open sans", sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 2rem;
+      padding: 1rem;
+      background-color: #1c1c1c;
+      border-radius: 0.5rem;
+
+      h4 {
+        margin-bottom: 1.5rem;
+      }
+
+      .gm-box {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 1rem;
+        .gm-card {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          .gamer-img {
+            height: 3rem;
+            width: 3rem;
+            background-color: #1c1c1c;
+            border: 2px solid gold;
+            border-radius: 0.5rem;
+            margin: 1rem;
+          }
+        }
+      }
+      .gamer-box {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 1rem;
+
+        .gc-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 1rem;
+
+          .gamer-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            .gamer-img {
+              height: 3rem;
+              width: 3rem;
+              background-color: #1c1c1c;
+              border: 2px solid palegreen;
+              border-radius: 0.5rem;
+              margin: 1rem;
+
+              &.user {
+                border: 2px solid palevioletred;
+              }
+            }
+          }
+        }
+
+        .legend {
+          margin-top: 2rem;
+
+          ul {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            li {
+              list-style: none;
+              margin: 0 0.5rem;
+              font-size: 0.75rem;
+              &#gm-color {
+                color: gold;
+              }
+              &#g-color {
+                color: palegreen;
+              }
+              &#user-color {
+                color: palevioletred;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

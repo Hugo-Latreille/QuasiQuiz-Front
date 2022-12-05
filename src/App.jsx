@@ -1,14 +1,15 @@
 // import Admin from "./Pages/BackOffice/Admin";
-import Register from "./Pages/Connexion/Connexion";
+// import Home from "./Pages/Home";
 import "./App.scss";
+import Lobby from "./Pages/Lobby";
 
 function App() {
-	// return <Admin />;
-	return (
-		<div className="app">
-			<Register />;
-		</div>
-	);
+  return (
+    //  <Admin />
+    // <Home />
+    <Lobby />
+  );
+
 }
 
 export default App;

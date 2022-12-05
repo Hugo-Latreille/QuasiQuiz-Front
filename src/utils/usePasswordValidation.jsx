@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const usePasswordValidation = (password) => {
+const usePasswordValidation = () => {
 	const [passwordValidity, setPasswordValidity] = useState({});
 	const [passwordValidationWidth, setPasswordValidationWidth] = useState(0);
 
@@ -8,12 +8,12 @@ const usePasswordValidation = (password) => {
 	const specialCharacterRegex = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/;
 	const oneUppercase = /[A-Z]/;
 
-	const checkPasswordValidity = () => {
+	const checkPasswordValidity = (inputValue) => {
 		setPasswordValidity({
-			minChar: password.length >= 8 ? true : false,
-			number: isNumberRegex.test(password) ? true : false,
-			uppercase: oneUppercase.test(password) ? true : false,
-			specialChar: specialCharacterRegex.test(password) ? true : false,
+			minChar: inputValue.length >= 8 ? true : false,
+			number: isNumberRegex.test(inputValue) ? true : false,
+			uppercase: oneUppercase.test(inputValue) ? true : false,
+			specialChar: specialCharacterRegex.test(inputValue) ? true : false,
 		});
 	};
 

@@ -6,7 +6,7 @@
 			"jsx": true
 		},
 		"sourceType": "module",
-		"ecmaVersion": 2015
+		"ecmaVersion": "latest"
 	},
 	"rules": {
 		"react/jsx-uses-react": "error",

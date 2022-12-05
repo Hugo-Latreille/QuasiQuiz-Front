@@ -18,7 +18,7 @@ const Input = ({
 						required={required}
 						onChange={(e) => {
 							setValue(e.target.value);
-							checkPasswordValidity();
+							checkPasswordValidity(e.target.value);
 						}}
 					/>
 					<div className="label">{label}</div>

@@ -11,7 +11,7 @@ const Register = ({ setIsLoggingActive }) => {
 	const [password, setPassword] = useState("");
 	const [passwordVisibility, setPasswordVisibility] = useState(false);
 	const [passwordValidity, passwordValidationWidth, checkPasswordValidity] =
-		usePasswordValidation(password);
+		usePasswordValidation();
 
 	return (
 		<div className="register-container">

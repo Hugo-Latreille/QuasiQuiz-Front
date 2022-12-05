@@ -17,16 +17,15 @@ const Register = ({ setIsLoggingActive }) => {
 		<div className="register-container">
 			<div className="content ">
 				<form className="form">
-					<div className="inputs-container">
-						<Input
-							name="pseudo"
-							value={pseudo}
-							label="Pseudo"
-							type="text"
-							required={true}
-							setValue={setPseudo}
-						/>
-					</div>
+					<Input
+						name="pseudo"
+						value={pseudo}
+						label="Pseudo"
+						type="text"
+						required={true}
+						setValue={setPseudo}
+					/>
+
 					<Input
 						name="email"
 						value={email}

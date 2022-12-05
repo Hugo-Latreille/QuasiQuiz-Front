@@ -37,7 +37,7 @@ const Connexion = () => {
 					>
 						<i className="fas fa-times-circle"></i>
 					</button>
-					{isLoggingActive && <Login />}
+					{isLoggingActive && <Login setIsLoggingActive={setIsLoggingActive} />}
 					{!isLoggingActive && (
 						<Register setIsLoggingActive={setIsLoggingActive} />
 					)}

@@ -1,15 +1,27 @@
-// import Admin from "./Pages/BackOffice/Admin";
-// import Home from "./Pages/Home";
+import Admin from "./Pages/BackOffice/Admin";
 import "./App.scss";
-import Lobby from "./Pages/Lobby";
+import Home from "./Pages/Home/Home";
+import { Route, Routes, useLocation } from "react-router-dom";
+import Connexion from "./Pages/Connexion/Connexion";
 
 function App() {
-  return (
-    //  <Admin />
-    // <Home />
-    <Lobby />
-  );
-
+	const location = useLocation();
+	const background = location.state && location.state.background;
+	return (
+		<>
+			<Routes location={background || location}>
+				<Route path="/" element={<Home />}>
+					<Route path="login" element={<Connexion />} />
+				</Route>
+				<Route path="admin" element={<Admin />} />
+			</Routes>
+			{background && (
+				<Routes>
+					<Route path="login" element={<Connexion />} />
+				</Routes>
+			)}
+		</>
+	);
 }
 
 export default App;

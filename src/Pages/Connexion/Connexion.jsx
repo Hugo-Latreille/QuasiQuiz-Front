@@ -3,11 +3,14 @@ import "./Connexion.scss";
 import { useState } from "react";
 import Register from "./Register.jsx";
 import Login from "./Login";
+import ReactDOM from "react-dom";
+import { useNavigate } from "react-router-dom";
 
 const Connexion = () => {
+	const navigate = useNavigate();
 	const [isLoggingActive, setIsLoggingActive] = useState(false);
 
-	return (
+	return ReactDOM.createPortal(
 		<div className="connexion">
 			<div className="connexion-container">
 				<div className="connexion-container-navigation">
@@ -30,10 +33,9 @@ const Connexion = () => {
 				<div className="connexion-container-form">
 					<button
 						className="close-modal"
-						// onClick={() => {
-						// 	dispatch(toggleLoggingModalOpen());
-						// 	navigate(-1);
-						// }}
+						onClick={() => {
+							navigate(-1);
+						}}
 					>
 						<i className="fas fa-times-circle"></i>
 					</button>
@@ -43,7 +45,8 @@ const Connexion = () => {
 					)}
 				</div>
 			</div>
-		</div>
+		</div>,
+		document.getElementById("modale")
 	);
 };
 

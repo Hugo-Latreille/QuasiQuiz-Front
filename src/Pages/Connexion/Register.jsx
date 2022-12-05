@@ -3,6 +3,7 @@ import Input from "../../Components/Input/Input";
 import "./Register.scss";
 import { useEffect, useState } from "react";
 import { MdOutlineVisibility, MdOutlineVisibilityOff } from "react-icons/md";
+import usePasswordValidation from "../../utils/usePasswordValidation";
 
 const Register = ({ setIsLoggingActive }) => {
 	const [pseudo, setPseudo] = useState("");
@@ -10,72 +11,75 @@ const Register = ({ setIsLoggingActive }) => {
 	const [password, setPassword] = useState("");
 	// const [passwordConfirm, setPasswordConfirm] = useState("");
 	const [passwordVisibility, setPasswordVisibility] = useState(false);
-	const [passwordValidity, setPasswordValidity] = useState({});
-	const [passwordValidationWidth, setPasswordValidationWidth] = useState(0);
+	// const [passwordValidity, setPasswordValidity] = useState({});
+	// const [passwordValidationWidth, setPasswordValidationWidth] = useState(0);
 
-	const isNumberRegex = /\d/;
-	const specialCharacterRegex = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/;
-	const oneUppercase = /[A-Z]/;
+	const [passwordValidity, passwordValidationWidth, checkPasswordValidity] =
+		usePasswordValidation(password);
 
-	const checkPasswordValidity = () => {
-		setPasswordValidity({
-			minChar: password.length >= 8 ? true : false,
-			number: isNumberRegex.test(password) ? true : false,
-			uppercase: oneUppercase.test(password) ? true : false,
-			specialChar: specialCharacterRegex.test(password) ? true : false,
-		});
-	};
+	// const isNumberRegex = /\d/;
+	// const specialCharacterRegex = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/;
+	// const oneUppercase = /[A-Z]/;
 
-	useEffect(() => {
-		countPasswordValidationWidth();
-	}, [passwordValidity]);
+	// const checkPasswordValidity = () => {
+	// 	setPasswordValidity({
+	// 		minChar: password.length >= 8 ? true : false,
+	// 		number: isNumberRegex.test(password) ? true : false,
+	// 		uppercase: oneUppercase.test(password) ? true : false,
+	// 		specialChar: specialCharacterRegex.test(password) ? true : false,
+	// 	});
+	// };
 
-	function countPasswordValidationWidth() {
-		setPasswordValidationWidth(0);
+	// useEffect(() => {
+	// 	countPasswordValidationWidth();
+	// }, [passwordValidity]);
 
-		if (
-			passwordValidity.uppercase ||
-			passwordValidity.number ||
-			passwordValidity.specialChar ||
-			passwordValidity.minChar
-		) {
-			setPasswordValidationWidth(25);
-		}
-		if (
-			(passwordValidity.uppercase && passwordValidity.number) ||
-			(passwordValidity.uppercase && passwordValidity.specialChar) ||
-			(passwordValidity.uppercase && passwordValidity.minChar) ||
-			(passwordValidity.number && passwordValidity.specialChar) ||
-			(passwordValidity.number && passwordValidity.minChar) ||
-			(passwordValidity.specialChar && passwordValidity.minChar)
-		) {
-			setPasswordValidationWidth(50);
-		}
-		if (
-			(passwordValidity.uppercase &&
-				passwordValidity.number &&
-				passwordValidity.specialChar) ||
-			(passwordValidity.uppercase &&
-				passwordValidity.specialChar &&
-				passwordValidity.minChar) ||
-			(passwordValidity.uppercase &&
-				passwordValidity.number &&
-				passwordValidity.minChar) ||
-			(passwordValidity.specialChar &&
-				passwordValidity.number &&
-				passwordValidity.minChar)
-		) {
-			setPasswordValidationWidth(75);
-		}
-		if (
-			passwordValidity.uppercase &&
-			passwordValidity.number &&
-			passwordValidity.specialChar &&
-			passwordValidity.minChar
-		) {
-			setPasswordValidationWidth(100);
-		}
-	}
+	// function countPasswordValidationWidth() {
+	// 	setPasswordValidationWidth(0);
+
+	// 	if (
+	// 		passwordValidity.uppercase ||
+	// 		passwordValidity.number ||
+	// 		passwordValidity.specialChar ||
+	// 		passwordValidity.minChar
+	// 	) {
+	// 		setPasswordValidationWidth(25);
+	// 	}
+	// 	if (
+	// 		(passwordValidity.uppercase && passwordValidity.number) ||
+	// 		(passwordValidity.uppercase && passwordValidity.specialChar) ||
+	// 		(passwordValidity.uppercase && passwordValidity.minChar) ||
+	// 		(passwordValidity.number && passwordValidity.specialChar) ||
+	// 		(passwordValidity.number && passwordValidity.minChar) ||
+	// 		(passwordValidity.specialChar && passwordValidity.minChar)
+	// 	) {
+	// 		setPasswordValidationWidth(50);
+	// 	}
+	// 	if (
+	// 		(passwordValidity.uppercase &&
+	// 			passwordValidity.number &&
+	// 			passwordValidity.specialChar) ||
+	// 		(passwordValidity.uppercase &&
+	// 			passwordValidity.specialChar &&
+	// 			passwordValidity.minChar) ||
+	// 		(passwordValidity.uppercase &&
+	// 			passwordValidity.number &&
+	// 			passwordValidity.minChar) ||
+	// 		(passwordValidity.specialChar &&
+	// 			passwordValidity.number &&
+	// 			passwordValidity.minChar)
+	// 	) {
+	// 		setPasswordValidationWidth(75);
+	// 	}
+	// 	if (
+	// 		passwordValidity.uppercase &&
+	// 		passwordValidity.number &&
+	// 		passwordValidity.specialChar &&
+	// 		passwordValidity.minChar
+	// 	) {
+	// 		setPasswordValidationWidth(100);
+	// 	}
+	// }
 
 	return (
 		<div className="register-container">
@@ -108,13 +112,13 @@ const Register = ({ setIsLoggingActive }) => {
 						checkPasswordValidity={checkPasswordValidity}
 						setValue={setPassword}
 					/>
-					{/* <Input
+					<Input
 						name="passwordConfirm"
-						value={passwordConfirm}
+						// value={passwordConfirm}
 						label="Confirmez votre mot de passe"
 						type={passwordVisibility ? "text" : "password"}
 						required={true}
-					/> */}
+					/>
 					<div
 						className="eye_register_pass"
 						onClick={() => setPasswordVisibility(!passwordVisibility)}

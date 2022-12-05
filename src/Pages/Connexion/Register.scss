@@ -24,18 +24,18 @@
 
 .eye_register_pass {
 	position: absolute;
-	top: 19.3rem;
+	top: 14.9rem;
 	right: 0.1rem;
 }
 
 .eye_register_confirm {
 	position: absolute;
-	top: 14.9rem;
+	top: 10.3rem;
 	right: 0.1rem;
 }
 
 .password-safety {
-	font-size: 0.8rem;
+	font-size: 1.1rem;
 	margin-top: -1.2rem;
 	margin-bottom: 2rem;
 
@@ -75,7 +75,7 @@
 	}
 
 	& span {
-		font-size: 0.6rem;
+		font-size: 1rem;
 	}
 }
 .form {
@@ -87,7 +87,7 @@
 
 		.label {
 			color: vars.$grey;
-			font-size: 0.8rem;
+			font-size: 1.4rem;
 			position: absolute;
 			top: -17px;
 			left: 8px;
@@ -139,4 +139,12 @@
 	-webkit-text-fill-color: transparent;
 	margin: 0.5rem;
 	cursor: pointer;
+}
+
+.third-button-colored {
+	color: #32518d;
+	font-size: 0.8rem;
+	padding-left: 1rem;
+	cursor: pointer;
+	width: 100%;
 }

@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import Input from "../../Components/Input/Input";
 import "./Register.scss";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { MdOutlineVisibility, MdOutlineVisibilityOff } from "react-icons/md";
 import usePasswordValidation from "../../utils/usePasswordValidation";
 
@@ -9,77 +9,9 @@ const Register = ({ setIsLoggingActive }) => {
 	const [pseudo, setPseudo] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	// const [passwordConfirm, setPasswordConfirm] = useState("");
 	const [passwordVisibility, setPasswordVisibility] = useState(false);
-	// const [passwordValidity, setPasswordValidity] = useState({});
-	// const [passwordValidationWidth, setPasswordValidationWidth] = useState(0);
-
 	const [passwordValidity, passwordValidationWidth, checkPasswordValidity] =
 		usePasswordValidation(password);
-
-	// const isNumberRegex = /\d/;
-	// const specialCharacterRegex = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/;
-	// const oneUppercase = /[A-Z]/;
-
-	// const checkPasswordValidity = () => {
-	// 	setPasswordValidity({
-	// 		minChar: password.length >= 8 ? true : false,
-	// 		number: isNumberRegex.test(password) ? true : false,
-	// 		uppercase: oneUppercase.test(password) ? true : false,
-	// 		specialChar: specialCharacterRegex.test(password) ? true : false,
-	// 	});
-	// };
-
-	// useEffect(() => {
-	// 	countPasswordValidationWidth();
-	// }, [passwordValidity]);
-
-	// function countPasswordValidationWidth() {
-	// 	setPasswordValidationWidth(0);
-
-	// 	if (
-	// 		passwordValidity.uppercase ||
-	// 		passwordValidity.number ||
-	// 		passwordValidity.specialChar ||
-	// 		passwordValidity.minChar
-	// 	) {
-	// 		setPasswordValidationWidth(25);
-	// 	}
-	// 	if (
-	// 		(passwordValidity.uppercase && passwordValidity.number) ||
-	// 		(passwordValidity.uppercase && passwordValidity.specialChar) ||
-	// 		(passwordValidity.uppercase && passwordValidity.minChar) ||
-	// 		(passwordValidity.number && passwordValidity.specialChar) ||
-	// 		(passwordValidity.number && passwordValidity.minChar) ||
-	// 		(passwordValidity.specialChar && passwordValidity.minChar)
-	// 	) {
-	// 		setPasswordValidationWidth(50);
-	// 	}
-	// 	if (
-	// 		(passwordValidity.uppercase &&
-	// 			passwordValidity.number &&
-	// 			passwordValidity.specialChar) ||
-	// 		(passwordValidity.uppercase &&
-	// 			passwordValidity.specialChar &&
-	// 			passwordValidity.minChar) ||
-	// 		(passwordValidity.uppercase &&
-	// 			passwordValidity.number &&
-	// 			passwordValidity.minChar) ||
-	// 		(passwordValidity.specialChar &&
-	// 			passwordValidity.number &&
-	// 			passwordValidity.minChar)
-	// 	) {
-	// 		setPasswordValidationWidth(75);
-	// 	}
-	// 	if (
-	// 		passwordValidity.uppercase &&
-	// 		passwordValidity.number &&
-	// 		passwordValidity.specialChar &&
-	// 		passwordValidity.minChar
-	// 	) {
-	// 		setPasswordValidationWidth(100);
-	// 	}
-	// }
 
 	return (
 		<div className="register-container">

@@ -3,6 +3,7 @@ import "./App.scss";
 import Home from "./Pages/Home/Home";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Connexion from "./Pages/Connexion/Connexion";
+import Lobby from "./Pages/Lobby/Lobby";
 
 function App() {
 	const location = useLocation();
@@ -13,6 +14,7 @@ function App() {
 				<Route path="/" element={<Home />}>
 					<Route path="login" element={<Connexion />} />
 				</Route>
+				<Route path="lobby" element={<Lobby />} />
 				<Route path="admin" element={<Admin />} />
 			</Routes>
 			{background && (

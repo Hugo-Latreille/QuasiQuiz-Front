@@ -43,6 +43,7 @@ function Admin() {
 
 	return (
 		<HydraAdmin
+			basename="/admin"
 			entrypoint={entrypoint}
 			dataProvider={dataProvider}
 			layout={CustomLayout}

@@ -2,15 +2,33 @@ import { useState } from "react";
 import { MdOutlineVisibility, MdOutlineVisibilityOff } from "react-icons/md";
 import Input from "../../Components/Input/Input";
 import "./Login.scss";
+import usePasswordValidation from "../../utils/usePasswordValidation";
+import axios from "axios";
 
 const Login = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [passwordVisibility, setPasswordVisibility] = useState(false);
+	const [passwordValidity, passwordValidationWidth, checkPasswordValidity] =
+		usePasswordValidation();
+
+	const handleLogin = async (e) => {
+		e.preventDefault();
+		console.log(email, password);
+		try {
+			const test = await axios.post("https://localhost:8000/api/login", {
+				email,
+				password,
+			});
+			console.log(test);
+		} catch (error) {
+			console.log(error.message);
+		}
+	};
 
 	return (
 		<div className="login-container">
-			<form className="login-form">
+			<form className="login-form" onSubmit={handleLogin}>
 				<div className="login-form-inputs">
 					<div className="form">
 						<Input
@@ -28,6 +46,7 @@ const Login = () => {
 							label="Mot de passe"
 							type={passwordVisibility ? "text" : "password"}
 							required={true}
+							checkPasswordValidity={checkPasswordValidity}
 						/>
 						<div
 							className="toggle_eye"

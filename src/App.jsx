@@ -14,6 +14,7 @@ function App() {
 					<Route path="login" element={<Connexion />} />
 				</Route>
 				<Route path="lobby" element={<Lobby />} />
+				<Route path="*" element={<p style={{ color: "white" }}>404</p>} />
 			</Routes>
 			{background && (
 				<Routes>

@@ -4,6 +4,7 @@ import "./Register.scss";
 import { useState } from "react";
 import { MdOutlineVisibility, MdOutlineVisibilityOff } from "react-icons/md";
 import usePasswordValidation from "../../utils/usePasswordValidation";
+import axios from "axios";
 
 const Register = ({ setIsLoggingActive }) => {
 	const [pseudo, setPseudo] = useState("");
@@ -13,10 +14,24 @@ const Register = ({ setIsLoggingActive }) => {
 	const [passwordValidity, passwordValidationWidth, checkPasswordValidity] =
 		usePasswordValidation();
 
+	const handleRegister = async (e) => {
+		e.preventDefault();
+		try {
+			const test = await axios.post("https://localhost:8000/api/users", {
+				email,
+				password,
+				pseudo,
+			});
+			console.log(test);
+		} catch (error) {
+			console.log(error.message);
+		}
+	};
+
 	return (
 		<div className="register-container">
 			<div className="content ">
-				<form className="form">
+				<form className="form" onSubmit={handleRegister}>
 					<Input
 						name="pseudo"
 						value={pseudo}
@@ -43,13 +58,13 @@ const Register = ({ setIsLoggingActive }) => {
 						checkPasswordValidity={checkPasswordValidity}
 						setValue={setPassword}
 					/>
-					<Input
+					{/* <Input
 						name="passwordConfirm"
 						// value={passwordConfirm}
 						label="Confirmez votre mot de passe"
 						type={passwordVisibility ? "text" : "password"}
 						required={true}
-					/>
+					/> */}
 					<div
 						className="eye_register_pass"
 						onClick={() => setPasswordVisibility(!passwordVisibility)}

@@ -5,10 +5,19 @@ import Register from "./Register.jsx";
 import Login from "./Login";
 import ReactDOM from "react-dom";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 
 const Connexion = () => {
 	const navigate = useNavigate();
 	const [isLoggingActive, setIsLoggingActive] = useState(false);
+
+	const toastOptions = {
+		position: "top-right",
+		autoClose: 6000,
+		pauseOnHover: true,
+		draggable: true,
+		theme: "light",
+	};
 
 	return ReactDOM.createPortal(
 		<div className="connexion">
@@ -45,6 +54,7 @@ const Connexion = () => {
 					)}
 				</div>
 			</div>
+			<ToastContainer />
 		</div>,
 		document.getElementById("modale")
 	);

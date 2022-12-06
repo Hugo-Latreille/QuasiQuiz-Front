@@ -21,7 +21,7 @@ const Home = () => {
             dolor quae ad nobis beatae. Sit earum esse quasi, sed error, minima
             illum eligendi fuga nostrum tenetur ipsum, commodi magni. Sit sed,
             dolore vel blanditiis optio praesentium autem quas minima
-            laudantium, provident veritatis.Lorem ipsum dolor sit amet
+            laudantium, provident veritatis. Lorem ipsum dolor sit amet
             consectetur, adipisicing elit. Reiciendis neque necessitatibus
             molestiae unde deserunt fugiat error! Assumenda dolor quae ad nobis
             beatae. Sit earum esse quasi, sed error, minima illum eligendi fuga

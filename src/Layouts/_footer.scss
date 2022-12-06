@@ -1,21 +1,22 @@
-@import url("https://fonts.googleapis.com/css2?family=Iceland&display=swap");
+@import "../styles/vars";
+@import "../styles/mixins";
 
 .footer {
-  background-color: #31383f;
+  background-color: $bg-color;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: fixed;
+  position: relative;
   bottom: 0;
   height: 2rem;
-  width: 100%;
+  padding: 0.5rem;
   box-shadow: 0px -4px 4px rgba(0, 0, 0, 0.25);
   p {
-    font-family: "Iceland", sans-serif;
-    color: #f3d849;
+    @include principal-font;
+    color: $primary-color;
     a {
       text-decoration: underline;
-      color: #f3d849;
+      color: $primary-color;
     }
   }
 }

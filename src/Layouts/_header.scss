@@ -1,13 +1,12 @@
-@import url("https://fonts.googleapis.com/css2?family=Iceland&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap");
+@import "../styles/vars";
+@import "../styles/mixins";
 
 .header {
-  font-family: "Iceland", sans-serif;
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 5rem;
-  background-color: #31383f;
+  background-color: $bg-color;
   padding: 0 0.5rem;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.26);
 
@@ -18,16 +17,16 @@
 
   #login-btn {
     padding: 0.5rem;
-    border: 1px solid #f3d849;
+    border: 1px solid $primary-color;
     border-radius: 0.5rem;
-    background-color: #31383f;
+    background-color: $bg-color;
     margin-right: 0.5rem;
 
     #link-mod {
-      font-family: "Open Sans", sans-serif;
-      font-weight: bolder;
+      @include principal-font;
+      // font-weight: bolder;
       text-decoration: none;
-      color: #f3d849;
+      color: $primary-color;
     }
   }
 }

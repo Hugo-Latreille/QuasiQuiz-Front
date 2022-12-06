@@ -4,14 +4,14 @@ import Input from "../../Components/Input/Input";
 import "./Login.scss";
 import usePasswordValidation from "../../utils/usePasswordValidation";
 
-const Login = ({ email, setEmail, password, setPassword, onSubmit }) => {
+const Login = ({ email, setEmail, password, setPassword, handleLogin }) => {
 	const [passwordVisibility, setPasswordVisibility] = useState(false);
 	const [passwordValidity, passwordValidationWidth, checkPasswordValidity] =
 		usePasswordValidation();
 
 	return (
 		<div className="login-container">
-			<form className="login-form" onSubmit={onSubmit}>
+			<form className="login-form" onSubmit={handleLogin}>
 				<div className="login-form-inputs">
 					<div className="form">
 						<Input

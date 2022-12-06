@@ -8,7 +8,6 @@ import {
 } from "react-router-dom";
 import App from "./App";
 import Admin from "./Pages/BackOffice/Admin";
-
 import "./styles/index.scss";
 
 const router = createBrowserRouter(

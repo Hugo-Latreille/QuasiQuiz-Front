@@ -6,27 +6,19 @@ import { MdOutlineVisibility, MdOutlineVisibilityOff } from "react-icons/md";
 import usePasswordValidation from "../../utils/usePasswordValidation";
 import axios from "axios";
 
-const Register = ({ setIsLoggingActive }) => {
-	const [pseudo, setPseudo] = useState("");
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
+const Register = ({
+	setIsLoggingActive,
+	email,
+	setEmail,
+	password,
+	setPassword,
+	pseudo,
+	setPseudo,
+	handleRegister,
+}) => {
 	const [passwordVisibility, setPasswordVisibility] = useState(false);
 	const [passwordValidity, passwordValidationWidth, checkPasswordValidity] =
 		usePasswordValidation();
-
-	const handleRegister = async (e) => {
-		e.preventDefault();
-		try {
-			const test = await axios.post("https://localhost:8000/api/users", {
-				email,
-				password,
-				pseudo,
-			});
-			console.log(test);
-		} catch (error) {
-			console.log(error.message);
-		}
-	};
 
 	return (
 		<div className="register-container">

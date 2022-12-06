@@ -3,12 +3,53 @@ import Home from "./Pages/Home/Home";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Connexion from "./Pages/Connexion/Connexion";
 import Lobby from "./Pages/Lobby/Lobby";
+import { createContext, useReducer } from "react";
+
+export const UserContext = createContext();
+
+const initialState = {
+	user: {
+		token: "",
+		email: "",
+	},
+};
+
+const action = {
+	ADD_USER: "ADD_USER",
+};
+
+const userReducer = (state, action) => {
+	if (action.type === "ADD_USER") {
+		return {
+			...state,
+			user: {
+				...state.user,
+				token: "coucou",
+				email: "coucou@coucou.com",
+			},
+		};
+	}
+};
+
+const Provider = ({ children }) => {
+	const [state, dispatch] = useReducer(userReducer, initialState);
+
+	const value = {
+		user: state.user,
+		addUser: (user) => {
+			dispatch({ type: action.ADD_USER, user });
+		},
+	};
+
+	return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+};
 
 function App() {
 	const location = useLocation();
 	const background = location.state && location.state.background;
+
 	return (
-		<>
+		<Provider>
 			<Routes location={background || location}>
 				<Route path="/" element={<Home />}>
 					<Route path="login" element={<Connexion />} />
@@ -21,7 +62,7 @@ function App() {
 					<Route path="login" element={<Connexion />} />
 				</Routes>
 			)}
-		</>
+		</Provider>
 	);
 }
 

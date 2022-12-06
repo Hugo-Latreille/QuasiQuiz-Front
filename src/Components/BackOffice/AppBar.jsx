@@ -1,6 +1,5 @@
 import { defaultTheme, AppBar, ToggleThemeButton } from "react-admin";
 import { createTheme, Box, Typography } from "@mui/material";
-import Logo from "./../../assets/logo.png";
 
 const darkTheme = createTheme({
 	palette: { mode: "dark" },

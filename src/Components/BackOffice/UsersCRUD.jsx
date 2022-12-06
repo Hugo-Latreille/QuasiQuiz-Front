@@ -6,18 +6,7 @@ import {
 	InputGuesser,
 	EditGuesser,
 } from "@api-platform/admin";
-import {
-	TextField,
-	ReferenceField,
-	NumberField,
-	ChipField,
-	ReferenceInput,
-	AutocompleteInput,
-	DateField,
-	ReferenceArrayInput,
-	EmailField,
-	PasswordInput,
-} from "react-admin";
+import { TextField, DateField, EmailField, PasswordInput } from "react-admin";
 
 const UsersList = (props) => (
 	<ListGuesser {...props} pagination={false}>

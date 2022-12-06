@@ -24,23 +24,20 @@ const userReducer = (state, action) => {
 			...state,
 			user: {
 				...state.user,
-				token: "coucou",
-				email: "coucou@coucou.com",
+				token: action.payload.token,
+				email: action.payload.email,
 			},
 		};
 	}
 };
-
 const Provider = ({ children }) => {
 	const [state, dispatch] = useReducer(userReducer, initialState);
-
 	const value = {
 		user: state.user,
-		addUser: (user) => {
-			dispatch({ type: action.ADD_USER, user });
+		addUser: (payload) => {
+			dispatch({ type: action.ADD_USER, payload });
 		},
 	};
-
 	return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
 

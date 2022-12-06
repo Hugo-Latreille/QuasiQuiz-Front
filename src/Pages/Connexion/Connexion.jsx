@@ -21,27 +21,30 @@ const Connexion = () => {
 	const [loginEmail, setLoginEmail] = useState("");
 	const [loginPassword, setLoginPassword] = useState("");
 
-	const test = useContext(UserContext);
+	const { user, addUser } = useContext(UserContext);
 
-	console.log(test);
+	console.log(user);
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
+		console.log(loginEmail, loginPassword);
 		try {
-			const result = await axios.post(loginRoute, {
-				loginEmail,
-				loginPassword,
+			const { data } = await axios.post(loginRoute, {
+				email: loginEmail,
+				password: loginPassword,
 			});
-			console.log(result);
+			console.log(data);
 			//! ici : enregistrer utilisateur dans le context global
+			addUser({ email: loginEmail, token: data.token });
 			//! ici : fermer la modale + redirection vers lobby
-			setEmail("");
-			setPassword("");
+			setLoginEmail("");
+			setLoginPassword("");
 		} catch (error) {
 			console.log(error);
 			if (error.response.status === 401) {
 				return toast.error("Vos identifiants sont incorrects", toastOptions);
 			}
+			return toast.error(`${error.response.data.detail}`, toastOptions);
 		}
 	};
 

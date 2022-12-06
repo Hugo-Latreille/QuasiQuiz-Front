@@ -4,29 +4,30 @@
 .header {
   font-family: "Iceland", sans-serif;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   height: 5rem;
-  background-color: #48d4ff;
+  background-color: #31383f;
+  padding: 0 0.5rem;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.26);
 
   #logo {
     height: 4rem;
-    border-radius: 0.5rem;
-  }
-
-  h1 {
-    color: #f03670;
-    text-transform: uppercase;
-    font-size: 2rem;
-    font-weight: bolder;
+    margin-bottom: 0.5rem;
   }
 
   #login-btn {
-    font-family: "Open Sans", sans-serif;
-    font-weight: bolder;
     padding: 0.5rem;
-    border: none;
+    border: 1px solid #f3d849;
     border-radius: 0.5rem;
-    background-color: #f03670;
+    background-color: #31383f;
+    margin-right: 0.5rem;
+
+    #link-mod {
+      font-family: "Open Sans", sans-serif;
+      font-weight: bolder;
+      text-decoration: none;
+      color: #f3d849;
+    }
   }
 }

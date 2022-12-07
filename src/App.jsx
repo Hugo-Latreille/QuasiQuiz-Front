@@ -3,63 +3,87 @@ import Home from "./Pages/Home/Home";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Connexion from "./Pages/Connexion/Connexion";
 import Lobby from "./Pages/Lobby/Lobby";
-import { createContext, useReducer } from "react";
+import { createContext, useReducer, useState } from "react";
 import RequireAuth from "./utils/RequireAuth";
 import AuthTest from "./Pages/JWTTest/AuthTest";
 import WelcomeTest from "./Pages/JWTTest/WelcomeTest";
+import { Admin } from "react-admin";
 
-export const UserContext = createContext();
+// export const UserContext = createContext();
 
-const initialState = {
-	user: {
-		token: "",
-		email: "",
-		role: [],
-	},
-};
+// const initialState = {
+// 	user: {
+// 		token: null,
+// 		email: null,
+// 		role: null,
+// 	},
+// };
+// const actions = {
+// 	ADD_USER: "ADD_USER",
+// 	REMOVE_USER: "REMOVE_USER",
+// 	REFRESH_TOKEN: "REFRESH_TOKEN",
+// };
 
-const action = {
-	ADD_USER: "ADD_USER",
-	REMOVE_USER: "REMOVE_USER",
-};
-
-const userReducer = (state, action) => {
-	if (action.type === "ADD_USER") {
-		return {
-			...state,
-			user: {
-				...state.user,
-				token: action.payload.token,
-				email: action.payload.email,
-				role: action.payload.role,
-			},
-		};
-	}
-	if (action.type === "REMOVE_USER") {
-		return {
-			...state,
-			user: {
-				...state.user,
-				token: "",
-				email: "",
-				role: "",
-			},
-		};
-	}
-};
+// const userReducer = (state, action) => {
+// 	switch (action.type) {
+// 		case actions.ADD_USER:
+// 			return {
+// 				...state,
+// 				user: {
+// 					...state.user,
+// 					token: action.payload.token,
+// 					email: action.payload.email,
+// 					role: action.payload.role,
+// 				},
+// 			};
+// 		case actions.REMOVE_USER:
+// 			return {
+// 				...state,
+// 				user: {
+// 					...state.user,
+// 					token: "",
+// 					email: "",
+// 					role: "",
+// 				},
+// 			};
+// 		case actions.REFRESH_TOKEN:
+// 			return {
+// 				...state,
+// 				user: {
+// 					...state.user,
+// 					token: action.payload,
+// 				},
+// 			};
+// 		default:
+// 			return state;
+// 	}
+// };
+// const Provider = ({ children }) => {
+// 	const [state, dispatch] = useReducer(userReducer, initialState);
+// 	const value = {
+// 		user: state.user,
+// 		addUser: (payload) => {
+// 			dispatch({ type: actions.ADD_USER, payload });
+// 			console.log("payload", payload);
+// 		},
+// 		removeUser: () => {
+// 			dispatch({ type: actions.REMOVE_USER });
+// 		},
+// 		refreshToken: (payload) => {
+// 			dispatch({ type: actions.REFRESH_TOKEN, payload });
+// 		},
+// 	};
+// 	return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+// };
+export const UserContext = createContext({});
 const Provider = ({ children }) => {
-	const [state, dispatch] = useReducer(userReducer, initialState);
-	// console.log(state.user);
-	const value = {
-		user: state.user,
-		addUser: (payload) => {
-			dispatch({ type: action.ADD_USER, payload });
-		},
-		removeUser: () => {
-			dispatch({ type: action.REMOVE_USER });
-		},
-	};
-	return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+	const [user, setUser] = useState({});
+
+	return (
+		<UserContext.Provider value={{ user, setUser }}>
+			{children}
+		</UserContext.Provider>
+	);
 };
 
 function App() {
@@ -72,12 +96,13 @@ function App() {
 				<Route path="/" element={<Home />}>
 					<Route path="login" element={<Connexion />} />
 				</Route>
-				<Route path="/test" element={<WelcomeTest />} />
-				<Route path="/authTest" element={<AuthTest />} />
 
 				{/* Routes privées */}
 				<Route element={<RequireAuth />}>
+					<Route path="/test" element={<WelcomeTest />} />
+					<Route path="/authTest" element={<AuthTest />} />
 					<Route path="lobby" element={<Lobby />} />
+					<Route path="admin/*" element={<Admin />} />;
 				</Route>
 
 				<Route path="*" element={<p style={{ color: "white" }}>404</p>} />

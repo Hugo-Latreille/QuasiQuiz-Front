@@ -4,9 +4,9 @@ import { UserContext } from "../App";
 
 const RequireAuth = () => {
 	const { user } = useContext(UserContext);
-	const token = user.token;
+	const token = user?.token;
 	const location = useLocation();
-	console.log(user.token);
+	console.log("REQUIRE AUTH", user);
 
 	return token ? (
 		<Outlet />

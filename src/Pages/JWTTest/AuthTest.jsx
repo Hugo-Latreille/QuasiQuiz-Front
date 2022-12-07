@@ -9,21 +9,33 @@ const AuthTest = () => {
 	const [users, setUsers] = useState({});
 
 	useEffect(() => {
+		let isMounted = true;
+		const controller = new AbortController();
 		const getUsers = async () => {
-			setIsLoading(true);
-			const { data } = await axios.get("https://localhost:8000/api/users");
-			if (data) {
-				setIsLoading(false);
+			try {
+				const { data } = await axios.get("https://localhost:8000/api/users", {
+					signal: controller.signal,
+				});
+				if (data) {
+					isMounted && setIsLoading(false);
+				}
+				setUsers(data["hydra:member"]);
+			} catch (error) {
+				console.log(error);
 			}
-			setUsers(data["hydra:member"]);
 		};
 		getUsers();
+
+		return () => {
+			isMounted = false;
+			controller.abort();
+		};
 	}, []);
 
 	const { removeUser } = useContext(UserContext);
 
 	const handleLogout = async () => {
-		await axios.get("https://localhost:8000/api/token/invalidate");
+		// await axios.get("https://localhost:8000/api/token/invalidate");
 		removeUser();
 	};
 

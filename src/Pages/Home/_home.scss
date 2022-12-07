@@ -3,41 +3,41 @@
 
 //? plus judicieux dans App.jsx
 body {
-  background-color: #1c1c1c;
-  //?
-  .home-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+	background-color: white;
+	//?
+	.home-content {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
 
-    .home-title {
-      margin: 3rem 6rem 0 6rem;
-      h1 {
-        font-family: "Iceland", sans-serif;
-        font-size: 2rem;
-        font-weight: bolder;
-        color: #f03670;
-      }
-    }
-    img {
-      margin: 3rem;
-      border-radius: 0.5rem;
-    }
-    .rules {
-      font-family: "Open Sans", sans-serif;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background-color: #48d4ff;
-      border-radius: 0.5rem;
-      margin: 0 2rem;
-      padding: 2rem;
-      h4 {
-        font-weight: bolder;
-        margin-bottom: 2rem;
-      }
-    }
-  }
+		.home-title {
+			margin: 3rem 6rem 0 6rem;
+			h1 {
+				font-family: "Iceland", sans-serif;
+				font-size: 2rem;
+				font-weight: bolder;
+				color: #f03670;
+			}
+		}
+		img {
+			margin: 3rem;
+			border-radius: 0.5rem;
+		}
+		.rules {
+			font-family: "Open Sans", sans-serif;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			background-color: #48d4ff;
+			border-radius: 0.5rem;
+			margin: 0 2rem;
+			padding: 2rem;
+			h4 {
+				font-weight: bolder;
+				margin-bottom: 2rem;
+			}
+		}
+	}
 }

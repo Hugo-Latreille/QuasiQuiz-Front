@@ -3,7 +3,7 @@ import { useContext, useState } from "react";
 import Register from "./Register.jsx";
 import Login from "./Login";
 import ReactDOM from "react-dom";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { loginRoute, usersRoute } from "../../utils/apiRoutes";
 //? React Toastify
@@ -20,7 +20,7 @@ const Connexion = () => {
 	const [passwordConfirm, setPasswordConfirm] = useState("");
 	const [loginEmail, setLoginEmail] = useState("");
 	const [loginPassword, setLoginPassword] = useState("");
-	const { addUser } = useContext(UserContext);
+	const { user, addUser } = useContext(UserContext);
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
@@ -32,20 +32,23 @@ const Connexion = () => {
 			const { data: userData } = await axios.get(
 				`${usersRoute}?email=${loginEmail}`
 			);
-			console.log(data);
-			console.log(userData);
-			addUser({
+			// console.log(data);
+			// console.log(userData);
+			await addUser({
 				email: loginEmail,
 				token: data.token,
 				role: userData["hydra:member"][0].roles,
 			});
-			if (userData["hydra:member"][0].roles[0] === "ROLE_ADMIN") {
-				console.log(userData["hydra:member"][0].roles[0]);
-				return navigate("/admin");
-			}
 			setLoginEmail("");
 			setLoginPassword("");
-			navigate("/lobby");
+			const token = await user.token;
+			if (token) {
+				if (userData["hydra:member"][0].roles[0] === "ROLE_ADMIN") {
+					console.log(userData["hydra:member"][0].roles[0]);
+					return navigate("/admin");
+				}
+				navigate("/lobby");
+			}
 		} catch (error) {
 			console.log(error);
 			if (error.response.status === 401) {
@@ -70,7 +73,9 @@ const Connexion = () => {
 				setPseudo("");
 				setPassword("");
 				setPasswordConfirm("");
-				//! Ici redirection ?
+				setTimeout(() => {
+					setIsLoggingActive(true);
+				}, 3000);
 			} catch (error) {
 				console.log(error);
 				if (error.message === "Request failed with status code 500") {

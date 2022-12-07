@@ -4,6 +4,9 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import Connexion from "./Pages/Connexion/Connexion";
 import Lobby from "./Pages/Lobby/Lobby";
 import { createContext, useReducer } from "react";
+import RequireAuth from "./utils/RequireAuth";
+import AuthTest from "./Pages/JWTTest/AuthTest";
+import WelcomeTest from "./Pages/JWTTest/WelcomeTest";
 
 export const UserContext = createContext();
 
@@ -17,6 +20,7 @@ const initialState = {
 
 const action = {
 	ADD_USER: "ADD_USER",
+	REMOVE_USER: "REMOVE_USER",
 };
 
 const userReducer = (state, action) => {
@@ -31,13 +35,28 @@ const userReducer = (state, action) => {
 			},
 		};
 	}
+	if (action.type === "REMOVE_USER") {
+		return {
+			...state,
+			user: {
+				...state.user,
+				token: "",
+				email: "",
+				role: "",
+			},
+		};
+	}
 };
 const Provider = ({ children }) => {
 	const [state, dispatch] = useReducer(userReducer, initialState);
+	// console.log(state.user);
 	const value = {
 		user: state.user,
 		addUser: (payload) => {
 			dispatch({ type: action.ADD_USER, payload });
+		},
+		removeUser: () => {
+			dispatch({ type: action.REMOVE_USER });
 		},
 	};
 	return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
@@ -53,7 +72,14 @@ function App() {
 				<Route path="/" element={<Home />}>
 					<Route path="login" element={<Connexion />} />
 				</Route>
-				<Route path="lobby" element={<Lobby />} />
+				<Route path="/test" element={<WelcomeTest />} />
+				<Route path="/authTest" element={<AuthTest />} />
+
+				{/* Routes privées */}
+				<Route element={<RequireAuth />}>
+					<Route path="lobby" element={<Lobby />} />
+				</Route>
+
 				<Route path="*" element={<p style={{ color: "white" }}>404</p>} />
 			</Routes>
 			{background && (

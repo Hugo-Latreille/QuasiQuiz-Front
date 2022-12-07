@@ -7,6 +7,7 @@ import { createContext, useReducer } from "react";
 import RequireAuth from "./utils/RequireAuth";
 import AuthTest from "./Pages/JWTTest/AuthTest";
 import WelcomeTest from "./Pages/JWTTest/WelcomeTest";
+import PersistLogin from "./utils/PersistLogin";
 
 export const UserContext = createContext();
 
@@ -86,10 +87,12 @@ function App() {
 				</Route>
 
 				{/* Routes privées */}
-				<Route element={<RequireAuth />}>
-					<Route path="/test" element={<WelcomeTest />} />
-					<Route path="/authTest" element={<AuthTest />} />
-					<Route path="lobby" element={<Lobby />} />
+				<Route element={<PersistLogin />}>
+					<Route element={<RequireAuth />}>
+						<Route path="/test" element={<WelcomeTest />} />
+						<Route path="/authTest" element={<AuthTest />} />
+						<Route path="lobby" element={<Lobby />} />
+					</Route>
 				</Route>
 
 				<Route path="*" element={<p style={{ color: "white" }}>404</p>} />

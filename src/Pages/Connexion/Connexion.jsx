@@ -51,7 +51,7 @@ const Connexion = () => {
 
 			if (userData["hydra:member"][0].roles[0] === "ROLE_ADMIN") {
 				console.log(userData["hydra:member"][0].roles[0]);
-				return navigate("/admin");
+				navigate("/admin");
 			}
 			// navigate("/lobby");
 			navigate("/test");

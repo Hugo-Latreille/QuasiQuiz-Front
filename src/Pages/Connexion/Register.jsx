@@ -12,6 +12,8 @@ const Register = ({
 	setEmail,
 	password,
 	setPassword,
+	passwordConfirm,
+	setPasswordConfirm,
 	pseudo,
 	setPseudo,
 	handleRegister,
@@ -50,13 +52,14 @@ const Register = ({
 						checkPasswordValidity={checkPasswordValidity}
 						setValue={setPassword}
 					/>
-					{/* <Input
+					<Input
 						name="passwordConfirm"
-						// value={passwordConfirm}
+						value={passwordConfirm}
+						setValue={setPasswordConfirm}
 						label="Confirmez votre mot de passe"
 						type={passwordVisibility ? "text" : "password"}
 						required={true}
-					/> */}
+					/>
 					<div
 						className="eye_register_pass"
 						onClick={() => setPasswordVisibility(!passwordVisibility)}

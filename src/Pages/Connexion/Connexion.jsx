@@ -3,9 +3,9 @@ import { useContext, useState } from "react";
 import Register from "./Register.jsx";
 import Login from "./Login";
 import ReactDOM from "react-dom";
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { loginRoute } from "../../utils/apiRoutes";
+import { loginRoute, usersRoute } from "../../utils/apiRoutes";
 //? React Toastify
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -20,25 +20,32 @@ const Connexion = () => {
 	const [passwordConfirm, setPasswordConfirm] = useState("");
 	const [loginEmail, setLoginEmail] = useState("");
 	const [loginPassword, setLoginPassword] = useState("");
-
-	const { user, addUser } = useContext(UserContext);
-
-	console.log(user);
+	const { addUser } = useContext(UserContext);
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
-		console.log(loginEmail, loginPassword);
 		try {
 			const { data } = await axios.post(loginRoute, {
 				email: loginEmail,
 				password: loginPassword,
 			});
+			const { data: userData } = await axios.get(
+				`${usersRoute}?email=${loginEmail}`
+			);
 			console.log(data);
-			//! ici : enregistrer utilisateur dans le context global
-			addUser({ email: loginEmail, token: data.token });
-			//! ici : fermer la modale + redirection vers lobby
+			console.log(userData);
+			addUser({
+				email: loginEmail,
+				token: data.token,
+				role: userData["hydra:member"][0].roles,
+			});
+			if (userData["hydra:member"][0].roles[0] === "ROLE_ADMIN") {
+				console.log(userData["hydra:member"][0].roles[0]);
+				return navigate("/admin");
+			}
 			setLoginEmail("");
 			setLoginPassword("");
+			navigate("/lobby");
 		} catch (error) {
 			console.log(error);
 			if (error.response.status === 401) {
@@ -62,10 +69,14 @@ const Connexion = () => {
 				setEmail("");
 				setPseudo("");
 				setPassword("");
+				setPasswordConfirm("");
 				//! Ici redirection ?
 			} catch (error) {
-				console.log(error.message);
-				//! gérer le cas de l'email déjà existant, cf réponse back
+				console.log(error);
+				if (error.message === "Request failed with status code 500") {
+					return toast.error("Cet email est déjà enregistré", toastOptions);
+				}
+				return toast.error(`Erreur ${error.response.status}`, toastOptions);
 			}
 		}
 	};
@@ -141,6 +152,8 @@ const Connexion = () => {
 							setEmail={setEmail}
 							password={password}
 							setPassword={setPassword}
+							passwordConfirm={passwordConfirm}
+							setPasswordConfirm={setPasswordConfirm}
 							pseudo={pseudo}
 							setPseudo={setPseudo}
 							handleRegister={handleRegister}

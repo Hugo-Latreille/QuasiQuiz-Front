@@ -11,6 +11,7 @@ const initialState = {
 	user: {
 		token: "",
 		email: "",
+		role: [],
 	},
 };
 
@@ -26,6 +27,7 @@ const userReducer = (state, action) => {
 				...state.user,
 				token: action.payload.token,
 				email: action.payload.email,
+				role: action.payload.role,
 			},
 		};
 	}

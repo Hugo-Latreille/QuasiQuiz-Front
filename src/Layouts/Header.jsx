@@ -7,10 +7,14 @@ const Header = () => {
   return (
     <>
       <div className="header">
-        <img src={logo} alt="logoQuasiQuiz" id="logo" />
+        <img src={logo} alt="logoQuasiQuiz" className="logo" />
 
-        <button id="login-btn">
-          <Link id="link-mod" to="login" state={{ background: location }}>
+        <button className="login-btn">
+          <Link
+            className="link-mod"
+            to="login"
+            state={{ background: location }}
+          >
             Connexion
           </Link>
         </button>

@@ -1,7 +1,7 @@
 import Header from "../../Layouts/Header";
 import Footer from "../../Layouts/Footer";
 import "./_home.scss";
-import bouh from "../../assets/logo-q.svg";
+import logoQ from "../../assets/logo-q.svg";
 import { Outlet } from "react-router-dom";
 
 const Home = () => {
@@ -12,7 +12,7 @@ const Home = () => {
         <div className="home-title">
           <h1>Bienvenue !</h1>
         </div>
-        <img src={bouh} alt="imagedepetitmonstre" />
+        <img src={logoQ} alt="logoQ" />
         <div className="rules">
           <h4>Voici les règles du jeu :</h4>
           <p>

@@ -1,10 +1,9 @@
-@import "../../styles/vars";
-@import "../../styles/mixins";
+@use "../../styles/vars" as v;
+@use "../../styles/mixins" as m;
 
 //? plus judicieux dans App.jsx
 body {
-  background-color: $bg-color;
-  padding-bottom: 6rem;
+  background-color: v.$bg-color;
   //?
   .home-content {
     display: flex;
@@ -12,22 +11,32 @@ body {
     justify-content: center;
     align-items: center;
 
+    @include m.tablets-only {
+      margin: 2rem;
+    }
+
     .home-title {
       margin: 3rem 6rem 0 6rem;
+      @include m.tablets-only {
+        margin: 6rem 0;
+      }
       h1 {
-        @include principal-font;
+        @include m.principal-font;
         font-size: 2rem;
-        color: $text-color;
+        color: v.$text-color;
       }
     }
     img {
       height: 8rem;
       margin: 2rem;
       border-radius: 0.5rem;
+      @include m.tablets-only {
+        margin-bottom: 4rem;
+      }
     }
     .rules {
-      color: $text-color;
-      @include secondary-font;
+      color: v.$text-color;
+      @include m.secondary-font;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -36,8 +45,16 @@ body {
       margin: 0 2rem 3rem 2rem;
       padding: 2rem;
       box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      @include m.tablets-only {
+        font-size: larger;
+        margin: 0 4rem 3rem 4rem;
+      }
+      @include m.desktop-only {
+        font-size: x-large;
+        margin: 0 16rem 3rem 16rem;
+      }
       h4 {
-        color: $primary-color;
+        color: v.$primary-color;
         font-weight: bolder;
         margin-bottom: 2rem;
       }

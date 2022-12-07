@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import axios from "axios";
+import axios, { usersRoute } from "../../utils/axios";
 import { useContext, useState } from "react";
 import { UserContext } from "../../App";
 import { useEffect } from "react";
@@ -13,7 +13,7 @@ const AuthTest = () => {
 		const controller = new AbortController();
 		const getUsers = async () => {
 			try {
-				const { data } = await axios.get("https://localhost:8000/api/users", {
+				const { data } = await axios.get(usersRoute, {
 					signal: controller.signal,
 				});
 				if (data) {

@@ -1,11 +1,11 @@
 import "./Connexion.scss";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import Register from "./Register.jsx";
 import Login from "./Login";
 import ReactDOM from "react-dom";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { loginRoute, usersRoute } from "../../utils/apiRoutes";
+import axios, { loginRoute, usersRoute } from "../../utils/axios";
+
 //? React Toastify
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -20,46 +20,35 @@ const Connexion = () => {
 	const [passwordConfirm, setPasswordConfirm] = useState("");
 	const [loginEmail, setLoginEmail] = useState("");
 	const [loginPassword, setLoginPassword] = useState("");
-	// const { addUser, user } = useContext(UserContext);
-	const { user, setUser } = useContext(UserContext);
+	const { addUser } = useContext(UserContext);
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
 		try {
-			const { data } = await axios.post(
-				loginRoute,
-				{
-					email: loginEmail,
-					password: loginPassword,
-				},
-				{
-					withCredentials: true,
-				}
-			);
+			const { data } = await axios.post(loginRoute, {
+				email: loginEmail,
+				password: loginPassword,
+			});
 			console.log(data);
-			// const { data: userData } = await axios.get(
-			// 	`${usersRoute}?email=${loginEmail}`
-			// );
+			const { data: userData } = await axios.get(
+				`${usersRoute}?email=${loginEmail}`
+			);
 			// console.log(data);
 			// console.log(userData);
-			// await addUser({
-			// email: loginEmail,
-			// token: data.token,
-			// role: userData["hydra:member"][0].roles,
-			// });
-			setUser({
+			await addUser({
+				email: loginEmail,
 				token: data.token,
+				role: userData["hydra:member"][0].roles,
 			});
+
 			setLoginEmail("");
 			setLoginPassword("");
-			console.log("User", user);
 
-			// if (userData["hydra:member"][0].roles[0] === "ROLE_ADMIN") {
-			// 	console.log(userData["hydra:member"][0].roles[0]);
-			// 	return navigate("/admin");
-			// }
+			if (userData["hydra:member"][0].roles[0] === "ROLE_ADMIN") {
+				console.log(userData["hydra:member"][0].roles[0]);
+				return navigate("/admin");
+			}
 			// navigate("/lobby");
-			console.log("AVANT REDIRECTION");
 			navigate("/test");
 		} catch (error) {
 			console.log(error);

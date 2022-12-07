@@ -3,10 +3,12 @@ import axios, { usersRoute } from "../../utils/axios";
 import { useContext, useState } from "react";
 import { UserContext } from "../../App";
 import { useEffect } from "react";
+import useRefreshToken from "../../utils/useRefreshToken";
 
 const AuthTest = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [users, setUsers] = useState({});
+	const refresh = useRefreshToken();
 
 	useEffect(() => {
 		let isMounted = true;
@@ -45,6 +47,7 @@ const AuthTest = () => {
 			{!isLoading && users?.map((user) => <p key={user.id}>{user.pseudo}</p>)}
 			<Link to="/test">Back to Welcome</Link>
 			<button onClick={handleLogout}>Logout</button>
+			<button onClick={() => refresh()}>Refresh</button>
 		</div>
 	);
 };

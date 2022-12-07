@@ -1,21 +1,23 @@
 import { Link } from "react-router-dom";
-import axios, { usersRoute } from "../../utils/axios";
+import axios, { usersRoute, logoutToken } from "../../utils/axios";
 import { useContext, useState } from "react";
 import { UserContext } from "../../App";
 import { useEffect } from "react";
 import useRefreshToken from "../../utils/useRefreshToken";
+import useAxiosPrivate from "../../utils/useAxiosJWT";
 
 const AuthTest = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [users, setUsers] = useState({});
 	const refresh = useRefreshToken();
+	const axiosPrivate = useAxiosPrivate();
 
 	useEffect(() => {
 		let isMounted = true;
 		const controller = new AbortController();
 		const getUsers = async () => {
 			try {
-				const { data } = await axios.get(usersRoute, {
+				const { data } = await axiosPrivate.get(usersRoute, {
 					signal: controller.signal,
 				});
 				if (data) {
@@ -37,7 +39,7 @@ const AuthTest = () => {
 	const { removeUser } = useContext(UserContext);
 
 	const handleLogout = async () => {
-		// await axios.get("https://localhost:8000/api/token/invalidate");
+		await axios.get(logoutToken);
 		removeUser();
 	};
 

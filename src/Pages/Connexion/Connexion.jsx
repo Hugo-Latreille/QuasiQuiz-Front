@@ -10,6 +10,7 @@ import axios, { loginRoute, usersRoute } from "../../utils/axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { UserContext } from "../../App";
+import useAxiosPrivate from "../../utils/useAxiosJWT";
 
 const Connexion = () => {
 	const navigate = useNavigate();
@@ -21,6 +22,7 @@ const Connexion = () => {
 	const [loginEmail, setLoginEmail] = useState("");
 	const [loginPassword, setLoginPassword] = useState("");
 	const { addUser } = useContext(UserContext);
+	const axiosPrivate = useAxiosPrivate();
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
@@ -30,8 +32,11 @@ const Connexion = () => {
 				password: loginPassword,
 			});
 			console.log(data);
-			const { data: userData } = await axios.get(
-				`${usersRoute}?email=${loginEmail}`
+			const { data: userData } = await axiosPrivate.get(
+				`${usersRoute}?email=${loginEmail}`,
+				{
+					headers: { "Authorization": `Bearer ${data.token}` },
+				}
 			);
 			// console.log(data);
 			// console.log(userData);

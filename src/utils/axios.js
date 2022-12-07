@@ -9,8 +9,9 @@ export default axios.create({
 export const loginRoute = `/login`;
 export const usersRoute = `/users`;
 export const refreshTokenRoute = `/token/refresh`;
+export const logoutToken = `token/invalidate`;
 
-// export const axiosPrivate = axios.create({
-// 	baseURL: host,
-// 	withCredentials: true,
-// });
+export const axiosPrivate = axios.create({
+	baseURL: host,
+	withCredentials: true,
+});

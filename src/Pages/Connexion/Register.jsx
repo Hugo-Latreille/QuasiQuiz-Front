@@ -1,10 +1,12 @@
 /* eslint-disable react/no-unescaped-entities */
 import Input from "../../Components/Input/Input";
 import "./Register.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdOutlineVisibility, MdOutlineVisibilityOff } from "react-icons/md";
 import usePasswordValidation from "../../utils/usePasswordValidation";
 import axios from "axios";
+import { multiAvatarAPIKey, multiAvatarRoute } from "../../utils/axios";
+import { Buffer } from "buffer";
 
 const Register = ({
 	setIsLoggingActive,
@@ -17,10 +19,33 @@ const Register = ({
 	pseudo,
 	setPseudo,
 	handleRegister,
+	avatars,
+	setAvatars,
+	setSelectedAvatar,
 }) => {
 	const [passwordVisibility, setPasswordVisibility] = useState(false);
 	const [passwordValidity, passwordValidationWidth, checkPasswordValidity] =
 		usePasswordValidation();
+	const [isLoading, setIsLoading] = useState(true);
+
+	useEffect(() => {
+		const getAvatars = async () => {
+			const data = [];
+			for (let i = 0; i < 4; i++) {
+				const image = await axios.get(
+					`${multiAvatarRoute}/${Math.round(
+						Math.random() * 1000
+					)}?apikey=${multiAvatarAPIKey}`
+				);
+				const buffer = Buffer.from(image.data);
+				data.push(buffer.toString("base64"));
+				console.log(buffer.toString("base64"));
+			}
+			setAvatars(data);
+			setIsLoading(false);
+		};
+		getAvatars();
+	}, []);
 
 	return (
 		<div className="register-container">
@@ -132,6 +157,19 @@ const Register = ({
 							</span>
 						</div>
 					</div>
+					{/* AVATAR ***********/}
+					{isLoading ? (
+						<div className="avatarContainer">
+							<img
+								src={require("./../../assets/bouh.png")}
+								alt="loading"
+								className="loader"
+							/>
+						</div>
+					) : (
+						<div className="avatarContainer"></div>
+					)}
+
 					<button type="submit" className="main-button-colored">
 						S'inscrire
 					</button>

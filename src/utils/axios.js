@@ -10,6 +10,8 @@ export const loginRoute = `/login`;
 export const usersRoute = `/users`;
 export const refreshTokenRoute = `/token/refresh`;
 export const logoutToken = `token/invalidate`;
+export const multiAvatarAPIKey = "27JS9MXha6pgzn";
+export const multiAvatarRoute = "https://api.multiavatar.com/`";
 
 export const axiosPrivate = axios.create({
 	baseURL: host,

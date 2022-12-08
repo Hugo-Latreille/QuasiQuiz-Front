@@ -2,138 +2,138 @@
 @import "./../../styles/mixins";
 
 .connexion {
-  background-color: $bg-color;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: absolute;
-  top: 0;
-  width: 100vw;
-  z-index: 999;
-  @include principal-font;
+	background-color: $bg-color-modale;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	position: absolute;
+	top: 0;
+	width: 100vw;
+	z-index: 999;
+	@include principal-font;
 
-  &-container {
-    width: 50%;
-    min-height: 75%;
-    margin: auto;
-    background-color: #fff;
-    display: flex;
-    border-radius: 10px;
-    position: relative;
+	&-container {
+		width: 50%;
+		min-height: 75%;
+		margin: auto;
+		background-color: #fff;
+		display: flex;
+		border-radius: 10px;
+		position: relative;
 
-    &-navigation {
-      position: relative;
-      width: 30%;
-      height: 100%;
-      background-color: teal;
-    }
+		&-navigation {
+			position: relative;
+			width: 30%;
+			height: 100%;
+			background-color: teal;
+		}
 
-    &-form {
-      width: 70%;
-      height: 100%;
-    }
-  }
+		&-form {
+			width: 70%;
+			height: 100%;
+		}
+	}
 
-  &-logo {
-    width: 100%;
-    margin: 2rem auto;
-  }
+	&-logo {
+		width: 100%;
+		margin: 2rem auto;
+	}
 }
 
 .navigation-links {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  right: 0;
-  top: 30%;
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	right: 0;
+	top: 30%;
 
-  & span {
-    padding: 1.5rem 2.5rem;
-    margin-bottom: 1rem;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 600ms ease-in-out;
-  }
+	& span {
+		padding: 1.5rem 2.5rem;
+		margin-bottom: 1rem;
+		color: white;
+		font-weight: bold;
+		cursor: pointer;
+		transition: all 600ms ease-in-out;
+	}
 }
 
 .link-is-active {
-  background-color: white;
-  border-radius: 25px 0 0 25px;
-  color: $primaryColor !important ;
+	background-color: white;
+	border-radius: 25px 0 0 25px;
+	color: $primaryColor !important ;
 }
 
 @media screen and (width < 1180px) {
-  .navigation-links {
-    font-size: 0.8rem;
+	.navigation-links {
+		font-size: 0.8rem;
 
-    & span {
-      padding: 1.5rem 1.6rem;
-      margin: 0;
-      text-align: right;
-    }
-  }
+		& span {
+			padding: 1.5rem 1.6rem;
+			margin: 0;
+			text-align: right;
+		}
+	}
 }
 
 @media screen and (width < 840px) {
-  .connexion {
-    &-container {
-      width: 97%;
-      margin: auto;
-      height: 80vh;
-    }
-  }
+	.connexion {
+		&-container {
+			width: 97%;
+			margin: auto;
+			height: 80vh;
+		}
+	}
 
-  .navigation-links {
-    font-size: 0.7rem;
-  }
+	.navigation-links {
+		font-size: 0.7rem;
+	}
 }
 
 @media screen and (width < 600px) {
-  .connexion {
-    &-container {
-      width: 96%;
-      margin: auto;
-      height: 80vh;
-    }
-  }
+	.connexion {
+		&-container {
+			width: 96%;
+			margin: auto;
+			height: 80vh;
+		}
+	}
 
-  .navigation-links {
-    font-size: 0.7rem;
+	.navigation-links {
+		font-size: 0.7rem;
 
-    & span {
-      padding: 1.5rem 1.6rem;
-      margin: 0;
-      text-align: right;
-    }
-  }
+		& span {
+			padding: 1.5rem 1.6rem;
+			margin: 0;
+			text-align: right;
+		}
+	}
 }
 
 .close-modal {
-  background-color: white;
-  border: none;
-  padding: 1rem;
-  background: $linearGradient;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  opacity: 0.9;
-  font-size: 1.5rem;
-  position: absolute;
-  top: 0;
-  right: 0;
-  cursor: pointer;
+	background-color: white;
+	border: none;
+	padding: 1rem;
+	background: $linearGradient;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	opacity: 0.9;
+	font-size: 1.5rem;
+	position: absolute;
+	top: 0;
+	right: 0;
+	cursor: pointer;
 }
 
 .success {
-  color: rgba(117, 197, 117, 0.959);
+	color: rgba(117, 197, 117, 0.959);
 }
 
 .warning {
-  color: rgba(242, 162, 32, 0.959);
+	color: rgba(242, 162, 32, 0.959);
 }
 
 .danger {
-  color: rgba(194, 82, 82, 0.959);
+	color: rgba(194, 82, 82, 0.959);
 }

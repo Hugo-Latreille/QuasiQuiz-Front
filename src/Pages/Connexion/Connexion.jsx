@@ -10,7 +10,6 @@ import axios, { loginRoute, usersRoute } from "../../utils/axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { UserContext } from "../../App";
-import useAxiosPrivate from "../../utils/useAxiosJWT";
 import jwt_decode from "jwt-decode";
 
 const Connexion = () => {
@@ -23,7 +22,8 @@ const Connexion = () => {
 	const [loginEmail, setLoginEmail] = useState("");
 	const [loginPassword, setLoginPassword] = useState("");
 	const { addUser } = useContext(UserContext);
-	const axiosPrivate = useAxiosPrivate();
+	const [avatars, setAvatars] = useState([]);
+	const [selectedAvatar, setSelectedAvatar] = useState(undefined);
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
@@ -68,8 +68,9 @@ const Connexion = () => {
 	const handleRegister = async (e) => {
 		e.preventDefault();
 		if (handleValidation()) {
+			console.log(avatars[selectedAvatar]);
 			try {
-				const result = await axios.post("https://localhost:8000/api/users", {
+				const result = await axios.post(usersRoute, {
 					email,
 					password,
 					pseudo,
@@ -106,6 +107,10 @@ const Connexion = () => {
 				"Votre password doit avoir au moins 8 caractères, dont une majuscule, un chiffre et un caractère spécial",
 				toastOptions
 			);
+			return false;
+		}
+		if (selectedAvatar === undefined) {
+			toast.error("Veuillez sélectionner un Avatar", toastOptions);
 			return false;
 		}
 
@@ -169,6 +174,9 @@ const Connexion = () => {
 							pseudo={pseudo}
 							setPseudo={setPseudo}
 							handleRegister={handleRegister}
+							setSelectedAvatar={setSelectedAvatar}
+							avatars={avatars}
+							setAvatars={setAvatars}
 						/>
 					)}
 				</div>

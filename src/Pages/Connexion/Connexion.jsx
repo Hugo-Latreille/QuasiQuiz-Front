@@ -50,8 +50,6 @@ const Connexion = () => {
 					headers: { "Authorization": `Bearer ${data.token}` },
 				}
 			);
-
-			console.log(userData["hydra:member"][0].id);
 			const userId = userData["hydra:member"][0].id;
 
 			await axiosJWT.patch(

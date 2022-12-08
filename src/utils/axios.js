@@ -13,7 +13,7 @@ export const logoutToken = `token/invalidate`;
 export const multiAvatarAPIKey = "27JS9MXha6pgzn";
 export const multiAvatarRoute = "https://api.multiavatar.com/`";
 
-export const axiosPrivate = axios.create({
+export const axiosJWT = axios.create({
 	baseURL: host,
 	withCredentials: true,
 });

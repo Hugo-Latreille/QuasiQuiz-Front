@@ -43,6 +43,7 @@ function Admin() {
 
 	return (
 		<HydraAdmin
+			basename="/admin"
 			entrypoint={entrypoint}
 			dataProvider={dataProvider}
 			layout={CustomLayout}
@@ -53,6 +54,7 @@ function Admin() {
 				show={UserShow}
 				edit={UserEdit}
 				create={UserCreate}
+				options={{ label: "Utilisateurs" }}
 			/>
 			<ResourceGuesser
 				name="questions"
@@ -60,6 +62,7 @@ function Admin() {
 				show={QuestionShow}
 				create={QuestionCreate}
 				edit={QuestionEdit}
+				options={{ label: "Questions" }}
 			/>
 			<ResourceGuesser
 				name="answers"
@@ -67,12 +70,14 @@ function Admin() {
 				show={AnswerShow}
 				create={AnswerCreate}
 				edit={AnswerEdit}
+				options={{ label: "Réponses" }}
 			/>
 			<ResourceGuesser
 				name="media"
 				list={MediaList}
 				show={MediaShow}
 				create={MediaCreate}
+				options={{ label: "Média" }}
 			/>
 		</HydraAdmin>
 	);

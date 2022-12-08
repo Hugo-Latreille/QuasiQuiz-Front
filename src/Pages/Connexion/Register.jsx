@@ -4,11 +4,20 @@ import "./Register.scss";
 import { useState } from "react";
 import { MdOutlineVisibility, MdOutlineVisibilityOff } from "react-icons/md";
 import usePasswordValidation from "../../utils/usePasswordValidation";
+import axios from "axios";
 
-const Register = ({ setIsLoggingActive }) => {
-	const [pseudo, setPseudo] = useState("");
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
+const Register = ({
+	setIsLoggingActive,
+	email,
+	setEmail,
+	password,
+	setPassword,
+	passwordConfirm,
+	setPasswordConfirm,
+	pseudo,
+	setPseudo,
+	handleRegister,
+}) => {
 	const [passwordVisibility, setPasswordVisibility] = useState(false);
 	const [passwordValidity, passwordValidationWidth, checkPasswordValidity] =
 		usePasswordValidation();
@@ -16,7 +25,7 @@ const Register = ({ setIsLoggingActive }) => {
 	return (
 		<div className="register-container">
 			<div className="content ">
-				<form className="form">
+				<form className="form" onSubmit={handleRegister}>
 					<Input
 						name="pseudo"
 						value={pseudo}
@@ -45,7 +54,8 @@ const Register = ({ setIsLoggingActive }) => {
 					/>
 					<Input
 						name="passwordConfirm"
-						// value={passwordConfirm}
+						value={passwordConfirm}
+						setValue={setPasswordConfirm}
 						label="Confirmez votre mot de passe"
 						type={passwordVisibility ? "text" : "password"}
 						required={true}

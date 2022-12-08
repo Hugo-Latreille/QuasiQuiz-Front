@@ -1,4 +1,3 @@
-import Admin from "./Pages/BackOffice/Admin";
 import "./App.scss";
 import Home from "./Pages/Home/Home";
 import { Route, Routes, useLocation } from "react-router-dom";
@@ -7,29 +6,112 @@ import Lobby from "./Pages/Lobby/Lobby";
 import Error from "./Pages/404/Error";
 import Game from "./Pages/Game/Game";
 import Correction from "./Pages/Correction/Correction";
+import { createContext, useReducer } from "react";
+import RequireAuth from "./utils/RequireAuth";
+import AuthTest from "./Pages/JWTTest/AuthTest";
+import WelcomeTest from "./Pages/JWTTest/WelcomeTest";
+import PersistLogin from "./utils/PersistLogin";
+
+export const UserContext = createContext();
+
+const initialState = {
+	user: {
+		token: null,
+		email: null,
+		role: null,
+	},
+};
+const actions = {
+	ADD_USER: "ADD_USER",
+	REMOVE_USER: "REMOVE_USER",
+	REFRESH_TOKEN: "REFRESH_TOKEN",
+};
+
+const userReducer = (state, action) => {
+	switch (action.type) {
+		case actions.ADD_USER:
+			return {
+				...state,
+				user: {
+					...state.user,
+					token: action.payload.token,
+					email: action.payload.email,
+					role: action.payload.role,
+				},
+			};
+		case actions.REMOVE_USER:
+			return {
+				...state,
+				user: {
+					...state.user,
+					token: "",
+					email: "",
+					role: [],
+				},
+			};
+		case actions.REFRESH_TOKEN:
+			return {
+				...state,
+				user: {
+					...state.user,
+					token: action.payload,
+				},
+			};
+		default:
+			return state;
+	}
+};
+const Provider = ({ children }) => {
+	const [state, dispatch] = useReducer(userReducer, initialState);
+	const value = {
+		user: state.user,
+		addUser: (payload) => {
+			dispatch({ type: actions.ADD_USER, payload });
+		},
+		removeUser: () => {
+			dispatch({ type: actions.REMOVE_USER });
+		},
+		refreshToken: (payload) => {
+			dispatch({ type: actions.REFRESH_TOKEN, payload });
+		},
+	};
+	return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+};
 
 function App() {
-  const location = useLocation();
-  const background = location.state && location.state.background;
-  return (
-    <>
-      <Routes location={background || location}>
-        <Route path="/" element={<Home />}>
-          <Route path="login" element={<Connexion />} />
-        </Route>
-        <Route path="lobby" element={<Lobby />} />
-        <Route path="game" element={<Game />} />
+	const location = useLocation();
+	const background = location.state && location.state.background;
+
+	return (
+		<Provider>
+			<Routes location={background || location}>
+				<Route path="/" element={<Home />}>
+					<Route path="login" element={<Connexion />} />
+				</Route>
+
+				{/* Routes privées */}
+				<Route element={<PersistLogin />}>
+					<Route element={<RequireAuth />}>
+						<Route path="/test" element={<WelcomeTest />} />
+						<Route path="/authTest" element={<AuthTest />} />
+						<Route path="lobby" element={<Lobby />} />
+              <Route path="game" element={<Game />} />
         <Route path="correction" element={<Correction />} />
-        <Route path="admin" element={<Admin />} />
+        
         <Route path="*" element={<Error />} />
-      </Routes>
-      {background && (
-        <Routes>
-          <Route path="login" element={<Connexion />} />
-        </Routes>
-      )}
-    </>
-  );
+					</Route>
+				</Route>
+
+				<Route path="*" element={<p style={{ color: "white" }}>404</p>} />
+			</Routes>
+			{background && (
+				<Routes>
+					<Route path="login" element={<Connexion />} />
+				</Routes>
+			)}
+		</Provider>
+	);
+
 }
 
 export default App;

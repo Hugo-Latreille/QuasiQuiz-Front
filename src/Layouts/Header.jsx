@@ -9,7 +9,7 @@ const Header = () => {
       <div className="header">
         <img src={logo} alt="logoQuasiQuiz" className="logo" />
 
-        <button className="login-btn">
+        {/* <button className="login-btn">
           <Link
             className="link-mod"
             to="login"
@@ -17,7 +17,25 @@ const Header = () => {
           >
             Connexion
           </Link>
-        </button>
+        </button> */}
+
+        <div className="dropdown">
+          <img src="https://picsum.photos/200" className="user-vatar"></img>
+          <div className="dropdown-content">
+            <ul>
+              <li>
+                <a href="#" className="profile">
+                  Profile
+                </a>
+              </li>
+              <li>
+                <a href="#" className="logout">
+                  Déconnexion
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </>
   );

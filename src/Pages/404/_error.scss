@@ -9,6 +9,7 @@
 
   .error-img-box {
     margin: 3rem 0;
+
     @include m.tablets-only {
       margin: 6rem 0;
       img {
@@ -17,7 +18,7 @@
     }
 
     @include m.desktop-only {
-      margin: 4rem 0;
+      margin: 0;
     }
   }
 

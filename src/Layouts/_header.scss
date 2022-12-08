@@ -2,7 +2,6 @@
 @use "../styles/mixins" as m;
 
 .header {
-
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -38,4 +37,52 @@
     }
   }
 
+  .dropdown {
+    .user-vatar {
+      height: 4rem;
+      border: 2px solid v.$primary-color;
+      border-radius: 50%;
+      margin-right: 0.5rem;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 3rem;
+      background-color: v.$bg-color;
+      border: 2px solid v.$primary-color;
+      border-radius: 1rem 0 1rem 1rem;
+      padding: 1rem;
+      z-index: 1;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.26);
+
+      ul {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        li {
+          list-style: none;
+          a {
+            @include m.principal-font;
+            text-decoration: none;
+          }
+          .profile {
+            color: v.$primary-color;
+            &:hover {
+              color: v.$g-color;
+            }
+          }
+          .logout {
+            color: v.$primary-color;
+            &:hover {
+              color: v.$user-color;
+            }
+          }
+        }
+      }
+    }
+    &:hover .dropdown-content {
+      display: block;
+    }
+  }
 }

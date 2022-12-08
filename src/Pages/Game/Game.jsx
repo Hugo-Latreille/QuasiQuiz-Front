@@ -7,29 +7,31 @@ const Game = () => {
   return (
     <>
       <Header />
-      <div className="game-content">
-        <div className="timer">
-          <p>30 s</p>
+      <main>
+        <div className="game-content">
+          <div className="timer">
+            <p>30 s</p>
+          </div>
+          <div className="game-box">
+            <div className="media">
+              <img src="https://picsum.photos/300/200" alt="image" />
+            </div>
+            <div className="question">
+              <p>Une question ?</p>
+            </div>
+            <div className="answer">
+              <form action="">
+                <input type="text" name="" id="" />
+              </form>
+            </div>
+          </div>
+          <div className="progressbar-box">
+            <div className="lvl-border">
+              <div className="lvl-content"></div>
+            </div>
+          </div>
         </div>
-        <div className="game-box">
-          <div className="media">
-            <img src="https://picsum.photos/300/200" alt="image" />
-          </div>
-          <div className="question">
-            <p>Une question ?</p>
-          </div>
-          <div className="answer">
-            <form action="">
-              <input type="text" name="" id="" />
-            </form>
-          </div>
-        </div>
-        <div className="progressbar-box">
-          <div className="lvl-border">
-            <div className="lvl-content"></div>
-          </div>
-        </div>
-      </div>
+      </main>
       <Footer />
     </>
   );

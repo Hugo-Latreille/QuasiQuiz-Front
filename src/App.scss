@@ -1,1 +1,19 @@
+@use "./styles/vars" as v;
+@use "./styles/mixins" as m;
 
+body {
+  background-color: v.$bg-color;
+  main {
+    min-height: calc(100vh - 7rem);
+
+    @include m.tablets-only {
+      margin: 0 6rem;
+    }
+
+    @include m.desktop-only {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}

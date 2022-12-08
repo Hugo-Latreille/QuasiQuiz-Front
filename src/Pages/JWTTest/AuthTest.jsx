@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios, { usersRoute, logoutToken } from "../../utils/axios";
 import { useContext, useState } from "react";
 import { UserContext } from "../../App";
@@ -11,7 +11,6 @@ const AuthTest = () => {
 	const [users, setUsers] = useState({});
 	const refresh = useRefreshToken();
 	const axiosPrivate = useAxiosPrivate();
-	const navigate = useNavigate();
 
 	useEffect(() => {
 		let isMounted = true;

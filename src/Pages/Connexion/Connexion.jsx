@@ -11,6 +11,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { UserContext } from "../../App";
 import useAxiosPrivate from "../../utils/useAxiosJWT";
+import jwt_decode from "jwt-decode";
 
 const Connexion = () => {
 	const navigate = useNavigate();
@@ -31,29 +32,29 @@ const Connexion = () => {
 				email: loginEmail,
 				password: loginPassword,
 			});
-			console.log(data);
-			const { data: userData } = await axiosPrivate.get(
-				`${usersRoute}?email=${loginEmail}`,
-				{
-					headers: { "Authorization": `Bearer ${data.token}` },
-				}
-			);
-			// console.log(data);
-			// console.log(userData);
+			const decodedToken = jwt_decode(data.token);
+			console.log(decodedToken.roles);
+
+			// const { data: userData } = await axiosPrivate.get(
+			// 	`${usersRoute}?email=${loginEmail}`,
+			// 	{
+			// 		headers: { "Authorization": `Bearer ${data.token}` },
+			// 	}
+			// );
+
 			await addUser({
-				email: loginEmail,
+				email: decodedToken.email,
 				token: data.token,
-				role: userData["hydra:member"][0].roles,
+				role: decodedToken.roles,
 			});
 
 			setLoginEmail("");
 			setLoginPassword("");
 
-			if (userData["hydra:member"][0].roles[0] === "ROLE_ADMIN") {
-				console.log(userData["hydra:member"][0].roles[0]);
-				navigate("/admin");
+			if (decodedToken.roles[0] === "ROLE_ADMIN") {
+				console.log("Coucou", decodedToken.roles[0]);
+				return navigate("/admin");
 			}
-			// navigate("/lobby");
 			navigate("/test");
 		} catch (error) {
 			console.log(error);

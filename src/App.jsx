@@ -43,7 +43,7 @@ const userReducer = (state, action) => {
 					...state.user,
 					token: "",
 					email: "",
-					role: "",
+					role: [],
 				},
 			};
 		case actions.REFRESH_TOKEN:

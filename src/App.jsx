@@ -3,6 +3,9 @@ import Home from "./Pages/Home/Home";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Connexion from "./Pages/Connexion/Connexion";
 import Lobby from "./Pages/Lobby/Lobby";
+import Error from "./Pages/404/Error";
+import Game from "./Pages/Game/Game";
+import Correction from "./Pages/Correction/Correction";
 import { createContext, useReducer } from "react";
 import RequireAuth from "./utils/RequireAuth";
 import AuthTest from "./Pages/JWTTest/AuthTest";
@@ -92,6 +95,10 @@ function App() {
 						<Route path="/test" element={<WelcomeTest />} />
 						<Route path="/authTest" element={<AuthTest />} />
 						<Route path="lobby" element={<Lobby />} />
+              <Route path="game" element={<Game />} />
+        <Route path="correction" element={<Correction />} />
+        
+        <Route path="*" element={<Error />} />
 					</Route>
 				</Route>
 
@@ -104,6 +111,7 @@ function App() {
 			)}
 		</Provider>
 	);
+
 }
 
 export default App;

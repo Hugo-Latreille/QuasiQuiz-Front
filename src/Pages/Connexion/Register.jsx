@@ -7,6 +7,7 @@ import usePasswordValidation from "../../utils/usePasswordValidation";
 import axios from "axios";
 import { multiAvatarAPIKey, multiAvatarRoute } from "../../utils/axios";
 import { Buffer } from "buffer";
+import Loader from "../../assets/avatarLoader.gif";
 
 const Register = ({
 	setIsLoggingActive,
@@ -22,6 +23,7 @@ const Register = ({
 	avatars,
 	setAvatars,
 	setSelectedAvatar,
+	selectedAvatar,
 }) => {
 	const [passwordVisibility, setPasswordVisibility] = useState(false);
 	const [passwordValidity, passwordValidationWidth, checkPasswordValidity] =
@@ -39,7 +41,6 @@ const Register = ({
 				);
 				const buffer = Buffer.from(image.data);
 				data.push(buffer.toString("base64"));
-				console.log(buffer.toString("base64"));
 			}
 			setAvatars(data);
 			setIsLoading(false);
@@ -160,14 +161,33 @@ const Register = ({
 					{/* AVATAR ***********/}
 					{isLoading ? (
 						<div className="avatarContainer">
-							<img
-								src={require("./../../assets/bouh.png")}
-								alt="loading"
-								className="loader"
-							/>
+							<img src={Loader} alt="loading" className="loader" />
 						</div>
 					) : (
-						<div className="avatarContainer"></div>
+						<div className="avatarContainer">
+							<div className="title-container">
+								<h1>Choisissez votre avatar</h1>
+							</div>
+							<div className="avatars">
+								{avatars.map((avatar, index) => {
+									return (
+										<div
+											key={index}
+											className={`avatar ${
+												selectedAvatar === index ? "selected" : ""
+											}`}
+										>
+											<img
+												src={`data:image/svg+xml;base64,${avatar}`}
+												alt="avatar"
+												key={avatar}
+												onClick={() => setSelectedAvatar(index)}
+											/>
+										</div>
+									);
+								})}
+							</div>
+						</div>
 					)}
 
 					<button type="submit" className="main-button-colored">

@@ -68,12 +68,12 @@ const Connexion = () => {
 	const handleRegister = async (e) => {
 		e.preventDefault();
 		if (handleValidation()) {
-			console.log(avatars[selectedAvatar]);
 			try {
 				const result = await axios.post(usersRoute, {
 					email,
 					password,
 					pseudo,
+					avatar: avatars[selectedAvatar],
 				});
 				console.log(result);
 				toast.success("Vous pouvez désormais vous connecter", toastOptions);
@@ -174,6 +174,7 @@ const Connexion = () => {
 							pseudo={pseudo}
 							setPseudo={setPseudo}
 							handleRegister={handleRegister}
+							selectedAvatar={selectedAvatar}
 							setSelectedAvatar={setSelectedAvatar}
 							avatars={avatars}
 							setAvatars={setAvatars}

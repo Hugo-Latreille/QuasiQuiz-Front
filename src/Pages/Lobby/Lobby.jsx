@@ -6,13 +6,17 @@ import useAxiosJWT from "../../utils/useAxiosJWT";
 import { gameHasUsersRoute, gamesRoute, usersRoute } from "../../utils/axios";
 import { UserContext } from "../../App";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+//? React Toastify
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Lobby = () => {
 	const axiosJWT = useAxiosJWT();
 	const { user } = useContext(UserContext);
-	// const [userPicture, setUserPicture] = useState(null);
 	const [gameId, setGameId] = useState(null);
 	const [otherUsers, setOtherUsers] = useState(null);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		let isMounted = true;
@@ -26,7 +30,6 @@ const Lobby = () => {
 						headers: { "Authorization": `Bearer ${user.token}` },
 					}
 				);
-				// setUserPicture(userData["hydra:member"][0].avatar);
 				const userId = userData["hydra:member"][0].id;
 
 				const { data } = await axiosJWT.get(`${gamesRoute}?is_open=true`, {
@@ -85,8 +88,7 @@ const Lobby = () => {
 		};
 	}, []);
 
-	//! 4- on récupère tous les utilisateurs de GHU pour cette partie, on stock pseudo/img/MJ, on map pour afficher
-
+	// on récupère tous les utilisateurs de GHU pour cette partie, on stock pseudo/img/MJ, on map pour afficher
 	useEffect(() => {
 		let isMounted = true;
 		const controller = new AbortController();
@@ -128,7 +130,53 @@ const Lobby = () => {
 		};
 	}, [gameId]);
 
-	//! 3-si GM, affichage bouton partie et lancement, le game devient fermé, on appelle la route générant les questions, navigate vers question / pour les autres joueurs, bouton "rejoindre la partie"
+	// 3-si GM, affichage bouton partie et au lancement, le game devient fermée, on appelle la route générant les questions, navigate vers question / pour les autres joueurs, bouton "rejoindre la partie"
+
+	const isUserGameMaster = () => {
+		return otherUsers?.filter(
+			(otherUser) =>
+				(otherUser.isGameMaster === true) & (otherUser.email === user.email)
+		).length === 1
+			? true
+			: false;
+	};
+
+	// /game/{GameId<\d+>}/questions/{nbrOfQuestions<\d+>
+
+	const handleGame = async (e) => {
+		e.preventDefault();
+		if (isUserGameMaster()) {
+			await axiosJWT.patch(
+				`${gamesRoute}/${gameId}`,
+				{
+					isOpen: false,
+				},
+				{ headers: { "Content-Type": "application/merge-patch+json" } }
+			);
+
+			await axiosJWT.get(`/game/${gameId}/questions`);
+			return navigate("/game");
+		}
+
+		const { data: isGameOpen } = await axiosJWT.get(`${gamesRoute}/${gameId}`);
+
+		if (isGameOpen.is_open === true) {
+			return toast.info(
+				"Veuillez attendre que le Maître du Jeu lance la partie",
+				toastOptions
+			);
+		}
+		return navigate("/game");
+
+		//si game encore ouverte, toast "Veuillez attendre que le MJ"
+	};
+	const toastOptions = {
+		position: "top-right",
+		autoClose: 6000,
+		pauseOnHover: true,
+		draggable: true,
+		theme: "dark",
+	};
 
 	return (
 		<>
@@ -141,19 +189,18 @@ const Lobby = () => {
 					<div className="gm-box">
 						<h4>Vous lui devez allégeance !</h4>
 						<div className="gm-card">
-							<div className="gamer-img">
-								{otherUsers &&
-									otherUsers
-										?.filter((otherUser) => otherUser.isGameMaster === true)
-										.map((otherUser) => (
+							{otherUsers &&
+								otherUsers
+									?.filter((otherUser) => otherUser.isGameMaster === true)
+									.map((otherUser) => (
+										<div key={otherUser.id} className="gamer-img">
 											<img
-												key={otherUser.id}
 												src={`data:image/svg+xml;base64,${otherUser.avatar}`}
 												alt=""
 											/>
-										))}
-							</div>
-							<h3>Pseudo</h3>
+											<h3>{otherUser.pseudo}</h3>
+										</div>
+									))}
 						</div>
 					</div>
 					<div className="gamer-box">
@@ -180,6 +227,12 @@ const Lobby = () => {
 										</div>
 									))}
 						</div>
+						{otherUsers && isUserGameMaster() ? (
+							<button onClick={handleGame}>LANCER LA PARTIE</button>
+						) : (
+							<button onClick={handleGame}>Rejoindre la partie</button>
+						)}
+
 						<div className="legend">
 							<ul>
 								<li id="gm-color">Le MJ</li>
@@ -191,6 +244,7 @@ const Lobby = () => {
 				</div>
 			</div>
 			<Footer />
+			<ToastContainer />
 		</>
 	);
 };

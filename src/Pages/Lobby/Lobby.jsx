@@ -9,11 +9,13 @@ import { UserContext } from "../../App";
 const Lobby = () => {
 	const axiosJWT = useAxiosJWT();
 	const { user } = useContext(UserContext);
-	//* 1 - vérifier si une game est ouverte, si oui, ajouter l'utilisateur à cette game
 
 	useEffect(() => {
 		let isMounted = true;
 		const controller = new AbortController();
+
+		// - Si une game est ouverte, et qu'il n'en fait pas déjà partie, on ajoute l'utilisateur à cette game
+
 		const isGameOpen = async () => {
 			try {
 				const { data: userData } = await axiosJWT.get(
@@ -29,23 +31,44 @@ const Lobby = () => {
 				});
 				if (isMounted && data) {
 					if (data["hydra:member"].length === 0) {
-						return console.log("PAS DE PARTIE");
+						// si pas de partie, on en créé une,  is_open true, et on y ajoute l'utilisateur en tant que MJ
+
+						const { data: newGame } = await axiosJWT.post(gamesRoute, {
+							isOpen: true,
+						});
+
+						await axiosJWT.post(gameHasUsersRoute, {
+							game: `/api/games/${newGame.id}`,
+							userId: `/api/users/${userId}`,
+							isGameMaster: true,
+						});
+
+						return console.log("Partie créée");
 					}
-					console.log(data["hydra:member"][0]);
+					const thisGame = data["hydra:member"][0];
 					const gameId = data["hydra:member"][0].id;
+					console.log(thisGame.gameHasUsers);
 
-					//! uniquement si game_has_user ne contient pas déjà l'utilisateur pour la partie en cours, comparer avec sous requete de data !!
+					// On vérifie si game_has_user ne contient pas déjà l'utilisateur pour la partie en cours
+					const isUserAlreadyGame = thisGame.gameHasUsers
+						.map((gameHasUser) =>
+							gameHasUser.userId.includes(`api/users/${userId}`)
+						)
+						.some((value) => value === true);
+					console.log(isUserAlreadyGame);
 
-					// const { data: addUserInGame } = await axiosJWT.post(
-					// 	gameHasUsersRoute,
-					// 	{
-					// 		game: `/api/games/${gameId}`,
-					// 		userId: `/api/users/${userId}`,
-					// 		isGameMaster: false,
-					// 	}
-					// );
-
-					// return console.log(addUserInGame);
+					//Si l'utilisateur n'est pas dans game existante, on l'ajoute
+					if (!isUserAlreadyGame) {
+						const { data: addUserInGame } = await axiosJWT.post(
+							gameHasUsersRoute,
+							{
+								game: `/api/games/${gameId}`,
+								userId: `/api/users/${userId}`,
+								isGameMaster: false,
+							}
+						);
+						return console.log(addUserInGame);
+					}
 				}
 			} catch (error) {
 				console.log(error);
@@ -59,7 +82,6 @@ const Lobby = () => {
 		};
 	}, []);
 
-	//* 2- sinon, créer une game, puis associer user et game dans game_has_user, l'utilisateur devient is_game_master
 	//* 3-si GM, affichage bouton partie et lancement, le game devient fermé, on appelle la route générant les questions, pour les autres joueurs, bouton "rejoindre la partie"
 
 	return (

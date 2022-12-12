@@ -10,12 +10,12 @@ import axios, { loginRoute, usersRoute } from "../../utils/axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { UserContext } from "../../App";
-import useAxiosPrivate from "../../utils/useAxiosJWT";
 import jwt_decode from "jwt-decode";
+import useAxiosJWT from "../../utils/useAxiosJWT";
 
 const Connexion = () => {
 	const navigate = useNavigate();
-	const [isLoggingActive, setIsLoggingActive] = useState(false);
+	const [isLoggingActive, setIsLoggingActive] = useState(true);
 	const [pseudo, setPseudo] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -23,7 +23,9 @@ const Connexion = () => {
 	const [loginEmail, setLoginEmail] = useState("");
 	const [loginPassword, setLoginPassword] = useState("");
 	const { addUser } = useContext(UserContext);
-	const axiosPrivate = useAxiosPrivate();
+	const [avatars, setAvatars] = useState([]);
+	const [selectedAvatar, setSelectedAvatar] = useState(undefined);
+	const axiosJWT = useAxiosJWT();
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
@@ -33,14 +35,6 @@ const Connexion = () => {
 				password: loginPassword,
 			});
 			const decodedToken = jwt_decode(data.token);
-			console.log(decodedToken.roles);
-
-			// const { data: userData } = await axiosPrivate.get(
-			// 	`${usersRoute}?email=${loginEmail}`,
-			// 	{
-			// 		headers: { "Authorization": `Bearer ${data.token}` },
-			// 	}
-			// );
 
 			await addUser({
 				email: decodedToken.email,
@@ -48,14 +42,33 @@ const Connexion = () => {
 				role: decodedToken.roles,
 			});
 
+			//* On patch l'utilisateur is_ready à true
+
+			const { data: userData } = await axiosJWT.get(
+				`${usersRoute}?email=${loginEmail}`,
+				{
+					headers: { "Authorization": `Bearer ${data.token}` },
+				}
+			);
+			const userId = userData["hydra:member"][0].id;
+
+			await axiosJWT.patch(
+				`${usersRoute}/${userId}`,
+				{
+					isReady: true,
+				},
+				{ headers: { "Content-Type": "application/merge-patch+json" } }
+			);
+
 			setLoginEmail("");
 			setLoginPassword("");
 
 			if (decodedToken.roles[0] === "ROLE_ADMIN") {
 				console.log("Coucou", decodedToken.roles[0]);
-				return navigate("/admin");
+				return navigate("/admin/login");
 			}
-			navigate("/test");
+			// navigate("/test");
+			navigate("/lobby");
 		} catch (error) {
 			console.log(error);
 			if (error.response.status === 401) {
@@ -69,10 +82,11 @@ const Connexion = () => {
 		e.preventDefault();
 		if (handleValidation()) {
 			try {
-				const result = await axios.post("https://localhost:8000/api/users", {
+				const result = await axios.post(usersRoute, {
 					email,
 					password,
 					pseudo,
+					avatar: avatars[selectedAvatar],
 				});
 				console.log(result);
 				toast.success("Vous pouvez désormais vous connecter", toastOptions);
@@ -106,6 +120,10 @@ const Connexion = () => {
 				"Votre password doit avoir au moins 8 caractères, dont une majuscule, un chiffre et un caractère spécial",
 				toastOptions
 			);
+			return false;
+		}
+		if (selectedAvatar === undefined) {
+			toast.error("Veuillez sélectionner un Avatar", toastOptions);
 			return false;
 		}
 
@@ -169,6 +187,10 @@ const Connexion = () => {
 							pseudo={pseudo}
 							setPseudo={setPseudo}
 							handleRegister={handleRegister}
+							selectedAvatar={selectedAvatar}
+							setSelectedAvatar={setSelectedAvatar}
+							avatars={avatars}
+							setAvatars={setAvatars}
 						/>
 					)}
 				</div>

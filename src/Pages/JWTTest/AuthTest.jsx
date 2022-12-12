@@ -4,20 +4,20 @@ import { useContext, useState } from "react";
 import { UserContext } from "../../App";
 import { useEffect } from "react";
 import useRefreshToken from "../../utils/useRefreshToken";
-import useAxiosPrivate from "../../utils/useAxiosJWT";
+import useAxiosJWT from "../../utils/useAxiosJWT";
 
 const AuthTest = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [users, setUsers] = useState({});
 	const refresh = useRefreshToken();
-	const axiosPrivate = useAxiosPrivate();
+	const axiosJWT = useAxiosJWT();
 
 	useEffect(() => {
 		let isMounted = true;
 		const controller = new AbortController();
 		const getUsers = async () => {
 			try {
-				const { data } = await axiosPrivate.get(usersRoute, {
+				const { data } = await axiosJWT.get(usersRoute, {
 					signal: controller.signal,
 				});
 				if (data) {

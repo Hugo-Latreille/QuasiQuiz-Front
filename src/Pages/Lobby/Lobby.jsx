@@ -17,6 +17,7 @@ const Lobby = () => {
 	const { user } = useContext(UserContext);
 	const [gameId, setGameId] = useState(null);
 	const [otherUsers, setOtherUsers] = useState(null);
+	// const [isNewGame, setIsNewGame] = useState(null);
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -50,21 +51,22 @@ const Lobby = () => {
 							userId: `/api/users/${userId}`,
 							isGameMaster: true,
 						});
-
+						setGameId(newGame.id);
 						return console.log("Partie créée");
 					}
 					const thisGame = data["hydra:member"][0];
+
 					setGameId(data["hydra:member"][0].id);
 
 					// - Si une game est ouverte, et qu'il n'en fait pas déjà partie, on ajoute l'utilisateur à cette game
 					// On vérifie si game_has_user ne contient pas déjà l'utilisateur pour la partie en cours
-					const isUserAlreadyGame = thisGame.gameHasUsers
+					const isUserAlreadyGame = thisGame?.gameHasUsers
 						.map((gameHasUser) =>
 							gameHasUser.userId.includes(`api/users/${userId}`)
 						)
 						.some((value) => value === true);
-					console.log("isUserAlreadyGame?", isUserAlreadyGame);
 
+					console.log(isUserAlreadyGame);
 					//Si l'utilisateur n'est pas dans game existante, on l'ajoute
 					if (!isUserAlreadyGame) {
 						const { data: addUserInGame } = await axiosJWT.post(
@@ -92,6 +94,7 @@ const Lobby = () => {
 
 	// on récupère tous les utilisateurs de GHU pour cette partie, on stock pseudo/img/MJ, on map pour afficher
 	useEffect(() => {
+		// console.log("ICIIIIIIIIIIIIIII", gameId);
 		let isMounted = true;
 		const controller = new AbortController();
 		const getGameUsers = async () => {
@@ -116,7 +119,7 @@ const Lobby = () => {
 								isGameMaster: user.is_game_master,
 							}));
 
-						// console.log(allOtherUsers);
+						console.log(allOtherUsers);
 						setOtherUsers(allOtherUsers);
 					}
 				}
@@ -147,7 +150,7 @@ const Lobby = () => {
 
 	const handleGame = async (e) => {
 		e.preventDefault();
-		console.log("coucou");
+
 		if (isUserGameMaster()) {
 			await axiosJWT.patch(
 				`${gamesRoute}/${gameId}`,

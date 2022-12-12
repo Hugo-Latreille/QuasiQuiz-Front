@@ -25,7 +25,7 @@ const Game = () => {
               </form>
             </div>
           </div>
-          <div className="progressbar-box">
+          <div className="lvl-box">
             <div className="lvl-border">
               <div className="lvl-content"></div>
             </div>

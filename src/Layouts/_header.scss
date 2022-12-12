@@ -7,7 +7,7 @@
   align-items: center;
   height: 5rem;
   background-color: v.$bg-color;
-  padding: 0 0.5rem;
+  padding: 0 1.5rem 0 1rem;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.26);
 
   .logo {
@@ -15,64 +15,45 @@
     margin-bottom: 0.5rem;
   }
 
-  .login-btn {
-    padding: 0.5rem;
-    border: 1px solid v.$primary-color;
-    border-radius: 0.5rem;
-    background-color: v.$bg-color;
-    margin-right: 0.5rem;
-
-    &:hover {
-      background-color: v.$primary-color;
-    }
-
-    .link-mod {
-      @include m.principal-font;
-      text-decoration: none;
-      color: v.$primary-color;
-
-      &:hover {
-        color: v.$bg-color;
-      }
-    }
-  }
-
   .dropdown {
-    .user-vatar {
-      height: 4rem;
-      border: 2px solid v.$primary-color;
-      border-radius: 50%;
+    .dropbtn {
+      height: 3rem;
+      border-radius: 0.5rem;
       margin-right: 0.5rem;
     }
 
     .dropdown-content {
       display: none;
       position: absolute;
-      right: 3rem;
+      right: 2.5rem;
       background-color: v.$bg-color;
-      border: 2px solid v.$primary-color;
-      border-radius: 1rem 0 1rem 1rem;
+      border: 1px solid v.$text-second-color;
+      border-radius: 0.5rem 0 0.5rem 0.5rem;
       padding: 1rem;
       z-index: 1;
       box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.26);
 
-      ul {
+      .list {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
-        li {
-          list-style: none;
-          a {
-            @include m.principal-font;
-            text-decoration: none;
-          }
-          .profile {
+        text-align: center;
+        gap: 0.5rem;
+        a {
+          @include m.principal-font;
+          text-decoration: none;
+        }
+        .profile {
+          color: v.$g-color;
+          @include m.desktop-only {
             color: v.$primary-color;
             &:hover {
               color: v.$g-color;
             }
           }
-          .logout {
+        }
+        .logout {
+          color: v.$user-color;
+          @include m.desktop-only {
             color: v.$primary-color;
             &:hover {
               color: v.$user-color;
@@ -80,9 +61,10 @@
           }
         }
       }
-    }
-    &:hover .dropdown-content {
-      display: block;
+
+      &.show {
+        display: block;
+      }
     }
   }
 }

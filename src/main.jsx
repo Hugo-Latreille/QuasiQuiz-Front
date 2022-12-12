@@ -7,13 +7,13 @@ import Admin from "./Pages/BackOffice/Admin";
 import AdminJWT from "./Pages/BackOffice/AdminJWT";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-	<React.StrictMode>
-		<BrowserRouter>
-			<Routes>
-				<Route path="/*" element={<App />} />;
-				{/* <Route path="admin/*" element={<Admin />} />; */}
-				<Route path="admin/*" element={<AdminJWT />} />;
-			</Routes>
-		</BrowserRouter>
-	</React.StrictMode>
+	// <React.StrictMode>
+	<BrowserRouter>
+		<Routes>
+			<Route path="/*" element={<App />} />;
+			{/* <Route path="admin/*" element={<Admin />} />; */}
+			<Route path="admin/*" element={<AdminJWT />} />;
+		</Routes>
+	</BrowserRouter>
+	// </React.StrictMode>
 );

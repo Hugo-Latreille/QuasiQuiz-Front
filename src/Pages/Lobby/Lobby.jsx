@@ -29,6 +29,7 @@ const Lobby = () => {
 					`${usersRoute}?email=${user.email}`,
 					{
 						headers: { "Authorization": `Bearer ${user.token}` },
+						signal: controller.signal,
 					}
 				);
 				const userId = userData["hydra:member"][0].id;

@@ -1,4 +1,5 @@
 import logo from "../assets/logo-full.svg";
+import BlankAvatar from "../assets/Blank-Avatar.png";
 import "./_header.scss";
 import Button from "../Components/Button/Button";
 import { Link, useLocation } from "react-router-dom";
@@ -7,12 +8,14 @@ import { UserContext } from "../App";
 import axios, { logoutToken, usersRoute } from "../utils/axios";
 import useAxiosJWT from "../utils/useAxiosJWT";
 import { useEffect } from "react";
+import { useState } from "react";
 
 const Header = () => {
 	const location = useLocation();
 	const { user, removeUser } = useContext(UserContext);
 	const axiosJWT = useAxiosJWT();
 	const dropDown = useRef(null);
+	const [avatar, setAvatar] = useState(null);
 
 	//** callback pour le dropdown */
 	const dropdownFunc = () => {
@@ -30,6 +33,36 @@ const Header = () => {
 		};
 		document.addEventListener("click", handleClickOutside);
 	}, [dropDown]);
+
+	useEffect(() => {
+		let isMounted = true;
+		const controller = new AbortController();
+		const loadUser = async () => {
+			try {
+				if (user.token) {
+					const { data: userData } = await axiosJWT.get(
+						`${usersRoute}?email=${user.email}`,
+						{
+							headers: { "Authorization": `Bearer ${user.token}` },
+							signal: controller.signal,
+						}
+					);
+					if (isMounted && userData) {
+						setAvatar(userData["hydra:member"][0].avatar);
+					}
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		};
+
+		loadUser();
+
+		return () => {
+			isMounted = false;
+			controller.abort();
+		};
+	}, []);
 
 	const handleLogout = async () => {
 		const { data: userData } = await axiosJWT.get(
@@ -69,17 +102,15 @@ const Header = () => {
 					<div className="dropdown">
 						<img
 							onClick={dropdownFunc}
-							src="https://picsum.photos/200"
+							src={avatar ? `data:image/svg+xml;base64,${avatar}` : BlankAvatar}
 							className="dropbtn"
 						></img>
 						<div id="myDropdown" className="dropdown-content" ref={dropDown}>
 							<div className="list">
-								<a href="#" className="profile">
-									Profile
-								</a>
-								<a href="#" className="logout">
+								<p className="profile">Profil</p>
+								<p className="logout" onClick={handleLogout}>
 									Déconnexion
-								</a>
+								</p>
 							</div>
 						</div>
 					</div>

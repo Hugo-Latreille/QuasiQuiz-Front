@@ -1,5 +1,7 @@
+import { Link, useLocation } from "react-router-dom";
 import Header from "../../Layouts/Header";
 import Footer from "../../Layouts/Footer";
+import Button from "../../Components/Button/Button";
 import "./_lobby.scss";
 import { useContext, useEffect } from "react";
 import useAxiosJWT from "../../utils/useAxiosJWT";
@@ -12,6 +14,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Lobby = () => {
+
 	const axiosJWT = useAxiosJWT();
 	const { user } = useContext(UserContext);
 	const [gameId, setGameId] = useState(null);
@@ -247,6 +250,7 @@ const Lobby = () => {
 			<ToastContainer />
 		</>
 	);
+
 };
 
 export default Lobby;

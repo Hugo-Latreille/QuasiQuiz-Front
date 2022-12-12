@@ -2,8 +2,8 @@
 @use "../../styles/mixins" as m;
 
 .game-content {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
   justify-content: center;
   align-items: center;
   margin: 3rem 0;
@@ -54,10 +54,7 @@
       font-size: larger;
     }
   }
-
-  .progressbar-box {
-    position: fixed;
-    bottom: 2rem;
+  .lvl-box {
     margin: 3rem 0.5rem;
     height: 1rem;
     width: 90%;

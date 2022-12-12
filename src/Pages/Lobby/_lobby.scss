@@ -1,133 +1,155 @@
 @use "../../styles/vars" as v;
 @use "../../styles/mixins" as m;
 
-.lobby-title {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	margin: 3rem 3rem 0 3rem;
-	@include m.tablets-only {
-		margin: 6rem 0;
-	}
-	h1 {
-		@include m.principal-font;
-		color: v.$text-color;
-		font-size: 2rem;
-	}
-}
-.lobby-gamer {
-	@include m.secondary-font;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	margin: 2rem 2rem 3rem 2rem;
-	padding: 1rem;
-	border-radius: 0.5rem;
-	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-	@include m.tablets-only {
-		margin: 2rem 6rem 3rem 6rem;
-	}
 
-	h4 {
-		color: v.$primary-color;
-		margin-bottom: 1.5rem;
-		@include m.tablets-only {
-			font-size: x-large;
-		}
-	}
+.lobby-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
-	.gm-box {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		margin: 1rem;
-		.gm-card {
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-			.gamer-img {
-				height: 4rem;
-				width: 4rem;
-				background-color: v.$random;
-				border: 2px solid v.$gm-color;
-				border-radius: 0.5rem;
-				margin: 1rem;
-				@include m.tablets-only {
-					height: 6rem;
-					width: 6rem;
-				}
-			}
-			h3 {
-				color: v.$text-color;
-			}
-		}
-	}
-	.gamer-box {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		margin: 1rem;
+  .lobby-title {
+    margin: 3rem 3rem 0 3rem;
 
-		.gc-grid {
-			display: grid;
-			grid-template-columns: repeat(3, 1fr);
-			gap: 1rem;
+    @include m.tablets-only {
+      margin: 6rem 0;
+    }
 
-			.gamer-card {
-				display: flex;
-				flex-direction: column;
-				justify-content: center;
-				align-items: center;
-				.gamer-img {
-					height: 3rem;
-					width: 3rem;
-					background-color: v.$random;
-					border: 2px solid v.$g-color;
-					border-radius: 0.5rem;
-					margin: 1rem;
-					@include m.tablets-only {
-						height: 5rem;
-						width: 5rem;
-					}
+    @include m.desktop-only {
+      margin: 2rem 0 2rem 0;
+    }
 
-					&.user {
-						border: 2px solid v.$user-color;
-					}
-				}
-				h3 {
-					color: v.$text-color;
-				}
-			}
-		}
+    h1 {
+      @include m.principal-font;
+      color: v.$text-color;
+      font-size: 2rem;
 
-		.legend {
-			margin-top: 2rem;
-			@include m.principal-font;
+      @include m.desktop-only {
+      }
+    }
+  }
+  .lobby-gamer {
+    @include m.secondary-font;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem 2rem 3rem 2rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
-			ul {
-				display: flex;
-				flex-direction: row;
-				justify-content: center;
-				align-items: center;
-				li {
-					list-style: none;
-					margin: 0 0.5rem;
-					font-size: 0.75rem;
-					&#gm-color {
-						color: v.$gm-color;
-					}
-					&#g-color {
-						color: v.$g-color;
-					}
-					&#user-color {
-						color: v.$user-color;
-					}
-				}
-			}
-		}
-	}
+    @include m.tablets-only {
+      margin: 2rem 6rem 3rem 6rem;
+    }
+
+    @include m.desktop-only {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    h4 {
+      color: v.$primary-color;
+      margin-bottom: 1.5rem;
+      @include m.tablets-only {
+        font-size: x-large;
+      }
+    }
+
+    .gm-box {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 1rem;
+      .gm-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        .gamer-img {
+          height: 4rem;
+          width: 4rem;
+          background-color: v.$random;
+          border: 2px solid v.$gm-color;
+          border-radius: 0.5rem;
+          margin: 1rem;
+          @include m.tablets-only {
+            height: 6rem;
+            width: 6rem;
+          }
+        }
+        h3 {
+          color: v.$text-color;
+          margin-bottom: 2rem;
+        }
+      }
+    }
+    .gamer-box {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 1rem;
+
+      .gc-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+
+        .gamer-card {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          .gamer-img {
+            height: 3rem;
+            width: 3rem;
+            background-color: v.$random;
+            border: 2px solid v.$g-color;
+            border-radius: 0.5rem;
+            margin: 1rem;
+            @include m.tablets-only {
+              height: 5rem;
+              width: 5rem;
+            }
+
+            &.user {
+              border: 2px solid v.$user-color;
+            }
+          }
+          h3 {
+            color: v.$text-color;
+          }
+        }
+      }
+
+      .legend {
+        margin-top: 2rem;
+        @include m.principal-font;
+
+        ul {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          li {
+            list-style: none;
+            margin: 0 0.5rem;
+            font-size: 0.75rem;
+            &#gm-color {
+              color: v.$gm-color;
+            }
+            &#g-color {
+              color: v.$g-color;
+            }
+            &#user-color {
+              color: v.$user-color;
+            }
+          }
+        }
+      }
+    }
+  }
+
 }

@@ -1,0 +1,15 @@
+@use "../../styles/vars" as v;
+@use "../../styles/mixins" as m;
+
+.btn {
+  padding: 0.5rem;
+  border: 1px solid v.$primary-color;
+  border-radius: 0.5rem;
+  background-color: v.$bg-color;
+  color: v.$primary-color;
+
+  &:hover {
+    background-color: v.$primary-color;
+    color: v.$bg-color;
+  }
+}

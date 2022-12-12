@@ -95,14 +95,11 @@ function App() {
 						<Route path="/test" element={<WelcomeTest />} />
 						<Route path="/authTest" element={<AuthTest />} />
 						<Route path="lobby" element={<Lobby />} />
-              <Route path="game" element={<Game />} />
-        <Route path="correction" element={<Correction />} />
-        
-        <Route path="*" element={<Error />} />
+						<Route path="game" element={<Game />} />
+						<Route path="correction" element={<Correction />} />
 					</Route>
 				</Route>
-
-				<Route path="*" element={<p style={{ color: "white" }}>404</p>} />
+				<Route path="*" element={<Error />} />
 			</Routes>
 			{background && (
 				<Routes>
@@ -111,7 +108,6 @@ function App() {
 			)}
 		</Provider>
 	);
-
 }
 
 export default App;

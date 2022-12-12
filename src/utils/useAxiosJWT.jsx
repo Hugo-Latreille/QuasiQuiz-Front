@@ -1,14 +1,14 @@
 import { useContext, useEffect } from "react";
 import useRefreshToken from "./useRefreshToken";
-import { axiosPrivate } from "./axios";
 import { UserContext } from "../App";
+import { axiosJWT } from "./axios";
 
-const useAxiosPrivate = () => {
+const useAxiosJWT = () => {
 	const refresh = useRefreshToken();
 	const { user } = useContext(UserContext);
 
 	useEffect(() => {
-		const requestIntercept = axiosPrivate.interceptors.request.use(
+		const requestIntercept = axiosJWT.interceptors.request.use(
 			(config) => {
 				if (!config.headers["Authorization"]) {
 					config.headers["Authorization"] = `Bearer ${user?.token}`;
@@ -18,7 +18,7 @@ const useAxiosPrivate = () => {
 			(error) => Promise.reject(error)
 		);
 
-		const responseIntercept = axiosPrivate.interceptors.response.use(
+		const responseIntercept = axiosJWT.interceptors.response.use(
 			(response) => response,
 			async (error) => {
 				const prevRequest = error?.config;
@@ -26,19 +26,19 @@ const useAxiosPrivate = () => {
 					prevRequest.sent = true;
 					const newAccessToken = await refresh();
 					prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-					return axiosPrivate(prevRequest);
+					return axiosJWT(prevRequest);
 				}
 				return Promise.reject(error);
 			}
 		);
 
 		return () => {
-			axiosPrivate.interceptors.request.eject(requestIntercept);
-			axiosPrivate.interceptors.response.eject(responseIntercept);
+			axiosJWT.interceptors.request.eject(requestIntercept);
+			axiosJWT.interceptors.response.eject(responseIntercept);
 		};
 	}, [user, refresh]);
 
-	return axiosPrivate;
+	return axiosJWT;
 };
 
-export default useAxiosPrivate;
+export default useAxiosJWT;

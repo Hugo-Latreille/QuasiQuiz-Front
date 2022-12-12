@@ -66,7 +66,6 @@ const Lobby = () => {
 						)
 						.some((value) => value === true);
 
-					console.log(isUserAlreadyGame);
 					//Si l'utilisateur n'est pas dans game existante, on l'ajoute
 					if (!isUserAlreadyGame) {
 						const { data: addUserInGame } = await axiosJWT.post(
@@ -192,7 +191,11 @@ const Lobby = () => {
 				</div>
 				<div className="lobby-gamer">
 					<div className="gm-box">
-						<h4>Vous lui devez allégeance !</h4>
+						{isUserGameMaster() ? (
+							<h4>Vous êtes le maître du jeu !</h4>
+						) : (
+							<h4>Vous lui devez allégeance !</h4>
+						)}
 						<div className="gm-card">
 							{otherUsers &&
 								otherUsers
@@ -239,11 +242,14 @@ const Lobby = () => {
 						)}
 
 						<div className="legend">
-							<ul>
-								<li id="gm-color">Le MJ</li>
-								<li id="g-color">Les Autres</li>
-								<li id="user-color">Vous</li>
-							</ul>
+							{console.log(isUserGameMaster())}
+							{isUserGameMaster() === false && (
+								<ul>
+									<li id="gm-color">Le MJ</li>
+									<li id="g-color">Les Autres</li>
+									<li id="user-color">Vous</li>
+								</ul>
+							)}
 						</div>
 					</div>
 				</div>

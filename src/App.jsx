@@ -82,34 +82,32 @@ function App() {
   const location = useLocation();
   const background = location.state && location.state.background;
 
+  return (
+    <Provider>
+      <Routes location={background || location}>
+        <Route path="/" element={<Home />}>
+          <Route path="login" element={<Connexion />} />
+        </Route>
 
-	return (
-		<Provider>
-			<Routes location={background || location}>
-				<Route path="/" element={<Home />}>
-					<Route path="login" element={<Connexion />} />
-				</Route>
-
-				{/* Routes privées */}
-				<Route element={<PersistLogin />}>
-					<Route element={<RequireAuth />}>
-						<Route path="/test" element={<WelcomeTest />} />
-						<Route path="/authTest" element={<AuthTest />} />
-						<Route path="lobby" element={<Lobby />} />
-						<Route path="game" element={<Game />} />
-						<Route path="correction" element={<Correction />} />
-					</Route>
-				</Route>
-				<Route path="*" element={<Error />} />
-			</Routes>
-			{background && (
-				<Routes>
-					<Route path="login" element={<Connexion />} />
-				</Routes>
-			)}
-		</Provider>
-	);
-
+        {/* Routes privées */}
+        <Route element={<PersistLogin />}>
+          <Route element={<RequireAuth />}>
+            <Route path="/test" element={<WelcomeTest />} />
+            <Route path="/authTest" element={<AuthTest />} />
+            <Route path="lobby" element={<Lobby />} />
+            <Route path="game" element={<Game />} />
+            <Route path="correction" element={<Correction />} />
+          </Route>
+        </Route>
+        <Route path="*" element={<Error />} />
+      </Routes>
+      {background && (
+        <Routes>
+          <Route path="login" element={<Connexion />} />
+        </Routes>
+      )}
+    </Provider>
+  );
 }
 
 export default App;

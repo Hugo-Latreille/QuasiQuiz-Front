@@ -3,12 +3,9 @@
 
 body {
   background-color: v.$bg-color;
-  main {
-    min-height: calc(100vh - 7rem);
 
-    @include m.tablets-only {
-      margin: 0 6rem;
-    }
+  main {
+    padding: 7rem 0;
 
     @include m.desktop-only {
       display: flex;

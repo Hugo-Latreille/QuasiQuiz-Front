@@ -116,7 +116,7 @@ const Lobby = () => {
 								isGameMaster: user.is_game_master,
 							}));
 
-						console.log(allOtherUsers);
+						// console.log(allOtherUsers);
 						setOtherUsers(allOtherUsers);
 					}
 				}
@@ -147,6 +147,7 @@ const Lobby = () => {
 
 	const handleGame = async (e) => {
 		e.preventDefault();
+		console.log("coucou");
 		if (isUserGameMaster()) {
 			await axiosJWT.patch(
 				`${gamesRoute}/${gameId}`,
@@ -162,6 +163,7 @@ const Lobby = () => {
 
 		const { data: isGameOpen } = await axiosJWT.get(`${gamesRoute}/${gameId}`);
 
+		//si game encore ouverte, toast "Veuillez attendre que le MJ"...
 		if (isGameOpen.is_open === true) {
 			return toast.info(
 				"Veuillez attendre que le Maître du Jeu lance la partie",
@@ -169,8 +171,6 @@ const Lobby = () => {
 			);
 		}
 		return navigate("/game");
-
-		//si game encore ouverte, toast "Veuillez attendre que le MJ"
 	};
 	const toastOptions = {
 		position: "top-right",

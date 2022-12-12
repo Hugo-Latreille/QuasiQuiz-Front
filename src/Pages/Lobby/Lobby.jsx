@@ -1,4 +1,3 @@
-import { Link, useLocation } from "react-router-dom";
 import Header from "../../Layouts/Header";
 import Footer from "../../Layouts/Footer";
 import Button from "../../Components/Button/Button";
@@ -14,7 +13,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Lobby = () => {
-
 	const axiosJWT = useAxiosJWT();
 	const { user } = useContext(UserContext);
 	const [gameId, setGameId] = useState(null);
@@ -231,9 +229,9 @@ const Lobby = () => {
 									))}
 						</div>
 						{otherUsers && isUserGameMaster() ? (
-							<button onClick={handleGame}>LANCER LA PARTIE</button>
+							<Button onClick={handleGame} label={"Lancer la partie"} />
 						) : (
-							<button onClick={handleGame}>Rejoindre la partie</button>
+							<Button onClick={handleGame} label={"Rejoindre la partie"} />
 						)}
 
 						<div className="legend">
@@ -250,7 +248,6 @@ const Lobby = () => {
 			<ToastContainer />
 		</>
 	);
-
 };
 
 export default Lobby;

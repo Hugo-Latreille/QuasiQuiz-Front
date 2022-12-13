@@ -3,7 +3,6 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import App from "./App";
 import "./styles/index.scss";
-import Admin from "./Pages/BackOffice/Admin";
 import AdminJWT from "./Pages/BackOffice/AdminJWT";
 
 ReactDOM.createRoot(document.getElementById("root")).render(

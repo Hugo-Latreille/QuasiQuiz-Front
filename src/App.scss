@@ -2,18 +2,18 @@
 @use "./styles/mixins" as m;
 
 body {
-  background-color: v.$bg-color;
-  main {
-    min-height: calc(100vh - 7rem);
+	background-color: v.$bg-color;
+	main {
+		min-height: calc(100vh - 7rem);
 
-    @include m.tablets-only {
-      margin: 0 6rem;
-    }
+		@include m.tablets-only {
+			margin: 0 6rem;
+		}
 
-    @include m.desktop-only {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-  }
+		@include m.desktop-only {
+			display: flex;
+			justify-content: center;
+			// align-items: center;
+		}
+	}
 }

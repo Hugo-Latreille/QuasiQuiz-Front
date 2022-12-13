@@ -2,47 +2,54 @@ import "./_game.scss";
 import Header from "../../Layouts/Header";
 import Footer from "../../Layouts/Footer";
 import { axiosJWT, gameQuestions } from "../../utils/axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Timer from "../../Components/Timer/Timer";
+import ProgressBar from "../../Components/ProgressBar/ProgressBar";
+import { useParams } from "react-router-dom";
 
+//? set FOCUS sur le champ de réponse (inputRef.current.focus())
 const Game = () => {
-	//! récupérer game AVEC PARAMETRES REACT ROUTER
-	// récuperer les questions de cette partie + le temps de chacune + le niveau
-	// set FOCUS sur le champ de réponse (inputRef.current.focus())
-	useEffect(() => {
-		let isMounted = true;
-		const controller = new AbortController();
-		const getQuestions = async () => {
-			try {
-				const { data: gameQuestion } = await axiosJWT.get(
-					`${gameQuestions}?game=35`,
-					{
-						signal: controller.signal,
-					}
-				);
-				if (isMounted && gameQuestion) {
-					console.log(gameQuestion);
-				}
-			} catch (error) {
-				console.log(error);
-			}
-		};
-		getQuestions();
+	// on récupère gameId des paramètres de la route
+	const { gameId } = useParams();
+	const [questions, setQuestions] = useState([]);
+	const [selectedQuestion, setSelectedQuestion] = useState({});
 
-		return () => {
-			isMounted = false;
-			controller.abort();
-		};
-	}, []);
+	// récuperer les questions de cette partie + le temps de chacune + le niveau
+	// useEffect(() => {
+	// 	let isMounted = true;
+	// 	const controller = new AbortController();
+	// 	const getQuestions = async () => {
+	// 		try {
+	// 			const { data: gameQuestion } = await axiosJWT.get(
+	// 				`${gameQuestions}?game=${gameId}`,
+	// 				{
+	// 					signal: controller.signal,
+	// 				}
+	// 			);
+	// 			if (isMounted && gameQuestion) {
+	// 				console.log(gameQuestion);
+	// 				setQuestions(gameQuestion["hydra:member"]);
+	// 			}
+	// 		} catch (error) {
+	// 			console.log(error);
+	// 		}
+	// 	};
+	// 	getQuestions();
+
+	// 	return () => {
+	// 		isMounted = false;
+	// 		controller.abort();
+	// 	};
+	// }, [gameId]);
 
 	return (
 		<>
 			<Header />
 			<main>
 				<div className="game-content">
-					<div className="timer">
+					{/* <div className="timer">
 						<p>30 s</p>
-					</div>
+					</div> */}
 					<Timer />
 					<div className="game-box">
 						<div className="media">
@@ -57,11 +64,12 @@ const Game = () => {
 							</form>
 						</div>
 					</div>
-					<div className="lvl-box">
+					<ProgressBar level={2} progress={50} />
+					{/* <div className="lvl-box">
 						<div className="lvl-border">
 							<div className="lvl-content"></div>
 						</div>
-					</div>
+					</div> */}
 				</div>
 			</main>
 			<Footer />

@@ -2,16 +2,20 @@ import { useEffect, useRef, useState } from "react";
 import "./timer.scss";
 
 const Timer = () => {
-	const [remainingTime, setRemainingTime] = useState(15);
+	const [remainingTime, setRemainingTime] = useState(10);
 	const timerRef = useRef(null);
+	const timerId = useRef(20);
+
+	console.log(timerId.current);
 
 	const decrementRemainingTime = () => {
 		if (remainingTime > 0) {
-			console.log(remainingTime);
-			setRemainingTime((prev) => prev - 1);
 			setColor();
+			return setRemainingTime((prev) => prev - 1);
 		}
-		clearInterval(timer);
+		clearInterval(timerId.current);
+		timerId.current = 0;
+		return;
 	};
 
 	const setColor = () => {
@@ -20,10 +24,8 @@ const Timer = () => {
 		}
 	};
 
-	const timer = setInterval(decrementRemainingTime, 1000);
-
 	const startTimer = () => {
-		return timer;
+		timerId.current = setInterval(decrementRemainingTime, 1000);
 	};
 
 	useEffect(() => {

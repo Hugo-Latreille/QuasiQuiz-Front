@@ -160,7 +160,7 @@ const Lobby = () => {
 			);
 
 			await axiosJWT.get(`/game/${gameId}/questions`);
-			return navigate("/game");
+			return navigate(`/game/${gameId}`);
 		}
 
 		const { data: isGameOpen } = await axiosJWT.get(`${gamesRoute}/${gameId}`);
@@ -172,7 +172,7 @@ const Lobby = () => {
 				toastOptions
 			);
 		}
-		return navigate("/game");
+		return navigate(`/game/${gameId}`);
 	};
 	const toastOptions = {
 		position: "top-right",

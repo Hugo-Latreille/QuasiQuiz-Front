@@ -236,22 +236,6 @@ const Lobby = () => {
                       </div>
                     ))}
               </div>
-              {/* {otherUsers && isUserGameMaster() ? (
-              <Button onClick={handleGame} label={"Lancer la partie"} />
-            ) : (
-              <Button onClick={handleGame} label={"Rejoindre la partie"} />
-            )} */}
-
-              {/* <div className="legend">
-              {console.log(isUserGameMaster())}
-              {isUserGameMaster() === false && (
-                <ul>
-                  <li id="gm-color">Le MJ</li>
-                  <li id="g-color">Les Autres</li>
-                  <li id="user-color">Vous</li>
-                </ul>
-              )}
-            </div> */}
             </div>
             <div className="legend">
               {console.log(isUserGameMaster())}

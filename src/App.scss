@@ -1,16 +1,26 @@
 @use "./styles/vars" as v;
 @use "./styles/mixins" as m;
 
-body {
-  background-color: v.$bg-color;
+html {
+  height: 100vh;
+  body {
+    background-color: v.$bg-color;
+    min-height: 100vh;
+    min-width: 100vw;
 
-  main {
-    padding: 7rem 0;
+    main {
+      min-height: 85vh;
+      margin: 5rem 0;
 
-    @include m.desktop-only {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      @include m.tablets-only {
+        margin-top: 10rem;
+      }
+
+      @include m.desktop-only {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
     }
   }
 }

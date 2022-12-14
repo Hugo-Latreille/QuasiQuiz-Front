@@ -11,113 +11,113 @@ import { useEffect } from "react";
 import { useState } from "react";
 
 const Header = () => {
-	const location = useLocation();
-	const { user, removeUser } = useContext(UserContext);
-	const axiosJWT = useAxiosJWT();
-	const dropDown = useRef(null);
-	const [avatar, setAvatar] = useState(null);
+  const location = useLocation();
+  const { user, removeUser } = useContext(UserContext);
+  const axiosJWT = useAxiosJWT();
+  const dropDown = useRef(null);
+  const [avatar, setAvatar] = useState(null);
 
-	//** callback pour le dropdown */
-	const dropdownFunc = () => {
-		dropDown.current.classList.toggle("show");
-	};
-	// ** Désactiver le dropdown en cliquant n'importe où sur l'écran */
+  //** callback pour le dropdown */
+  const dropdownFunc = () => {
+    dropDown.current.classList.toggle("show");
+  };
+  // ** Désactiver le dropdown en cliquant n'importe où sur l'écran */
 
-	useEffect(() => {
-		const handleClickOutside = (event) => {
-			if (dropDown.current && !event.target.matches(".dropbtn")) {
-				if (dropDown.current.classList.contains("show")) {
-					dropDown.current.classList.remove("show");
-				}
-			}
-		};
-		document.addEventListener("click", handleClickOutside);
-	}, [dropDown]);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropDown.current && !event.target.matches(".dropbtn")) {
+        if (dropDown.current.classList.contains("show")) {
+          dropDown.current.classList.remove("show");
+        }
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+  }, [dropDown]);
 
-	useEffect(() => {
-		let isMounted = true;
-		const controller = new AbortController();
-		const loadUser = async () => {
-			try {
-				if (user.token) {
-					const { data: userData } = await axiosJWT.get(
-						`${usersRoute}?email=${user.email}`,
-						{
-							headers: { "Authorization": `Bearer ${user.token}` },
-							signal: controller.signal,
-						}
-					);
-					if (isMounted && userData) {
-						setAvatar(userData["hydra:member"][0].avatar);
-					}
-				}
-			} catch (error) {
-				console.log(error);
-			}
-		};
+  useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+    const loadUser = async () => {
+      try {
+        if (user.token) {
+          const { data: userData } = await axiosJWT.get(
+            `${usersRoute}?email=${user.email}`,
+            {
+              headers: { Authorization: `Bearer ${user.token}` },
+              signal: controller.signal,
+            }
+          );
+          if (isMounted && userData) {
+            setAvatar(userData["hydra:member"][0].avatar);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-		loadUser();
+    loadUser();
 
-		return () => {
-			isMounted = false;
-			controller.abort();
-		};
-	}, []);
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, []);
 
-	const handleLogout = async () => {
-		const { data: userData } = await axiosJWT.get(
-			`${usersRoute}?email=${user.email}`,
-			{
-				headers: { "Authorization": `Bearer ${user.token}` },
-			}
-		);
-		const userId = userData["hydra:member"][0].id;
+  const handleLogout = async () => {
+    const { data: userData } = await axiosJWT.get(
+      `${usersRoute}?email=${user.email}`,
+      {
+        headers: { Authorization: `Bearer ${user.token}` },
+      }
+    );
+    const userId = userData["hydra:member"][0].id;
 
-		await axiosJWT.patch(
-			`${usersRoute}/${userId}`,
-			{
-				isReady: false,
-			},
-			{ headers: { "Content-Type": "application/merge-patch+json" } }
-		);
+    await axiosJWT.patch(
+      `${usersRoute}/${userId}`,
+      {
+        isReady: false,
+      },
+      { headers: { "Content-Type": "application/merge-patch+json" } }
+    );
 
-		await axios.get(logoutToken);
-		removeUser();
-	};
+    await axios.get(logoutToken);
+    removeUser();
+  };
 
-	return (
-		<>
-			<div className="header">
-				<img src={logo} alt="logoQuasiQuiz" className="logo" />
+  return (
+    <>
+      <div className="header">
+        <img src={logo} alt="logoQuasiQuiz" className="logo" />
 
-				{!user.token ? (
-					<Link
-						className="link-mod"
-						to="login"
-						state={{ background: location }}
-					>
-						<Button label="Connexion" />
-					</Link>
-				) : (
-					<div className="dropdown">
-						<img
-							onClick={dropdownFunc}
-							src={avatar ? `data:image/svg+xml;base64,${avatar}` : BlankAvatar}
-							className="dropbtn"
-						></img>
-						<div id="myDropdown" className="dropdown-content" ref={dropDown}>
-							<div className="list">
-								<p className="profile">Profil</p>
-								<p className="logout" onClick={handleLogout}>
-									Déconnexion
-								</p>
-							</div>
-						</div>
-					</div>
-				)}
-			</div>
-		</>
-	);
+        {!user.token ? (
+          <Link
+            className="link-mod"
+            to="login"
+            state={{ background: location }}
+          >
+            <Button label="Connexion" />
+          </Link>
+        ) : (
+          <div className="dropdown">
+            <img
+              onClick={dropdownFunc}
+              src={avatar ? `data:image/svg+xml;base64,${avatar}` : BlankAvatar}
+              className="dropbtn"
+            ></img>
+            <div id="myDropdown" className="dropdown-content" ref={dropDown}>
+              <div className="list">
+                <p className="profile">Profil</p>
+                <p className="logout" onClick={handleLogout}>
+                  Déconnexion
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
+  );
 };
 
 export default Header;

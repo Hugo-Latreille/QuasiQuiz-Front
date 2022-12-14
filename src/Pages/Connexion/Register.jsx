@@ -82,7 +82,7 @@ const Register = ({
             name="passwordConfirm"
             value={passwordConfirm}
             setValue={setPasswordConfirm}
-            label="Confirmez votre mot de passe"
+            label="Confirmez mot de passe"
             type={passwordVisibility ? "text" : "password"}
             required={true}
           />

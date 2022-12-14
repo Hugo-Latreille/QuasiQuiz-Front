@@ -1,0 +1,80 @@
+@use "../../styles/vars" as v;
+@use "../../styles/mixins" as m;
+
+.profile-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+
+  .avatar {
+    margin-top: 3rem;
+    img {
+      height: 7rem;
+      border-radius: 50%;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    }
+  }
+  .profile-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    border-radius: 0.5rem;
+    // padding: 2rem;
+    // box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    h1 {
+      @include m.principal-font;
+      text-transform: uppercase;
+      color: v.$primary-color;
+      .edit {
+        color: black;
+      }
+    }
+    a {
+      @include m.secondary-font;
+      color: v.$text-color;
+      .edit {
+        color: black;
+      }
+    }
+  }
+
+  .parties {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    width: 60%;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    h3 {
+      @include m.secondary-font;
+      color: v.$primary-color;
+    }
+    .party {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 75%;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      border-radius: 0.5rem;
+      padding: 0.5rem;
+      background-color: v.$primary-color;
+      //   background-image: linear-gradient(
+      //     to bottom left,
+      //     v.$primary-color,
+      //     v.$primary-color,
+      //     v.$bg-color
+      //   );
+      a {
+        @include m.principal-font;
+        color: v.$bg-color;
+      }
+    }
+  }
+}

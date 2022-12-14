@@ -7,11 +7,12 @@ import Error from "./Pages/404/Error";
 import Game from "./Pages/Game/Game";
 import Correction from "./Pages/Correction/Correction";
 import Palmares from "./Pages/Palmares/Palmares";
+import Profile from "./Pages/Profile/Profile";
 import { createContext, useReducer } from "react";
-// import RequireAuth from "./utils/RequireAuth";
+import RequireAuth from "./utils/RequireAuth";
 import AuthTest from "./Pages/JWTTest/AuthTest";
 import WelcomeTest from "./Pages/JWTTest/WelcomeTest";
-// import PersistLogin from "./utils/PersistLogin";
+import PersistLogin from "./utils/PersistLogin";
 
 export const UserContext = createContext();
 
@@ -91,16 +92,17 @@ function App() {
         </Route>
 
         {/* Routes privées */}
-        {/* <Route element={<PersistLogin />}> */}
-        {/* <Route element={<RequireAuth />}> */}
-        <Route path="/test" element={<WelcomeTest />} />
-        <Route path="/authTest" element={<AuthTest />} />
-        <Route path="lobby" element={<Lobby />} />
-        <Route path="game" element={<Game />} />
-        <Route path="correction" element={<Correction />} />
-        <Route path="palmares" element={<Palmares />} />
-        {/* </Route> */}
-        {/* </Route> */}
+        <Route element={<PersistLogin />}>
+          <Route element={<RequireAuth />}>
+            <Route path="/test" element={<WelcomeTest />} />
+            <Route path="/authTest" element={<AuthTest />} />
+            <Route path="lobby" element={<Lobby />} />
+            <Route path="game" element={<Game />} />
+            <Route path="correction" element={<Correction />} />
+            <Route path="palmares" element={<Palmares />} />
+            <Route path="profile" element={<Profile />} />
+          </Route>
+        </Route>
         <Route path="*" element={<Error />} />
       </Routes>
       {background && (

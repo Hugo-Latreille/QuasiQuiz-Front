@@ -12,65 +12,97 @@ const Game = () => {
 	// on récupère gameId des paramètres de la route
 	const { gameId } = useParams();
 	const [questions, setQuestions] = useState([]);
-	const [selectedQuestion, setSelectedQuestion] = useState({});
+	const [selectedQuestion, setSelectedQuestion] = useState(0);
+	const [noMoreTime, setNoMoreTime] = useState(false);
+	const [thisQuestion, setThisQuestion] = useState(null);
+	// const isLastQuestion = selectedQuestion === questions.length - 1;
+
+	//!calculer % complétion pour progressBar
 
 	// récuperer les questions de cette partie + le temps de chacune + le niveau
-	// useEffect(() => {
-	// 	let isMounted = true;
-	// 	const controller = new AbortController();
-	// 	const getQuestions = async () => {
-	// 		try {
-	// 			const { data: gameQuestion } = await axiosJWT.get(
-	// 				`${gameQuestions}?game=${gameId}`,
-	// 				{
-	// 					signal: controller.signal,
-	// 				}
-	// 			);
-	// 			if (isMounted && gameQuestion) {
-	// 				console.log(gameQuestion);
-	// 				setQuestions(gameQuestion["hydra:member"]);
-	// 			}
-	// 		} catch (error) {
-	// 			console.log(error);
-	// 		}
-	// 	};
-	// 	getQuestions();
+	useEffect(() => {
+		let isMounted = true;
+		const controller = new AbortController();
+		const getQuestions = async () => {
+			try {
+				const { data: gameQuestion } = await axiosJWT.get(
+					`${gameQuestions}?game=${gameId}`,
+					{
+						signal: controller.signal,
+					}
+				);
+				if (isMounted && gameQuestion) {
+					console.log(gameQuestion);
+					setQuestions(gameQuestion["hydra:member"]);
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		};
+		getQuestions();
 
-	// 	return () => {
-	// 		isMounted = false;
-	// 		controller.abort();
-	// 	};
-	// }, [gameId]);
+		return () => {
+			isMounted = false;
+			controller.abort();
+		};
+	}, [gameId]);
 
+	useEffect(() => {
+		questions && setThisQuestion(questions[`${selectedQuestion}`]);
+	}, [questions, selectedQuestion]);
+
+	useEffect(() => {
+		if (noMoreTime && selectedQuestion <= questions.length - 1) {
+			setNoMoreTime((prev) => !prev);
+			console.log("ICI NEXT QUESTION");
+			return setSelectedQuestion((prev) => prev + 1);
+		}
+	}, [noMoreTime]);
+
+	const getParseMedia = () => {
+		if (thisQuestion.question.media.length > 0) {
+			const media = thisQuestion.question.media[0].contentUrl;
+			if (media.includes("mp4")) {
+				return (
+					<video width="750" height="500" controls autoPlay muted>
+						<source src={media} type="video/mp4" />
+					</video>
+				);
+			} else if (media.includes("png")) {
+				return <img src={media} alt="image" />;
+			}
+		}
+		return;
+	};
 	return (
 		<>
 			<Header />
 			<main>
-				<div className="game-content">
-					{/* <div className="timer">
-						<p>30 s</p>
-					</div> */}
-					<Timer />
-					<div className="game-box">
-						<div className="media">
-							<img src="https://picsum.photos/300/200" alt="image" />
+				<p style={{ color: "white" }}>{selectedQuestion}</p>
+				{thisQuestion && (
+					<div className="game-content">
+						<Timer
+							time={thisQuestion.question.timer}
+							// time={5}
+							setNoMoreTime={setNoMoreTime}
+							noMoreTime={noMoreTime}
+						/>
+						<p style={{ color: "orange" }}>{thisQuestion.question.timer}</p>
+						<div className="game-box">
+							<div className="media">{getParseMedia()}</div>
+							<div className="question">
+								<p>{thisQuestion.question.question}</p>
+							</div>
+							<div className="answer">
+								<form action="">
+									<input type="text" name="" id="" />
+								</form>
+							</div>
 						</div>
-						<div className="question">
-							<p>Une question ?</p>
-						</div>
-						<div className="answer">
-							<form action="">
-								<input type="text" name="" id="" />
-							</form>
-						</div>
+
+						<ProgressBar level={thisQuestion.question.level} progress={50} />
 					</div>
-					<ProgressBar level={2} progress={50} />
-					{/* <div className="lvl-box">
-						<div className="lvl-border">
-							<div className="lvl-content"></div>
-						</div>
-					</div> */}
-				</div>
+				)}
 			</main>
 			<Footer />
 		</>

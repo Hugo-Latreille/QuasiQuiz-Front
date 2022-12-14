@@ -1,25 +1,36 @@
 import { useEffect, useRef, useState } from "react";
 import "./timer.scss";
 
-const Timer = () => {
-	const [remainingTime, setRemainingTime] = useState(10);
+const Timer = ({ time, noMoreTime, setNoMoreTime }) => {
+	const [remainingTime, setRemainingTime] = useState(null);
 	const timerRef = useRef(null);
-	const timerId = useRef(20);
+	const timerId = useRef();
 
-	console.log(timerId.current);
+	useEffect(() => {
+		console.log(remainingTime);
+		if (remainingTime === 0) {
+			console.log("remaintingTIME 0");
+			return setNoMoreTime(true);
+		}
+	}, [remainingTime]);
 
 	const decrementRemainingTime = () => {
-		if (remainingTime > 0) {
-			setColor();
-			return setRemainingTime((prev) => prev - 1);
-		}
-		clearInterval(timerId.current);
-		timerId.current = 0;
-		return;
+		return setRemainingTime((prev) => {
+			console.log("PREV", prev);
+			if (prev > 0) {
+				setColor(prev - 1);
+				return prev - 1;
+			} else {
+				// setNoMoreTime(true);
+				clearInterval(timerId.current);
+				timerId.current = 0;
+				return 0;
+			}
+		});
 	};
 
-	const setColor = () => {
-		if (remainingTime <= 10) {
+	const setColor = (prev) => {
+		if (prev <= 10) {
 			timerRef.current.classList.add("warning");
 		}
 	};
@@ -29,12 +40,22 @@ const Timer = () => {
 	};
 
 	useEffect(() => {
-		timerRef.current.setAttribute(
-			"style",
-			"animation: countdown " + remainingTime + "s linear forwards"
-		);
-		startTimer();
-	}, []);
+		console.log("ICI", noMoreTime);
+		if (!noMoreTime) {
+			console.log("TIME", time);
+			timerRef.current.setAttribute(
+				"style",
+				"animation: countdown " + time + "s linear forwards"
+			);
+			setRemainingTime(time);
+			startTimer();
+
+			return () => {
+				clearInterval(timerId.current);
+			};
+		}
+		return;
+	}, [noMoreTime]);
 
 	return (
 		<div className="timer-container">

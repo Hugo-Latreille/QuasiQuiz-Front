@@ -18,7 +18,7 @@
 	transform: translate(-50%, -50%);
 }
 
-svg circle {
+.svgCircle {
 	stroke-dasharray: 250px;
 	stroke-dashoffset: 0px;
 	stroke-linecap: round;
@@ -28,7 +28,7 @@ svg circle {
 	transition: 8s linear all;
 }
 
-svg circle.warning {
+.svgCircle.warning {
 	stroke: red;
 }
 

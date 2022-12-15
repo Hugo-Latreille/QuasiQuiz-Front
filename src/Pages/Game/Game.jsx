@@ -191,10 +191,15 @@ const Game = () => {
 		return;
 	};
 
-	const handleButton = () => {
+	const handleButton = async () => {
 		if (isUserGameMaster()) {
 			return navigate("/correction");
 		} else {
+			const isGameCorrected = await fetchIsGameCorrected();
+
+			if (isGameCorrected) {
+				return navigate("/palmares");
+			}
 			return toast.info(
 				"Veuillez attendre que le Maître du Jeu corrige la partie",
 				toastOptions
@@ -202,10 +207,13 @@ const Game = () => {
 		}
 	};
 
-	const isGameCorrected = async () => {
+	const fetchIsGameCorrected = async () => {
 		try {
 			const { data: thisGame } = await axiosJWT.get(`${gamesRoute}/${gameId}`);
-			return console.log(thisGame);
+			// setIsGameCorrected("")
+			if (thisGame) {
+				return thisGame.is_corrected === true ? true : false;
+			}
 		} catch (error) {
 			console.log(error);
 		}
@@ -219,8 +227,6 @@ const Game = () => {
 			? true
 			: false;
 	};
-
-	console.log(isUserGameMaster());
 
 	const toastOptions = {
 		position: "top-right",

@@ -3,15 +3,20 @@ import Header from "../../Layouts/Header";
 import Footer from "../../Layouts/Footer";
 import {
 	axiosJWT,
+	gameHasUsersRoute,
 	gameQuestions,
 	userAnswersRoute,
 	usersRoute,
 } from "../../utils/axios";
 import { useContext, useEffect, useRef, useState } from "react";
 import ProgressBar from "../../Components/ProgressBar/ProgressBar";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Timer from "../../Components/Timer/Timer";
 import { UserContext } from "../../App";
+import Button from "../../Components/Button/Button";
+//? React Toastify
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 //? set FOCUS sur le champ de réponse (inputRef.current.focus())
 const Game = () => {
@@ -30,6 +35,7 @@ const Game = () => {
 	const { user } = useContext(UserContext);
 	const [userId, setUserId] = useState(null);
 	const [answer, setAnswer] = useState("");
+	const navigate = useNavigate();
 
 	//!calculer % complétion pour progressBar
 
@@ -166,45 +172,99 @@ const Game = () => {
 		}
 		return;
 	};
+
+	const handleButton = () => {
+		if (isUserGameMaster) {
+			return navigate("/correction");
+		} else {
+			return toast.info(
+				"Veuillez attendre que le Maître du Jeu corrige la partie",
+				toastOptions
+			);
+		}
+	};
+
+	const isUserGameMaster = async () => {
+		try {
+			if (gameId) {
+				const { data: usersInGame } = await axiosJWT.get(
+					`${gameHasUsersRoute}?game=${gameId}`
+				);
+				if (usersInGame) {
+					const allGameUsers = usersInGame["hydra:member"];
+					return allGameUsers?.filter(
+						(thisUser) =>
+							(thisUser.isGameMaster === true) & (thisUser.email === user.email)
+					).length === 1
+						? true
+						: false;
+				}
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const toastOptions = {
+		position: "top-right",
+		autoClose: 6000,
+		pauseOnHover: true,
+		draggable: true,
+		theme: "dark",
+	};
+
 	return (
 		<>
 			<Header />
 			<main>
-				<p style={{ color: "white" }}>{selectedQuestion}</p>
-				{thisQuestion && (
-					<div className="game-content">
-						<Timer
-							remainingTime={remainingTime}
-							forwardRef={timerRef}
-							time={time}
-						/>
-						<div className="game-box">
-							<div className="media">{getParseMedia()}</div>
-							<div className="question">
-								<p>{thisQuestion.question.question}</p>
-							</div>
-							<div className="answer">
-								<form>
-									<input
-										ref={inputRef}
-										type="text"
-										name=""
-										value={answer}
-										onChange={(e) => setAnswer(e.target.value)}
-									/>
-								</form>
-							</div>
-						</div>
+				{!isLastQuestion ? (
+					<>
+						<p style={{ color: "white" }}>{selectedQuestion}</p>
+						{thisQuestion && (
+							<div className="game-content">
+								<Timer
+									remainingTime={remainingTime}
+									forwardRef={timerRef}
+									time={time}
+								/>
+								<div className="game-box">
+									<div className="media">{getParseMedia()}</div>
+									<div className="question">
+										<p>{thisQuestion.question.question}</p>
+									</div>
+									<div className="answer">
+										<form>
+											<input
+												ref={inputRef}
+												type="text"
+												name=""
+												value={answer}
+												onChange={(e) => setAnswer(e.target.value)}
+											/>
+										</form>
+									</div>
+								</div>
 
-						<ProgressBar
-							level={thisQuestion.question.level}
-							progress={progressBarCalc()}
-						/>
-					</div>
+								<ProgressBar
+									level={thisQuestion.question.level}
+									progress={progressBarCalc()}
+								/>
+							</div>
+						)}
+					</>
+				) : (
+					<>
+						{" "}
+						{isUserGameMaster() ? (
+							<Button label={"Valider les réponses"} onClick={handleButton} />
+						) : (
+							<Button label={"Correction en cours..."} onClick={handleButton} />
+						)}
+					</>
 				)}
-				{isLastQuestion && <p> CORRIGER</p>}
 			</main>
 			<Footer />
+			<ToastContainer />
 		</>
 	);
 };

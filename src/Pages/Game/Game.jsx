@@ -5,6 +5,7 @@ import {
 	axiosJWT,
 	gameHasUsersRoute,
 	gameQuestions,
+	gamesRoute,
 	userAnswersRoute,
 	usersRoute,
 } from "../../utils/axios";
@@ -35,6 +36,7 @@ const Game = () => {
 	const { user } = useContext(UserContext);
 	const [userId, setUserId] = useState(null);
 	const [answer, setAnswer] = useState("");
+	const [users, setUsers] = useState(null);
 	const navigate = useNavigate();
 
 	//!calculer % complétion pour progressBar
@@ -68,7 +70,23 @@ const Game = () => {
 				console.log(error);
 			}
 		};
+		const getUsers = async () => {
+			try {
+				if (gameId) {
+					const { data: usersInGame } = await axiosJWT.get(
+						`${gameHasUsersRoute}?game=${gameId}`
+					);
+					if (usersInGame) {
+						setUsers(usersInGame["hydra:member"]);
+					}
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		};
+
 		getQuestions();
+		getUsers();
 
 		return () => {
 			isMounted = false;
@@ -174,7 +192,7 @@ const Game = () => {
 	};
 
 	const handleButton = () => {
-		if (isUserGameMaster) {
+		if (isUserGameMaster()) {
 			return navigate("/correction");
 		} else {
 			return toast.info(
@@ -184,26 +202,25 @@ const Game = () => {
 		}
 	};
 
-	const isUserGameMaster = async () => {
+	const isGameCorrected = async () => {
 		try {
-			if (gameId) {
-				const { data: usersInGame } = await axiosJWT.get(
-					`${gameHasUsersRoute}?game=${gameId}`
-				);
-				if (usersInGame) {
-					const allGameUsers = usersInGame["hydra:member"];
-					return allGameUsers?.filter(
-						(thisUser) =>
-							(thisUser.isGameMaster === true) & (thisUser.email === user.email)
-					).length === 1
-						? true
-						: false;
-				}
-			}
+			const { data: thisGame } = await axiosJWT.get(`${gamesRoute}/${gameId}`);
+			return console.log(thisGame);
 		} catch (error) {
 			console.log(error);
 		}
 	};
+
+	const isUserGameMaster = () => {
+		return users?.filter(
+			(thisUser) =>
+				thisUser.is_game_master === true && thisUser.userId.email === user.email
+		).length === 1
+			? true
+			: false;
+	};
+
+	console.log(isUserGameMaster());
 
 	const toastOptions = {
 		position: "top-right",
@@ -254,7 +271,6 @@ const Game = () => {
 					</>
 				) : (
 					<>
-						{" "}
 						{isUserGameMaster() ? (
 							<Button label={"Valider les réponses"} onClick={handleButton} />
 						) : (

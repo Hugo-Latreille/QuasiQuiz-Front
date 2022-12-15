@@ -11,6 +11,7 @@ export const usersRoute = `/api/users`;
 export const gamesRoute = "/api/games";
 export const gameQuestions = "/api/game_has_questions";
 export const mediaRoute = "/api/media";
+export const userAnswersRoute = "/api/user_answers";
 export const gameHasUsersRoute = "/api/game_has_users";
 export const refreshTokenRoute = `/api/token/refresh`;
 export const logoutToken = `/api/token/invalidate`;

@@ -1,6 +1,32 @@
 @use "../../styles/vars" as v;
 @use "../../styles/mixins" as m;
 
+@property --angle {
+	syntax: "<angle>";
+	initial-value: 90deg;
+	inherits: true;
+}
+
+@property --gradX {
+	syntax: "<percentage>";
+	initial-value: 50%;
+	inherits: true;
+}
+
+@property --gradY {
+	syntax: "<percentage>";
+	initial-value: 0%;
+	inherits: true;
+}
+
+:root {
+	--d: 2500ms;
+	--angle: 90deg;
+	--gradX: 100%;
+	--gradY: 50%;
+	--c1: yellow;
+	--c2: orange;
+}
 .game-content {
 	display: flex;
 	// grid-template-columns: 1fr;
@@ -52,13 +78,61 @@
 
 		input {
 			background-color: v.$bg-color;
-			border: 1px solid v.$primary-color;
+			border: 0.2rem solid v.$primary-color;
 			border-radius: 0.5rem;
+			padding: 1vw;
+			width: 15rem;
 			color: v.$primary-color;
 			@include m.principal-font;
 			font-size: larger;
+			transition: border-image 5s ease-out;
+
+			&:focus {
+				// border: 3px dashed v.$primary-color;
+				outline: none;
+				border-radius: 0.5rem;
+				border-image: conic-gradient(
+						from var(--angle),
+						var(--c2),
+						var(--c1) 0.1turn,
+						var(--c1) 0.15turn,
+						var(--c2) 0.25turn
+					)
+					30;
+				animation: borderRotate var(--d) linear infinite forwards;
+			}
 		}
 	}
+
+	@keyframes borderRotate {
+		100% {
+			--angle: 420deg;
+		}
+	}
+
+	@keyframes borderRadial {
+		20% {
+			--gradX: 100%;
+			--gradY: 50%;
+		}
+		40% {
+			--gradX: 100%;
+			--gradY: 100%;
+		}
+		60% {
+			--gradX: 50%;
+			--gradY: 100%;
+		}
+		80% {
+			--gradX: 0%;
+			--gradY: 50%;
+		}
+		100% {
+			--gradX: 50%;
+			--gradY: 0%;
+		}
+	}
+
 	// .lvl-box {
 	//   margin: 3rem 0.5rem;
 	//   height: 1rem;

@@ -1,12 +1,17 @@
 import "./_game.scss";
-import "./../../Components/Timer/timer.scss";
 import Header from "../../Layouts/Header";
 import Footer from "../../Layouts/Footer";
-import { axiosJWT, gameQuestions } from "../../utils/axios";
-import { useEffect, useRef, useState } from "react";
-// import Timer from "../../Components/Timer/Timer";
+import {
+	axiosJWT,
+	gameQuestions,
+	userAnswersRoute,
+	usersRoute,
+} from "../../utils/axios";
+import { useContext, useEffect, useRef, useState } from "react";
 import ProgressBar from "../../Components/ProgressBar/ProgressBar";
 import { useParams } from "react-router-dom";
+import Timer from "../../Components/Timer/Timer";
+import { UserContext } from "../../App";
 
 //? set FOCUS sur le champ de réponse (inputRef.current.focus())
 const Game = () => {
@@ -17,12 +22,15 @@ const Game = () => {
 	const [noMoreTime, setNoMoreTime] = useState(false);
 	const [thisQuestion, setThisQuestion] = useState(null);
 	const [remainingTime, setRemainingTime] = useState(null);
-	// const [circleCss, setCircleCss] = useState(null);
 	const [time, setTime] = useState(null);
 	const timerId = useRef();
 	const timerRef = useRef(null);
-
+	const inputRef = useRef(null);
 	const isLastQuestion = selectedQuestion === questions.length;
+	const { user } = useContext(UserContext);
+	const [userId, setUserId] = useState(null);
+	const [answer, setAnswer] = useState("");
+
 	//!calculer % complétion pour progressBar
 
 	// récuperer les questions de cette partie + le temps de chacune + le niveau
@@ -31,6 +39,15 @@ const Game = () => {
 		const controller = new AbortController();
 		const getQuestions = async () => {
 			try {
+				const { data: userData } = await axiosJWT.get(
+					`${usersRoute}?email=${user.email}`,
+					{
+						signal: controller.signal,
+					}
+				);
+				const userId = userData["hydra:member"][0].id;
+				setUserId(userId);
+
 				const { data: gameQuestion } = await axiosJWT.get(
 					`${gameQuestions}?game=${gameId}`,
 					{
@@ -62,44 +79,51 @@ const Game = () => {
 		thisQuestion && setTime(thisQuestion.question.timer);
 	}, [thisQuestion]);
 
-	const startTimer = () => {
-		timerId.current = setInterval(decrementRemainingTime, 1000);
-	};
-
 	useEffect(() => {
-		console.log(isLastQuestion);
+		const postUserAnswers = async () => {
+			await axiosJWT.post(userAnswersRoute, {
+				answer: answer,
+				userId: `/api/users/${userId}`,
+				question: `/api/questions/${thisQuestion.question.id}`,
+				game: `/api/games/${gameId}`,
+			});
+		};
 
 		if (!noMoreTime && time) {
 			if (isLastQuestion) {
-				return <p style={{ color: "white" }}>FIN</p>;
+				return;
 			}
-			// timerRef.current.classList.add("svgCircle");
 			timerRef.current.setAttribute(
 				"style",
 				"animation: countdown " + time + "s linear forwards"
 			);
+			inputRef.current.focus();
 			setRemainingTime(time);
-			console.log(time);
 			startTimer();
 		}
 		if (noMoreTime && selectedQuestion <= questions.length) {
+			// on poste la réponse de l'utilisateur
+			postUserAnswers();
+			setAnswer("");
 			setNoMoreTime((prev) => !prev);
 			setSelectedQuestion((prev) => prev + 1);
+
 			return;
 		}
 		return () => {
 			clearInterval(timerId.current);
-			// timerRef.current.removeAttribute("style");
 		};
 	}, [noMoreTime, time]);
 
 	useEffect(() => {
 		if (remainingTime === 0) {
-			// timerRef.current.classList.remove("svgCircle");
-
 			return setNoMoreTime(true);
 		}
 	}, [remainingTime]);
+
+	const startTimer = () => {
+		timerId.current = setInterval(decrementRemainingTime, 1000);
+	};
 
 	const setColor = (prev) => {
 		if (prev <= 10) {
@@ -119,6 +143,12 @@ const Game = () => {
 				return 0;
 			}
 		});
+	};
+
+	const progressBarCalc = () => {
+		const result = ((selectedQuestion + 1) / questions.length) * 100;
+
+		return result;
 	};
 
 	const getParseMedia = () => {
@@ -143,38 +173,36 @@ const Game = () => {
 				<p style={{ color: "white" }}>{selectedQuestion}</p>
 				{thisQuestion && (
 					<div className="game-content">
-						<div className="timer-container">
-							<div className="circular-timer">
-								<svg>
-									<circle
-										className="svgCircle"
-										ref={timerRef}
-										key={time}
-										id="circle"
-										r="40"
-										cx="50"
-										cy="50"
-									></circle>
-								</svg>
-								<div className="thin-circle"></div>
-							</div>
-							<div className="timer-text">{remainingTime} s</div>
-						</div>
+						<Timer
+							remainingTime={remainingTime}
+							forwardRef={timerRef}
+							time={time}
+						/>
 						<div className="game-box">
 							<div className="media">{getParseMedia()}</div>
 							<div className="question">
 								<p>{thisQuestion.question.question}</p>
 							</div>
 							<div className="answer">
-								<form action="">
-									<input type="text" name="" id="" />
+								<form>
+									<input
+										ref={inputRef}
+										type="text"
+										name=""
+										value={answer}
+										onChange={(e) => setAnswer(e.target.value)}
+									/>
 								</form>
 							</div>
 						</div>
 
-						<ProgressBar level={thisQuestion.question.level} progress={50} />
+						<ProgressBar
+							level={thisQuestion.question.level}
+							progress={progressBarCalc()}
+						/>
 					</div>
 				)}
+				{isLastQuestion && <p> CORRIGER</p>}
 			</main>
 			<Footer />
 		</>

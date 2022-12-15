@@ -28,6 +28,7 @@ const ProgressBar = ({ level, progress }) => {
 				<div className="progress-bar__bar">
 					<div
 						className={`progress-bar__progress ${questionLevel()}`}
+						key={progress}
 						style={style}
 					></div>
 				</div>

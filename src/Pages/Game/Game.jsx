@@ -193,7 +193,7 @@ const Game = () => {
 
 	const handleButton = async () => {
 		if (isUserGameMaster()) {
-			return navigate("/correction");
+			return navigate(`/correction/${gameId}`);
 		} else {
 			const isGameCorrected = await fetchIsGameCorrected();
 

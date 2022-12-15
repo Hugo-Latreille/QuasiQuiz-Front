@@ -81,7 +81,6 @@ const Provider = ({ children }) => {
 };
 
 function App() {
-
 	const location = useLocation();
 	const background = location.state && location.state.background;
 
@@ -99,9 +98,9 @@ function App() {
 						<Route path="/authTest" element={<AuthTest />} />
 						<Route path="lobby" element={<Lobby />} />
 						<Route path="game/:gameId" element={<Game />} />
-						<Route path="correction" element={<Correction />} />
-              <Route path="palmares" element={<Palmares />} />
-            <Route path="profile" element={<Profile />} />
+						<Route path="correction/:gameId" element={<Correction />} />
+						<Route path="palmares" element={<Palmares />} />
+						<Route path="profile" element={<Profile />} />
 					</Route>
 				</Route>
 				<Route path="*" element={<Error />} />
@@ -113,7 +112,6 @@ function App() {
 			)}
 		</Provider>
 	);
-
 }
 
 export default App;

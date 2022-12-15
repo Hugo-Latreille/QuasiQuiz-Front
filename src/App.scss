@@ -2,6 +2,7 @@
 @use "./styles/mixins" as m;
 
 body {
+
   background-color: v.$bg-color;
   // min-height: 100vh;
   min-width: 100vw;
@@ -22,4 +23,5 @@ body {
     //   align-items: center;
     // }
   }
+
 }

@@ -159,28 +159,32 @@ const Lobby = () => {
         { headers: { "Content-Type": "application/merge-patch+json" } }
       );
 
-      await axiosJWT.get(`/game/${gameId}/questions`);
-      return navigate("/game");
-    }
+
+			await axiosJWT.get(`/game/${gameId}/questions`);
+			return navigate(`/game/${gameId}`);
+		}
+
 
     const { data: isGameOpen } = await axiosJWT.get(`${gamesRoute}/${gameId}`);
 
-    //si game encore ouverte, toast "Veuillez attendre que le MJ"...
-    if (isGameOpen.is_open === true) {
-      return toast.info(
-        "Veuillez attendre que le Maître du Jeu lance la partie",
-        toastOptions
-      );
-    }
-    return navigate("/game");
-  };
-  const toastOptions = {
-    position: "top-right",
-    autoClose: 6000,
-    pauseOnHover: true,
-    draggable: true,
-    theme: "dark",
-  };
+
+		//si game encore ouverte, toast "Veuillez attendre que le MJ"...
+		if (isGameOpen.is_open === true) {
+			return toast.info(
+				"Veuillez attendre que le Maître du Jeu lance la partie",
+				toastOptions
+			);
+		}
+		return navigate(`/game/${gameId}`);
+	};
+	const toastOptions = {
+		position: "top-right",
+		autoClose: 6000,
+		pauseOnHover: true,
+		draggable: true,
+		theme: "dark",
+	};
+
 
   return (
     <>

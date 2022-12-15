@@ -9,15 +9,15 @@ $backgroundLight: #f9f8fe;
 $linearGradient: linear-gradient(to right, #30cfd0 0%, #330867 100%);
 $linearGradientDarkMode: linear-gradient(to left top, #404c70 0%, #191e33 100%);
 $linearGradientDarkModeCards: linear-gradient(
-	to left top,
-	#232843cb 0%,
-	#14162a 100%
+  to left top,
+  #232843cb 0%,
+  #14162a 100%
 );
 
 // Responsive
 $breakpoints: (
-	tablets: 768px,
-	desktop: 1024px,
+  tablets: 768px,
+  desktop: 1024px,
 );
 // Colors
 $bg-color: #31383f;
@@ -28,4 +28,5 @@ $text-second-color: #f2e9eb;
 $gm-color: gold;
 $g-color: palegreen;
 $user-color: palevioletred;
+$blue: #4e0eff;
 $random: #1c1c1c;

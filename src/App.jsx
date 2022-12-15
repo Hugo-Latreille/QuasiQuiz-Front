@@ -6,6 +6,8 @@ import Lobby from "./Pages/Lobby/Lobby";
 import Error from "./Pages/404/Error";
 import Game from "./Pages/Game/Game";
 import Correction from "./Pages/Correction/Correction";
+import Palmares from "./Pages/Palmares/Palmares";
+import Profile from "./Pages/Profile/Profile";
 import { createContext, useReducer } from "react";
 import RequireAuth from "./utils/RequireAuth";
 import AuthTest from "./Pages/JWTTest/AuthTest";
@@ -79,6 +81,7 @@ const Provider = ({ children }) => {
 };
 
 function App() {
+
 	const location = useLocation();
 	const background = location.state && location.state.background;
 
@@ -97,6 +100,8 @@ function App() {
 						<Route path="lobby" element={<Lobby />} />
 						<Route path="game/:gameId" element={<Game />} />
 						<Route path="correction" element={<Correction />} />
+              <Route path="palmares" element={<Palmares />} />
+            <Route path="profile" element={<Profile />} />
 					</Route>
 				</Route>
 				<Route path="*" element={<Error />} />
@@ -108,6 +113,7 @@ function App() {
 			)}
 		</Provider>
 	);
+
 }
 
 export default App;

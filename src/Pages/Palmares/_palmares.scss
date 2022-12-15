@@ -1,0 +1,96 @@
+@use "../../styles/vars" as v;
+@use "../../styles/mixins" as m;
+
+.palmares-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+
+  .title {
+    margin-top: 3rem;
+    h1 {
+      @include m.principal-font;
+      text-transform: uppercase;
+      color: v.$text-color;
+    }
+  }
+
+  .results-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    width: 90%;
+
+    .g-result {
+      height: 3rem;
+      width: 90%;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      border-radius: 0.5rem;
+      padding: 0.5rem;
+
+      &.first {
+        background-image: linear-gradient(
+          to bottom left,
+          gold,
+          gold,
+          v.$bg-color
+        );
+      }
+      &.second {
+        background-image: linear-gradient(
+          to bottom left,
+          silver,
+          silver,
+          v.$bg-color
+        );
+      }
+      &.third {
+        background-image: linear-gradient(
+          to bottom left,
+          #967444,
+          #967444,
+          v.$bg-color
+        );
+      }
+      &.others {
+        background-image: linear-gradient(
+          to bottom left,
+          v.$g-color,
+          v.$g-color,
+          v.$bg-color
+        );
+      }
+      &.last {
+        background-image: linear-gradient(
+          to bottom left,
+          v.$user-color,
+          v.$user-color,
+          v.$bg-color
+        );
+      }
+      .gamer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+        img {
+          height: 3rem;
+          border-radius: 100%;
+        }
+      }
+      a {
+        @include m.principal-font;
+        color: v.$bg-color;
+        text-decoration: none;
+      }
+    }
+  }
+}

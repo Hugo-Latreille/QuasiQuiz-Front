@@ -19,7 +19,7 @@ import Button from "../../Components/Button/Button";
 const Correction = () => {
 	const navigate = useNavigate();
 	const { gameId } = useParams();
-	const { user } = useContext(UserContext);
+	// const { user } = useContext(UserContext);
 	// const [userId, setUserId] = useState(null);
 	// const [users, setUsers] = useState(null);
 	const [questions, setQuestions] = useState([]);
@@ -113,7 +113,7 @@ const Correction = () => {
 	useEffect(() => {
 		thisQuestionAnswers &&
 			setThisQuestionAnswer(thisQuestionAnswers[`${selectedQuestionAnswer}`]);
-	}, [thisQuestionAnswers]);
+	}, [thisQuestionAnswers, selectedQuestionAnswer]);
 
 	const progressBarCalc = () => {
 		const result = ((selectedQuestion + 1) / questions.length) * 100;
@@ -198,12 +198,15 @@ const Correction = () => {
 		}
 		falseRef.current.classList.remove("false__active");
 		trueRef.current.classList.remove("true__active");
+		console.log(isLastAnswer);
+		console.log(isLastQuestion);
 		if (!isLastAnswer) {
 			return setSelectedQuestionAnswer((prev) => prev + 1);
 		}
 		if (isLastQuestion) {
 			return console.log("fin des réponses");
 		}
+		setSelectedQuestionAnswer(0);
 		setSelectedQuestion((prev) => prev + 1);
 	};
 
@@ -219,9 +222,6 @@ const Correction = () => {
 		setIsTrue(false);
 	};
 
-	//TODO ICI BOUTON CONDITIONNEL
-	//TODO Une fois terminé, PATCH /api/game/gameId is_corrected = true
-	//TODO bouton "afficher les résultats" pour GM, autres utilisateurs sur page "Correction en cours" get api/game/gameID -> bouton s'affiche quand is_corrected = true
 	const handleEndCorrection = async () => {
 		try {
 			await axiosJWT.patch(
@@ -229,7 +229,7 @@ const Correction = () => {
 				{ isCorrected: true },
 				{ headers: { "Content-Type": "application/merge-patch+json" } }
 			);
-			// navigate("/palmares");
+			navigate("/palmares");
 		} catch (error) {
 			console.log(error);
 		}

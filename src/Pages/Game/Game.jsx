@@ -38,6 +38,7 @@ const Game = () => {
 	const [answer, setAnswer] = useState("");
 	const [users, setUsers] = useState(null);
 	const navigate = useNavigate();
+	const btnRef = useRef();
 
 	//!calculer % complétion pour progressBar
 
@@ -229,6 +230,7 @@ const Game = () => {
 			} else {
 				const isGameCorrected = await fetchIsGameCorrected();
 				if (isGameCorrected) {
+					// btnRef.current.innerText = "Afficher les résultats";
 					return navigate("/palmares");
 				}
 				return toast.info(
@@ -312,7 +314,11 @@ const Game = () => {
 						{isUserGameMaster() ? (
 							<Button label={"Valider les réponses"} onClick={handleButton} />
 						) : (
-							<Button label={"Correction en cours..."} onClick={handleButton} />
+							<Button
+								label={"Correction en cours..."}
+								onClick={handleButton}
+								ref={btnRef}
+							/>
 						)}
 					</>
 				)}

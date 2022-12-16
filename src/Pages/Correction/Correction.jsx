@@ -1,11 +1,12 @@
 import Header from "../../Layouts/Header";
 import Footer from "../../Layouts/Footer";
 import "./_correction.scss";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
 	axiosJWT,
 	gameHasUsersRoute,
 	gameQuestions,
+	gamesRoute,
 	scoresRoute,
 	userAnswersRoute,
 	usersRoute,
@@ -13,16 +14,14 @@ import {
 import { useContext, useEffect, useRef, useState } from "react";
 import { UserContext } from "../../App";
 import ProgressBar from "../../Components/ProgressBar/ProgressBar";
-
-//TODO Une fois terminé, PATCH /api/game/gameId is_corrected = true
-//TODO bouton "afficher les résultats" pour GM, autres utilisateurs sur page "Correction en cours" get api/game/gameID -> bouton s'affiche quand is_corrected = true
-//!ajout css click boutons
+import Button from "../../Components/Button/Button";
 
 const Correction = () => {
+	const navigate = useNavigate();
 	const { gameId } = useParams();
 	const { user } = useContext(UserContext);
-	const [userId, setUserId] = useState(null);
-	const [users, setUsers] = useState(null);
+	// const [userId, setUserId] = useState(null);
+	// const [users, setUsers] = useState(null);
 	const [questions, setQuestions] = useState([]);
 	const [selectedQuestion, setSelectedQuestion] = useState(0);
 	const [thisQuestion, setThisQuestion] = useState(null);
@@ -41,14 +40,14 @@ const Correction = () => {
 		const controller = new AbortController();
 		const getQuestions = async () => {
 			try {
-				const { data: userData } = await axiosJWT.get(
-					`${usersRoute}?email=${user.email}`,
-					{
-						signal: controller.signal,
-					}
-				);
-				const userId = userData["hydra:member"][0].id;
-				setUserId(userId);
+				// const { data: userData } = await axiosJWT.get(
+				// 	`${usersRoute}?email=${user.email}`,
+				// 	{
+				// 		signal: controller.signal,
+				// 	}
+				// );
+				// const userId = userData["hydra:member"][0].id;
+				// setUserId(userId);
 
 				const { data: gameQuestion } = await axiosJWT.get(
 					`${gameQuestions}?game=${gameId}`,
@@ -64,24 +63,24 @@ const Correction = () => {
 				console.log(error);
 			}
 		};
-		const getUsers = async () => {
-			try {
-				if (gameId) {
-					const { data: usersInGame } = await axiosJWT.get(
-						`${gameHasUsersRoute}?game=${gameId}`
-					);
-					if (usersInGame) {
-						console.log(usersInGame["hydra:member"]);
-						setUsers(usersInGame["hydra:member"]);
-					}
-				}
-			} catch (error) {
-				console.log(error);
-			}
-		};
+		// const getUsers = async () => {
+		// 	try {
+		// 		if (gameId) {
+		// 			const { data: usersInGame } = await axiosJWT.get(
+		// 				`${gameHasUsersRoute}?game=${gameId}`
+		// 			);
+		// 			if (usersInGame) {
+		// 				console.log(usersInGame["hydra:member"]);
+		// 				setUsers(usersInGame["hydra:member"]);
+		// 			}
+		// 		}
+		// 	} catch (error) {
+		// 		console.log(error);
+		// 	}
+		// };
 
 		getQuestions();
-		getUsers();
+		// getUsers();
 
 		return () => {
 			isMounted = false;
@@ -137,14 +136,12 @@ const Correction = () => {
 		return;
 	};
 
-	//TODO revoir la logique : validation au click sur suivant, si vrai alors useState true, si faux alors false !!!!!!!!!
-
 	const handleNext = async () => {
 		if (isTrue === null) return;
 		if (isTrue === false) {
 			console.log("FAUX");
 			try {
-				const { data: patchUser } = await axiosJWT.patch(
+				await axiosJWT.patch(
 					`${userAnswersRoute}/${thisQuestionAnswer.id}`,
 					{
 						isTrue: false,
@@ -162,7 +159,7 @@ const Correction = () => {
 		if (isTrue) {
 			console.log("VRAI");
 			try {
-				const { data: patchUser } = await axiosJWT.patch(
+				await axiosJWT.patch(
 					`${userAnswersRoute}/${thisQuestionAnswer.id}`,
 					{
 						isTrue: true,
@@ -171,12 +168,11 @@ const Correction = () => {
 						headers: { "Content-Type": "application/merge-patch+json" },
 					}
 				);
-				console.log("patch", patchUser);
 
 				const { data: userScore } = await axiosJWT.get(
 					`${scoresRoute}?game=${gameId}&userId=${thisQuestionAnswer.userId.id}`
 				);
-				console.log(userScore);
+				// console.log(userScore);
 				if (userScore["hydra:member"].length === 0) {
 					const { data: userScore } = await axiosJWT.post(scoresRoute, {
 						game: `/api/games/${thisQuestion.game.id}`,
@@ -223,61 +219,90 @@ const Correction = () => {
 		setIsTrue(false);
 	};
 
+	//TODO ICI BOUTON CONDITIONNEL
+	//TODO Une fois terminé, PATCH /api/game/gameId is_corrected = true
+	//TODO bouton "afficher les résultats" pour GM, autres utilisateurs sur page "Correction en cours" get api/game/gameID -> bouton s'affiche quand is_corrected = true
+	const handleEndCorrection = async () => {
+		try {
+			await axiosJWT.patch(
+				`${gamesRoute}/${gameId}`,
+				{ isCorrected: true },
+				{ headers: { "Content-Type": "application/merge-patch+json" } }
+			);
+			// navigate("/palmares");
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	return (
 		<>
 			<Header />
 			<main>
-				{thisQuestion && (
-					<div className="game-content">
-						<div className="game-box">
-							<div className="media">{getParseMedia()}</div>
-							<div className="question">
-								<p>{thisQuestion.question.question}</p>
-							</div>
-							{thisQuestionAnswer && (
-								<>
-									<div className="answer">
-										<div className="good-answer">
-											<p>Réponse attendue :</p>
-											<p>{thisQuestion.question.answer.answer}</p>
-										</div>
-										<div className="gamer-answer">
-											<p>{thisQuestionAnswer.answer}</p>
-										</div>
+				{!isLastQuestion ? (
+					<>
+						{thisQuestion && (
+							<div className="game-content">
+								<div className="game-box">
+									<div className="media">{getParseMedia()}</div>
+									<div className="question">
+										<p>{thisQuestion.question.question}</p>
 									</div>
-									<div className="gamer-pseudo">
-										<p>{thisQuestionAnswer.userId.pseudo}</p>
-										<img
-											className="avatar"
-											src={`data:image/svg+xml;base64,${thisQuestionAnswer.userId.avatar}`}
-											alt=""
-										/>
-									</div>
-								</>
-							)}
+									{thisQuestionAnswer && (
+										<>
+											<div className="answer">
+												<div className="good-answer">
+													<p>Réponse attendue :</p>
+													<p>{thisQuestion.question.answer.answer}</p>
+												</div>
+												<div className="gamer-answer">
+													<p>{thisQuestionAnswer.answer}</p>
+												</div>
+											</div>
+											<div className="gamer-pseudo">
+												<p>{thisQuestionAnswer.userId.pseudo}</p>
+												<img
+													className="avatar"
+													src={`data:image/svg+xml;base64,${thisQuestionAnswer.userId.avatar}`}
+													alt=""
+												/>
+											</div>
+										</>
+									)}
 
-							<div className="true-false-next">
-								<button className="true" onClick={handleTrue} ref={trueRef}>
-									Vrai
-								</button>
-								<button className="next" onClick={handleNext}>
-									Suivant
-								</button>
-								<button className="false" onClick={handleFalse} ref={falseRef}>
-									Faux
-								</button>
-							</div>
-						</div>
-						<ProgressBar
-							level={thisQuestion.question.level}
-							progress={progressBarCalc()}
-						/>
-						{/* <div className="progressbar-box">
+									<div className="true-false-next">
+										<button className="true" onClick={handleTrue} ref={trueRef}>
+											Vrai
+										</button>
+										<button className="next" onClick={handleNext}>
+											Suivant
+										</button>
+										<button
+											className="false"
+											onClick={handleFalse}
+											ref={falseRef}
+										>
+											Faux
+										</button>
+									</div>
+								</div>
+								<ProgressBar
+									level={thisQuestion.question.level}
+									progress={progressBarCalc()}
+								/>
+								{/* <div className="progressbar-box">
 							<div className="lvl-border">
 								<div className="lvl-content"></div>
 							</div>
 						</div> */}
-					</div>
+							</div>
+						)}
+					</>
+				) : (
+					<Button
+						label={"Valider la correction"}
+						onClick={handleEndCorrection}
+					/>
 				)}
 			</main>
 			<Footer />

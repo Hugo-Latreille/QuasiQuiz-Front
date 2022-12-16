@@ -3,15 +3,21 @@ import Header from "../../Layouts/Header";
 import Footer from "../../Layouts/Footer";
 import {
 	axiosJWT,
+	gameHasUsersRoute,
 	gameQuestions,
+	gamesRoute,
 	userAnswersRoute,
 	usersRoute,
 } from "../../utils/axios";
 import { useContext, useEffect, useRef, useState } from "react";
 import ProgressBar from "../../Components/ProgressBar/ProgressBar";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Timer from "../../Components/Timer/Timer";
 import { UserContext } from "../../App";
+import Button from "../../Components/Button/Button";
+//? React Toastify
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 //? set FOCUS sur le champ de réponse (inputRef.current.focus())
 const Game = () => {
@@ -30,6 +36,9 @@ const Game = () => {
 	const { user } = useContext(UserContext);
 	const [userId, setUserId] = useState(null);
 	const [answer, setAnswer] = useState("");
+	const [users, setUsers] = useState(null);
+	const navigate = useNavigate();
+	const btnRef = useRef();
 
 	//!calculer % complétion pour progressBar
 
@@ -62,7 +71,24 @@ const Game = () => {
 				console.log(error);
 			}
 		};
+		const getUsers = async () => {
+			try {
+				if (gameId) {
+					const { data: usersInGame } = await axiosJWT.get(
+						`${gameHasUsersRoute}?game=${gameId}`
+					);
+					if (usersInGame) {
+						setUsers(usersInGame["hydra:member"]);
+						console.log(usersInGame);
+					}
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		};
+
 		getQuestions();
+		getUsers();
 
 		return () => {
 			isMounted = false;
@@ -166,45 +192,139 @@ const Game = () => {
 		}
 		return;
 	};
+	// fonction pour vérifier que tous les joueurs ont répondu à toutes les questions : userAnswer length === questions length
+	const areAllUsersDone = async () => {
+		try {
+			const usersArray = await Promise.all(
+				users.map(async (user) => {
+					const { data: usersAnswers } = await axiosJWT.get(
+						`${userAnswersRoute}?userId=${user.userId.id}&game=${gameId}`
+					);
+					if (usersAnswers) {
+						return usersAnswers["hydra:member"].length === questions.length
+							? true
+							: false;
+					}
+				})
+			);
+			return usersArray;
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const handleButton = async () => {
+		console.log(await areAllUsersDone());
+		const usersReadyorNot = await areAllUsersDone();
+		const notReadyToCorrect = usersReadyorNot.some(
+			(finished) => finished === false
+		);
+		if (notReadyToCorrect) {
+			return toast.info(
+				"Veuillez attendre que tous les joueurs aient terminé le quizz",
+				toastOptions
+			);
+		} else {
+			if (isUserGameMaster()) {
+				return navigate(`/correction/${gameId}`);
+			} else {
+				const isGameCorrected = await fetchIsGameCorrected();
+				if (isGameCorrected) {
+					// btnRef.current.innerText = "Afficher les résultats";
+					return navigate("/palmares");
+				}
+				return toast.info(
+					"Veuillez attendre que le Maître du Jeu corrige la partie",
+					toastOptions
+				);
+			}
+		}
+	};
+
+	const fetchIsGameCorrected = async () => {
+		try {
+			const { data: thisGame } = await axiosJWT.get(`${gamesRoute}/${gameId}`);
+			// setIsGameCorrected("")
+			if (thisGame) {
+				return thisGame.is_corrected === true ? true : false;
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const isUserGameMaster = () => {
+		return users?.filter(
+			(thisUser) =>
+				thisUser.is_game_master === true && thisUser.userId.email === user.email
+		).length === 1
+			? true
+			: false;
+	};
+
+	const toastOptions = {
+		position: "top-right",
+		autoClose: 6000,
+		pauseOnHover: true,
+		draggable: true,
+		theme: "dark",
+	};
+
 	return (
 		<>
 			<Header />
 			<main>
-				<p style={{ color: "white" }}>{selectedQuestion}</p>
-				{thisQuestion && (
-					<div className="game-content">
-						<Timer
-							remainingTime={remainingTime}
-							forwardRef={timerRef}
-							time={time}
-						/>
-						<div className="game-box">
-							<div className="media">{getParseMedia()}</div>
-							<div className="question">
-								<p>{thisQuestion.question.question}</p>
-							</div>
-							<div className="answer">
-								<form>
-									<input
-										ref={inputRef}
-										type="text"
-										name=""
-										value={answer}
-										onChange={(e) => setAnswer(e.target.value)}
-									/>
-								</form>
-							</div>
-						</div>
+				{!isLastQuestion ? (
+					<>
+						<p style={{ color: "white" }}>{selectedQuestion}</p>
+						{thisQuestion && (
+							<div className="game-content">
+								<Timer
+									remainingTime={remainingTime}
+									forwardRef={timerRef}
+									time={time}
+								/>
+								<div className="game-box">
+									<div className="media">{getParseMedia()}</div>
+									<div className="question">
+										<p>{thisQuestion.question.question}</p>
+									</div>
+									<div className="answer">
+										<form>
+											<input
+												ref={inputRef}
+												type="text"
+												name=""
+												value={answer}
+												onChange={(e) => setAnswer(e.target.value)}
+											/>
+										</form>
+									</div>
+								</div>
 
-						<ProgressBar
-							level={thisQuestion.question.level}
-							progress={progressBarCalc()}
-						/>
-					</div>
+								<ProgressBar
+									level={thisQuestion.question.level}
+									progress={progressBarCalc()}
+								/>
+							</div>
+						)}
+					</>
+				) : (
+					<>
+						{isUserGameMaster() ? (
+							<Button label={"Valider les réponses"} onClick={handleButton} />
+						) : (
+							<Button
+								label={"Correction en cours..."}
+								onClick={handleButton}
+								// ref={btnRef}
+							/>
+						)}
+					</>
 				)}
-				{isLastQuestion && <p> CORRIGER</p>}
 			</main>
 			<Footer />
+			<ToastContainer />
 		</>
 	);
 };

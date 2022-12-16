@@ -317,7 +317,7 @@ const Game = () => {
 							<Button
 								label={"Correction en cours..."}
 								onClick={handleButton}
-								ref={btnRef}
+								// ref={btnRef}
 							/>
 						)}
 					</>

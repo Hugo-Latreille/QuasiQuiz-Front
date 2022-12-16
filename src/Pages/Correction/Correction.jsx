@@ -31,7 +31,7 @@ const Correction = () => {
 	const [isTrue, setIsTrue] = useState(null);
 	const trueRef = useRef(null);
 	const falseRef = useRef(null);
-	const isLastQuestion = selectedQuestion + 1 === questions?.length;
+	const isLastQuestion = selectedQuestion === questions?.length;
 	const isLastAnswer =
 		selectedQuestionAnswer + 1 === thisQuestionAnswers?.length;
 
@@ -139,7 +139,6 @@ const Correction = () => {
 	const handleNext = async () => {
 		if (isTrue === null) return;
 		if (isTrue === false) {
-			console.log("FAUX");
 			try {
 				await axiosJWT.patch(
 					`${userAnswersRoute}/${thisQuestionAnswer.id}`,
@@ -157,7 +156,6 @@ const Correction = () => {
 		}
 
 		if (isTrue) {
-			console.log("VRAI");
 			try {
 				await axiosJWT.patch(
 					`${userAnswersRoute}/${thisQuestionAnswer.id}`,
@@ -198,7 +196,6 @@ const Correction = () => {
 		}
 		falseRef.current.classList.remove("false__active");
 		trueRef.current.classList.remove("true__active");
-		console.log(isLastAnswer);
 		console.log(isLastQuestion);
 		if (!isLastAnswer) {
 			return setSelectedQuestionAnswer((prev) => prev + 1);

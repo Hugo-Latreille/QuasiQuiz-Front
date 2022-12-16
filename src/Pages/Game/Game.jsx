@@ -78,6 +78,7 @@ const Game = () => {
 					);
 					if (usersInGame) {
 						setUsers(usersInGame["hydra:member"]);
+						console.log(usersInGame);
 					}
 				}
 			} catch (error) {
@@ -190,20 +191,51 @@ const Game = () => {
 		}
 		return;
 	};
+	// fonction pour vérifier que tous les joueurs ont répondu à toutes les questions : userAnswer length === questions length
+	const areAllUsersDone = async () => {
+		try {
+			const usersArray = await Promise.all(
+				users.map(async (user) => {
+					const { data: usersAnswers } = await axiosJWT.get(
+						`${userAnswersRoute}?userId=${user.userId.id}&game=${gameId}`
+					);
+					if (usersAnswers) {
+						return usersAnswers["hydra:member"].length === questions.length
+							? true
+							: false;
+					}
+				})
+			);
+			return usersArray;
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	const handleButton = async () => {
-		if (isUserGameMaster()) {
-			return navigate(`/correction/${gameId}`);
-		} else {
-			const isGameCorrected = await fetchIsGameCorrected();
-
-			if (isGameCorrected) {
-				return navigate("/palmares");
-			}
+		console.log(await areAllUsersDone());
+		const usersReadyorNot = await areAllUsersDone();
+		const notReadyToCorrect = usersReadyorNot.some(
+			(finished) => finished === false
+		);
+		if (notReadyToCorrect) {
 			return toast.info(
-				"Veuillez attendre que le Maître du Jeu corrige la partie",
+				"Veuillez attendre que tous les joueurs aient terminé le quizz",
 				toastOptions
 			);
+		} else {
+			if (isUserGameMaster()) {
+				return navigate(`/correction/${gameId}`);
+			} else {
+				const isGameCorrected = await fetchIsGameCorrected();
+				if (isGameCorrected) {
+					return navigate("/palmares");
+				}
+				return toast.info(
+					"Veuillez attendre que le Maître du Jeu corrige la partie",
+					toastOptions
+				);
+			}
 		}
 	};
 

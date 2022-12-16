@@ -14,11 +14,8 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../App";
 import ProgressBar from "../../Components/ProgressBar/ProgressBar";
 
-// GM attribue vrai/faux (PATCH api/user_answers is_true=true ou false), validation manuelle (bouton "suivant), passage à l'utilisateur suivant / question suivante quand plus d'utilisateurs
-// Première réponse de l'utilisateur, si bonne réponse : POST api/scores, ajout note accordée à la question
-// Bonnes réponses suivantes : PATCH api/scores/userId incrémentant le score de la note accordée
-// Une fois terminé, PATCH /api/game/gameId is_corrected = true
-// bouton "afficher les résultats" pour GM, autres utilisateurs sur page "Correction en cours" get api/game/gameID -> bouton s'affiche quand is_corrected = true
+//TODO Une fois terminé, PATCH /api/game/gameId is_corrected = true
+//TODO bouton "afficher les résultats" pour GM, autres utilisateurs sur page "Correction en cours" get api/game/gameID -> bouton s'affiche quand is_corrected = true
 //!ajout css click boutons
 
 const Correction = () => {

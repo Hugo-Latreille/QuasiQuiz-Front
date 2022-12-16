@@ -10,7 +10,7 @@ import {
 	userAnswersRoute,
 	usersRoute,
 } from "../../utils/axios";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { UserContext } from "../../App";
 import ProgressBar from "../../Components/ProgressBar/ProgressBar";
 
@@ -29,6 +29,9 @@ const Correction = () => {
 	const [thisQuestionAnswers, setThisQuestionAnswers] = useState(null);
 	const [thisQuestionAnswer, setThisQuestionAnswer] = useState(null);
 	const [selectedQuestionAnswer, setSelectedQuestionAnswer] = useState(0);
+	const [isTrue, setIsTrue] = useState(null);
+	const trueRef = useRef(null);
+	const falseRef = useRef(null);
 	const isLastQuestion = selectedQuestion + 1 === questions?.length;
 	const isLastAnswer =
 		selectedQuestionAnswer + 1 === thisQuestionAnswers?.length;
@@ -89,8 +92,6 @@ const Correction = () => {
 		questions && setThisQuestion(questions[`${selectedQuestion}`]);
 	}, [questions, selectedQuestion]);
 
-	//? Route filtrée : https://localhost:8000/api/user_answers?userId=25&question=44&game=11
-
 	useEffect(() => {
 		const getAnswersByQuestion = async () => {
 			try {
@@ -138,7 +139,69 @@ const Correction = () => {
 
 	//TODO revoir la logique : validation au click sur suivant, si vrai alors useState true, si faux alors false !!!!!!!!!
 
-	const handleNext = () => {
+	const handleNext = async () => {
+		if (isTrue === null) return;
+		if (isTrue === false) {
+			console.log("FAUX");
+			try {
+				const { data: patchUser } = await axiosJWT.patch(
+					`${userAnswersRoute}/${thisQuestionAnswer.id}`,
+					{
+						isTrue: false,
+					},
+					{
+						headers: { "Content-Type": "application/merge-patch+json" },
+					}
+				);
+				// console.log("patch", patchUser);
+			} catch (error) {
+				console.log(error);
+			}
+		}
+
+		if (isTrue) {
+			console.log("VRAI");
+			try {
+				const { data: patchUser } = await axiosJWT.patch(
+					`${userAnswersRoute}/${thisQuestionAnswer.id}`,
+					{
+						isTrue: true,
+					},
+					{
+						headers: { "Content-Type": "application/merge-patch+json" },
+					}
+				);
+				console.log("patch", patchUser);
+
+				const { data: userScore } = await axiosJWT.get(
+					`${scoresRoute}?game=${gameId}&userId=${thisQuestionAnswer.userId.id}`
+				);
+				console.log(userScore);
+				if (userScore["hydra:member"].length === 0) {
+					const { data: userScore } = await axiosJWT.post(scoresRoute, {
+						game: `/api/games/${thisQuestion.game.id}`,
+						userId: `/api/users/${thisQuestionAnswer.userId.id}`,
+						score: thisQuestion.question.level,
+					});
+					console.log(userScore);
+				}
+				//sinon patch le score
+				await axiosJWT.patch(
+					`${scoresRoute}/${userScore["hydra:member"][0].id}`,
+					{
+						score:
+							userScore["hydra:member"][0].score + thisQuestion.question.level,
+					},
+					{
+						headers: { "Content-Type": "application/merge-patch+json" },
+					}
+				);
+			} catch (error) {
+				console.log(error);
+			}
+		}
+		falseRef.current.classList.remove("false__active");
+		trueRef.current.classList.remove("true__active");
 		if (!isLastAnswer) {
 			return setSelectedQuestionAnswer((prev) => prev + 1);
 		}
@@ -148,65 +211,16 @@ const Correction = () => {
 		setSelectedQuestion((prev) => prev + 1);
 	};
 
-	const handleTrue = async () => {
-		//patch useranswer istrue = true
-		//vérifier si première bonne réponse (avec filtre userAnswers), si oui post score, sinon, patch score, on fetch score actuel et on incrémente
-		// https://localhost:8000/api/scores?order[score]=asc&game=25
-		try {
-			const { data: patchUser } = await axiosJWT.patch(
-				`${userAnswersRoute}/${thisQuestionAnswer.id}`,
-				{
-					isTrue: true,
-				},
-				{
-					headers: { "Content-Type": "application/merge-patch+json" },
-				}
-			);
-			console.log("patch", patchUser);
-
-			const { data: userScore } = await axiosJWT.get(
-				`${scoresRoute}?game=${gameId}&userId=${thisQuestionAnswer.userId.id}`
-			);
-			console.log(userScore);
-			if (userScore["hydra:member"].length === 0) {
-				const { data: userScore } = await axiosJWT.post(scoresRoute, {
-					game: `/api/games/${thisQuestion.game.id}`,
-					userId: `/api/users/${thisQuestionAnswer.userId.id}`,
-					score: thisQuestion.question.level,
-				});
-				console.log(userScore);
-			}
-			//sinon patch le score
-			const { data: updateScore } = await axiosJWT.patch(
-				`${scoresRoute}/${userScore["hydra:member"][0].id}`,
-				{
-					score:
-						userScore["hydra:member"][0].score + thisQuestion.question.level,
-				},
-				{
-					headers: { "Content-Type": "application/merge-patch+json" },
-				}
-			);
-		} catch (error) {
-			console.log(error);
-		}
+	const handleTrue = () => {
+		falseRef.current.classList.remove("false__active");
+		trueRef.current.classList.add("true__active");
+		setIsTrue(true);
 	};
 
-	const handleFalse = async () => {
-		try {
-			const { data: patchUser } = await axiosJWT.patch(
-				`${userAnswersRoute}/${thisQuestionAnswer.id}`,
-				{
-					isTrue: false,
-				},
-				{
-					headers: { "Content-Type": "application/merge-patch+json" },
-				}
-			);
-			// console.log("patch", patchUser);
-		} catch (error) {
-			console.log(error);
-		}
+	const handleFalse = () => {
+		trueRef.current.classList.remove("true__active");
+		falseRef.current.classList.add("false__active");
+		setIsTrue(false);
 	};
 
 	return (
@@ -243,13 +257,13 @@ const Correction = () => {
 							)}
 
 							<div className="true-false-next">
-								<button className="true" onClick={handleTrue}>
+								<button className="true" onClick={handleTrue} ref={trueRef}>
 									Vrai
 								</button>
 								<button className="next" onClick={handleNext}>
 									Suivant
 								</button>
-								<button className="false" onClick={handleFalse}>
+								<button className="false" onClick={handleFalse} ref={falseRef}>
 									Faux
 								</button>
 							</div>

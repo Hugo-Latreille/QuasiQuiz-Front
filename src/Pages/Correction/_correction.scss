@@ -76,6 +76,10 @@
 					border: 1px solid v.$g-color;
 					background-color: v.$bg-color;
 					color: v.$g-color;
+					&.true__active {
+						background-color: v.$g-color;
+						color: v.$bg-color;
+					}
 
 					&:hover {
 						background-color: v.$g-color;
@@ -98,6 +102,10 @@
 					border: 1px solid v.$user-color;
 					background-color: v.$bg-color;
 					color: v.$user-color;
+					&.false__active {
+						background-color: v.$user-color;
+						color: v.$bg-color;
+					}
 
 					&:hover {
 						background-color: v.$user-color;

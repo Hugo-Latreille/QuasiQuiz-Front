@@ -50,7 +50,7 @@ const Palmares = () => {
 				setCount((count) => count + 1);
 				counter++;
 			}
-		}, 2000);
+		}, 3000);
 
 		return () => clearInterval(interval);
 	}, [scores]);
@@ -104,7 +104,6 @@ const Palmares = () => {
 											{user.userId.pseudo}
 										</a>
 									</div>
-
 									<a href="" className="pts">
 										{user.score}pts
 									</a>

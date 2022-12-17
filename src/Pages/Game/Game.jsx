@@ -188,6 +188,13 @@ const Game = () => {
 				);
 			} else if (media.includes("png")) {
 				return <img src={media} alt="image" />;
+			} else if (media.includes("mp3")) {
+				return (
+					<audio src={media} autoPlay controls>
+						{/* eslint-disable-next-line react/no-unescaped-entities */}
+						Votre navigateur ne supporte pas l'élément <code>audio</code>.
+					</audio>
+				);
 			}
 		}
 		return;

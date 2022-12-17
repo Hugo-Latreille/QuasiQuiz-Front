@@ -1,105 +1,125 @@
+/* eslint-disable no-unreachable */
 import Header from "../../Layouts/Header";
 import Footer from "../../Layouts/Footer";
 import Button from "../../Components/Button/Button";
 
 import "./_palmares.scss";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { axiosJWT, scoresRoute } from "../../utils/axios";
 
 const Palmares = () => {
-  return (
-    <>
-      <Header />
-      <main>
-        <div className="palmares-content">
-          <div className="title">
-            <h1>Résultats</h1>
-          </div>
-          <div className="results-box">
-            <div className="g-result first">
-              <div className="gamer">
-                <img src="https://picsum.photos/200" alt="" />
-                <a href="" className="pseudo">
-                  Coucou
-                </a>
-              </div>
+	const { gameId } = useParams();
+	const [scores, setScores] = useState(null);
+	const [count, setCount] = useState(0);
 
-              <a href="" className="pts">
-                50 pts
-              </a>
-              <a href="" className="position">
-                1er
-              </a>
-            </div>
+	useEffect(() => {
+		let isMounted = true;
+		const controller = new AbortController();
+		const getScores = async () => {
+			try {
+				const { data: gameScores } = await axiosJWT.get(
+					`${scoresRoute}?order[score]=desc&game=${gameId}`,
+					{
+						signal: controller.signal,
+					}
+				);
+				if (isMounted && gameScores) {
+					console.log(gameScores["hydra:member"]);
+					setScores(gameScores["hydra:member"]);
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		};
 
-            <div className="g-result second">
-              <div className="gamer">
-                <img src="https://picsum.photos/200" alt="" />
-                <a href="" className="pseudo">
-                  Coucou
-                </a>
-              </div>
+		getScores();
 
-              <a href="" className="pts">
-                49 pts
-              </a>
-              <a href="" className="position">
-                2nd
-              </a>
-            </div>
+		return () => {
+			isMounted = false;
+			controller.abort();
+		};
+	}, [gameId]);
 
-            <div className="g-result third">
-              <div className="gamer">
-                <img src="https://picsum.photos/200" alt="" />
-                <a href="" className="pseudo">
-                  Coucou
-                </a>
-              </div>
+	useEffect(() => {
+		let counter = count;
+		const interval = setInterval(() => {
+			if (counter >= scores.length) {
+				clearInterval(interval);
+			} else {
+				setCount((count) => count + 1);
+				counter++;
+			}
+		}, 2000);
 
-              <a href="" className="pts">
-                47 pts
-              </a>
-              <a href="" className="position">
-                3e
-              </a>
-            </div>
+		return () => clearInterval(interval);
+	}, [scores]);
 
-            <div className="g-result others">
-              <div className="gamer">
-                <img src="https://picsum.photos/200" alt="" />
-                <a href="" className="pseudo">
-                  Coucou
-                </a>
-              </div>
+	const scoresWithPosition = scores?.map((user, index) => ({
+		...user,
+		position: index + 1,
+	}));
 
-              <a href="" className="pts">
-                10 pts
-              </a>
-              <a href="" className="position">
-                4e
-              </a>
-            </div>
+	const cssPosition = (position) => {
+		switch (position) {
+			case 1:
+				return "g-result first";
+				break;
+			case 2:
+				return "g-result second";
+				break;
+			case 3:
+				return "g-result third";
+				break;
+			case scoresWithPosition.length:
+				return "g-result last";
+				break;
+			default:
+				return "g-result others";
+		}
+	};
 
-            <div className="g-result last">
-              <div className="gamer">
-                <img src="https://picsum.photos/200" alt="" />
-                <a href="" className="pseudo">
-                  Coucou
-                </a>
-              </div>
+	return (
+		<>
+			<Header />
+			<main>
+				<div className="palmares-content">
+					<div className="title">
+						<h1>Résultats</h1>
+					</div>
+					<div className="results-box">
+						{scoresWithPosition
+							?.slice(
+								scoresWithPosition.length - count,
+								scoresWithPosition.length
+							)
+							.map((user) => (
+								<div key={user.position} className={cssPosition(user.position)}>
+									<div className="gamer">
+										<img
+											src={`data:image/svg+xml;base64,${user.userId.avatar}`}
+											alt=""
+										/>
+										<a href="" className="pseudo">
+											{user.userId.pseudo}
+										</a>
+									</div>
 
-              <a href="" className="pts">
-                2 pts
-              </a>
-              <a href="" className="position">
-                &#x1F602;
-              </a>
-            </div>
-          </div>
-          <Button label={"Rejouer"} />
-        </div>
-      </main>
-      <Footer />
-    </>
-  );
+									<a href="" className="pts">
+										{user.score}pts
+									</a>
+									<a href="" className="position">
+										{user.position}
+									</a>
+								</div>
+							))}
+					</div>
+					<Button label={"Rejouer"} />
+				</div>
+			</main>
+			<Footer />
+		</>
+	);
 };
 
 export default Palmares;

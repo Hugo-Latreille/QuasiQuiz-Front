@@ -230,8 +230,8 @@ const Game = () => {
 			} else {
 				const isGameCorrected = await fetchIsGameCorrected();
 				if (isGameCorrected) {
-					// btnRef.current.innerText = "Afficher les résultats";
-					return navigate("/palmares");
+					btnRef.current.innerText = "Afficher les résultats";
+					return navigate(`/palmares/${gameId}`);
 				}
 				return toast.info(
 					"Veuillez attendre que le Maître du Jeu corrige la partie",
@@ -317,7 +317,7 @@ const Game = () => {
 							<Button
 								label={"Correction en cours..."}
 								onClick={handleButton}
-								// ref={btnRef}
+								forwardRef={btnRef}
 							/>
 						)}
 					</>

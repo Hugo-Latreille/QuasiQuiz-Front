@@ -99,7 +99,7 @@ function App() {
 						<Route path="lobby" element={<Lobby />} />
 						<Route path="game/:gameId" element={<Game />} />
 						<Route path="correction/:gameId" element={<Correction />} />
-						<Route path="palmares" element={<Palmares />} />
+						<Route path="palmares/:gameId" element={<Palmares />} />
 						<Route path="profile" element={<Profile />} />
 					</Route>
 				</Route>

@@ -13,7 +13,6 @@ const Palmares = () => {
 	const [scores, setScores] = useState(null);
 	const [count, setCount] = useState(0);
 
-
 	//TODO si utilisateur = moi, alors signe distinctif
 
 	useEffect(() => {

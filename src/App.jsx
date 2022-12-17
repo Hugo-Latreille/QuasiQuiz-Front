@@ -100,7 +100,7 @@ function App() {
 						<Route path="game/:gameId" element={<Game />} />
 						<Route path="correction/:gameId" element={<Correction />} />
 						<Route path="palmares/:gameId" element={<Palmares />} />
-						<Route path="profile" element={<Profile />} />
+						<Route path="profil" element={<Profile />} />
 					</Route>
 				</Route>
 				<Route path="*" element={<Error />} />

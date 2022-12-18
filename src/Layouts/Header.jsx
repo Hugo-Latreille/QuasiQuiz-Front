@@ -93,7 +93,9 @@ const Header = () => {
 	return (
 		<>
 			<div className="header">
-				<img src={logo} alt="logoQuasiQuiz" className="logo" />
+				<Link to="/lobby">
+					<img src={logo} alt="logoQuasiQuiz" className="logo" />
+				</Link>
 
 				{!user.token ? (
 					<Link

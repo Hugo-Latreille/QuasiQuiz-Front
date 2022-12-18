@@ -13,6 +13,7 @@ import RequireAuth from "./utils/RequireAuth";
 import AuthTest from "./Pages/JWTTest/AuthTest";
 import WelcomeTest from "./Pages/JWTTest/WelcomeTest";
 import PersistLogin from "./utils/PersistLogin";
+import PasswordEdit from "./Pages/PasswordEdit/PasswordEdit";
 
 export const UserContext = createContext();
 
@@ -101,6 +102,7 @@ function App() {
 						<Route path="correction/:gameId" element={<Correction />} />
 						<Route path="palmares/:gameId" element={<Palmares />} />
 						<Route path="profil" element={<Profile />} />
+						<Route path="password/:userId" element={<PasswordEdit />} />
 					</Route>
 				</Route>
 				<Route path="*" element={<Error />} />
@@ -108,6 +110,7 @@ function App() {
 			{background && (
 				<Routes>
 					<Route path="login" element={<Connexion />} />
+					<Route path="password/:userId" element={<PasswordEdit />} />
 				</Routes>
 			)}
 		</Provider>

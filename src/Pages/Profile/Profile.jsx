@@ -14,11 +14,12 @@ import {
 	multiAvatarRoute,
 	multiAvatarAPIKey,
 } from "../../utils/axios";
-import { Link } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import { DateTime } from "luxon";
 import axios from "axios";
 
 const Profile = () => {
+	const location = useLocation();
 	const { user } = useContext(UserContext);
 	const [userData, setUserData] = useState(null);
 	const [userGames, setUserGames] = useState(null);
@@ -60,7 +61,7 @@ const Profile = () => {
 					}
 				}
 
-				//TODO : retrouver toutes les games de l'utilisateur, afficher heure convertie
+				//TODO : uniquement games CORRIGEES : ajout filtre boolean sur entité !!!
 
 				// const {data:userHistory}
 			} catch (error) {
@@ -77,15 +78,19 @@ const Profile = () => {
 	}, []);
 
 	const handlePseudo = async () => {
-		await axiosJWT.patch(
-			`${usersRoute}/${userData.id}`,
-			{
-				pseudo: pseudo,
-			},
-			{ headers: { "Content-Type": "application/merge-patch+json" } }
-		);
+		try {
+			await axiosJWT.patch(
+				`${usersRoute}/${userData.id}`,
+				{
+					pseudo: pseudo,
+				},
+				{ headers: { "Content-Type": "application/merge-patch+json" } }
+			);
 
-		setEditPseudo(false);
+			setEditPseudo(false);
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	useEffect(() => {
@@ -104,6 +109,22 @@ const Profile = () => {
 		};
 		getAvatars();
 	}, []);
+
+	const handleAvatar = async () => {
+		try {
+			await axiosJWT.patch(
+				`${usersRoute}/${userData.id}`,
+				{
+					avatar: avatars[selectedAvatar],
+				},
+				{ headers: { "Content-Type": "application/merge-patch+json" } }
+			);
+			setAvatar(avatars[selectedAvatar]);
+			setEditAvatar(false);
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	return (
 		<>
@@ -135,6 +156,9 @@ const Profile = () => {
 												</div>
 											);
 										})}
+										{avatars && (
+											<AiOutlineCheck onClick={handleAvatar} className="edit" />
+										)}
 									</div>
 								</div>
 							) : (
@@ -167,29 +191,37 @@ const Profile = () => {
 								</h1>
 							)}
 
-							<a href="">
-								{userData.email} <MdEdit className="edit" />
-							</a>
-							<Button label="Changer le mdp" />
+							<a href="">{userData.email}</a>
+
+							<Link
+								className="link-mod"
+								to={`/password/${userData.id}`}
+								state={{ background: location }}
+							>
+								<Button label="Changer le mdp" />
+							</Link>
 						</div>
 
 						<div className="parties">
 							<h3>Historique :</h3>
 							{userGames &&
-								userGames.map((game) => (
-									<div className="party" key={game.id}>
-										<Link to={`/palmares/${game.game.id}`} className="date">
-											{DateTime.fromISO(
-												`${game.game.created_at}`
-											).toLocaleString(DateTime.DATETIME_MED)}
-										</Link>
-									</div>
-								))}
+								userGames
+									.filter((game) => game.game.is_corrected)
+									.map((game) => (
+										<div className="party" key={game.id}>
+											<Link to={`/palmares/${game.game.id}`} className="date">
+												{DateTime.fromISO(
+													`${game.game.created_at}`
+												).toLocaleString(DateTime.DATETIME_MED)}
+											</Link>
+										</div>
+									))}
 						</div>
 					</div>
 				</main>
 			)}
 			<Footer />
+			<Outlet />
 		</>
 	);
 };

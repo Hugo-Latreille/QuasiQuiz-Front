@@ -14,6 +14,7 @@ import AuthTest from "./Pages/JWTTest/AuthTest";
 import WelcomeTest from "./Pages/JWTTest/WelcomeTest";
 import PersistLogin from "./utils/PersistLogin";
 import PasswordEdit from "./Pages/PasswordEdit/PasswordEdit";
+import Message from "./Pages/Message/Message";
 
 export const UserContext = createContext();
 
@@ -103,6 +104,7 @@ function App() {
 						<Route path="palmares/:gameId" element={<Palmares />} />
 						<Route path="profil" element={<Profile />} />
 						<Route path="password/:userId" element={<PasswordEdit />} />
+						<Route path="message" element={<Message />} />
 					</Route>
 				</Route>
 				<Route path="*" element={<Error />} />

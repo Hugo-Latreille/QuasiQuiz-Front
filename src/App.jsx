@@ -15,9 +15,9 @@ import WelcomeTest from "./Pages/JWTTest/WelcomeTest";
 import PersistLogin from "./utils/PersistLogin";
 import PasswordEdit from "./Pages/PasswordEdit/PasswordEdit";
 import Message from "./Pages/Message/Message";
-import LobbySkel from "./Pages/Skeleton/LobbySkel";
-import GameSkel from "./Pages/Skeleton/GameSkel";
-import PalmaSkel from "./Pages/Skeleton/PalmaSkel";
+// import LobbySkel from "./Pages/Skeleton/LobbySkel";
+// import GameSkel from "./Pages/Skeleton/GameSkel";
+// import PalmaSkel from "./Pages/Skeleton/PalmaSkel";
 
 export const UserContext = createContext();
 
@@ -97,22 +97,22 @@ function App() {
         </Route>
 
         {/* Routes privées */}
-        {/* <Route element={<PersistLogin />}>
-					<Route element={<RequireAuth />}> */}
-        <Route path="/test" element={<WelcomeTest />} />
-        <Route path="/authTest" element={<AuthTest />} />
-        <Route path="lobby" element={<Lobby />} />
-        <Route path="game/:gameId" element={<Game />} />
-        <Route path="correction/:gameId" element={<Correction />} />
-        <Route path="palmares/:gameId" element={<Palmares />} />
-        <Route path="profil" element={<Profile />} />
-        <Route path="password/:userId" element={<PasswordEdit />} />
-        <Route path="message" element={<Message />} />
-        <Route path="lobbyskel" element={<LobbySkel />} />
-        <Route path="gameskel" element={<GameSkel />} />
-        <Route path="palmaskel" element={<PalmaSkel />} />
-        {/* </Route>
-				</Route> */}
+        <Route element={<PersistLogin />}>
+          <Route element={<RequireAuth />}>
+            <Route path="/test" element={<WelcomeTest />} />
+            <Route path="/authTest" element={<AuthTest />} />
+            <Route path="lobby" element={<Lobby />} />
+            <Route path="game/:gameId" element={<Game />} />
+            <Route path="correction/:gameId" element={<Correction />} />
+            <Route path="palmares/:gameId" element={<Palmares />} />
+            <Route path="profil" element={<Profile />} />
+            <Route path="password/:userId" element={<PasswordEdit />} />
+            <Route path="message" element={<Message />} />
+            {/* <Route path="lobbyskel" element={<LobbySkel />} />
+            <Route path="gameskel" element={<GameSkel />} />
+            <Route path="palmaskel" element={<PalmaSkel />} /> */}
+          </Route>
+        </Route>
         <Route path="*" element={<Error />} />
       </Routes>
       {background && (

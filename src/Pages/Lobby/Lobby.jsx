@@ -9,6 +9,7 @@ import {
 	gamesRoute,
 	host,
 	mercureHubUrl,
+	messagesRoute,
 	usersRoute,
 } from "../../utils/axios";
 import { UserContext } from "../../App";
@@ -135,32 +136,55 @@ const Lobby = () => {
 		};
 		getGameUsers();
 
+		return () => {
+			isMounted = false;
+			controller.abort();
+		};
+	}, [gameId]);
+
+	useEffect(() => {
 		const url = new URL(mercureHubUrl);
 		url.searchParams.append("topic", `${host}${gameHasUsersRoute}/{id}`);
+		url.searchParams.append("topic", `${host}${messagesRoute}/{id}`);
+		url.searchParams.append("topic", `${host}${gamesRoute}/{id}`);
 		const eventSource = new EventSource(url);
 		eventSource.onmessage = (e) => {
 			console.log(JSON.parse(e.data));
-			const newUser = JSON.parse(e.data);
-			if (userId !== newUser.userId.id) {
-				setOtherUsers((prev) => [
+			const data = JSON.parse(e.data);
+
+			if (
+				data["@context"].includes("GameHasUser") &&
+				otherUsers &&
+				userId !== data.userId.id
+			) {
+				console.log(userId, data.userId.id);
+				console.log("UserEvent", data);
+				return setOtherUsers((prev) => [
 					...prev,
 					{
-						id: newUser.userId.id,
-						pseudo: newUser.userId.pseudo,
-						avatar: newUser.userId.avatar,
-						email: newUser.userId.email,
-						isGameMaster: newUser.is_game_master,
+						id: data.userId.id,
+						pseudo: data.userId.pseudo,
+						avatar: data.userId.avatar,
+						email: data.userId.email,
+						isGameMaster: data.is_game_master,
 					},
 				]);
+			}
+			if (
+				data["@context"].includes("Game") &&
+				!data["@context"].includes("GameHasUser")
+			) {
+				if (data.is_open === false) {
+					console.log("GameEvent", data);
+					return navigate(`/game/${gameId}`);
+				}
 			}
 		};
 
 		return () => {
-			isMounted = false;
-			controller.abort();
 			eventSource.close();
 		};
-	}, [gameId]);
+	}, [otherUsers]);
 
 	// 3-si GM, affichage bouton partie et au lancement, le game devient fermée, on appelle la route générant les questions, navigate vers question / pour les autres joueurs, bouton "rejoindre la partie"
 

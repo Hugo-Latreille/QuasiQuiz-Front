@@ -18,6 +18,7 @@ const Message = () => {
 		url.searchParams.append("topic", `${host}${messagesRoute}/{id}`);
 		const eventSource = new EventSource(url);
 		eventSource.onmessage = (e) => {
+			console.log("Message", e);
 			console.log(JSON.parse(e.data));
 			setMessages((prev) => [...prev, JSON.parse(e.data)]);
 		};

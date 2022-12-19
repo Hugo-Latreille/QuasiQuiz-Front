@@ -42,6 +42,10 @@ const Game = () => {
 	const btnRef = useRef();
 	const [isloading, setIsLoading] = useState(true);
 
+	//! quand game terminée pour TOUT LE MONDE, passage automatique à la correction
+	//! correction : possible : passage écran suivant...ou animation. Possibilité d'afficher vrai/faux en direct ?? uniquement si patch bdd...
+	//! quand correction terminée, passage automatique au palmarès
+
 	// récuperer les questions de cette partie + le temps de chacune + le niveau
 	useEffect(() => {
 		let isMounted = true;

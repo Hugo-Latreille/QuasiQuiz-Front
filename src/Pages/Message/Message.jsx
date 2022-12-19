@@ -1,15 +1,19 @@
 import "./message.scss";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import { host, mercureHubUrl, messagesRoute } from "../../utils/axios";
 import useAxiosJWT from "../../utils/useAxiosJWT";
 import { BsFillChatLeftDotsFill } from "react-icons/bs";
+import { AiOutlineCloseCircle } from "react-icons/ai";
 
 const Message = ({ gameId, userId }) => {
 	const axiosJWT = useAxiosJWT();
 	const [messages, setMessages] = useState(null);
 	const [chatMessage, setChatMessage] = useState("");
 	const [chatOpen, setChatOpen] = useState(false);
+	const [notifications, setNotifications] = useState(0);
+	const notifRef = useRef(null);
+	const bottomRef = useRef(null);
 
 	useEffect(() => {
 		let isMounted = true;
@@ -47,9 +51,14 @@ const Message = ({ gameId, userId }) => {
 		eventSource.onmessage = (e) => {
 			console.log("Message", e);
 			console.log(JSON.parse(e.data));
+			setNotifications((prev) => prev + 1);
+			notifRef.current.classList.add("animate");
+			setTimeout(() => {
+				notifRef.current.classList.remove("animate");
+			}, 2000);
+			bottomRef.current?.scrollIntoView({ behavior: "smooth" });
 			setMessages((prev) => [...prev, JSON.parse(e.data)]);
 		};
-
 		return () => {
 			eventSource.close();
 		};
@@ -63,6 +72,7 @@ const Message = ({ gameId, userId }) => {
 				userId: `/api/users/${userId}`,
 				game: `/api/games/${gameId}`,
 			});
+			setChatMessage("");
 		} catch (error) {
 			console.log(error);
 		}
@@ -72,7 +82,15 @@ const Message = ({ gameId, userId }) => {
 		<>
 			{!chatOpen ? (
 				<div className="chatIcon">
-					<BsFillChatLeftDotsFill onClick={() => setChatOpen(true)} />
+					<div className="notifications" ref={notifRef}>
+						{notifications}
+					</div>
+					<BsFillChatLeftDotsFill
+						onClick={() => {
+							setChatOpen(true);
+							setNotifications(0);
+						}}
+					/>
 				</div>
 			) : (
 				<div className="messageContainer">
@@ -82,16 +100,27 @@ const Message = ({ gameId, userId }) => {
 								key={message.id}
 								className={message.userId.id === userId ? "me" : "other"}
 							>
-								{message.message}
+								{message.userId.pseudo} : {message.message}
 							</p>
 						))}
+					<div ref={bottomRef} />
 					<form onSubmit={handleMessage}>
 						<input
 							type="text"
 							value={chatMessage}
 							onChange={(e) => setChatMessage(e.target.value)}
 						/>
-						<button type="submit">Envoyer</button>
+						<button className="send" type="submit">
+							Envoyer
+						</button>
+						<div className="close">
+							<AiOutlineCloseCircle
+								onClick={() => {
+									setChatOpen(false);
+									setNotifications(0);
+								}}
+							/>
+						</div>
 					</form>
 				</div>
 			)}

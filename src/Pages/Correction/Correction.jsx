@@ -226,7 +226,7 @@ const Correction = () => {
 				{ isCorrected: true },
 				{ headers: { "Content-Type": "application/merge-patch+json" } }
 			);
-			navigate("/palmares");
+			navigate(`/palmares/${gameId}`);
 		} catch (error) {
 			console.log(error);
 		}

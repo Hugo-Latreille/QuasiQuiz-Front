@@ -1,8 +1,8 @@
 import "./_button.scss";
 
-const Button = ({ label, onClick }) => {
+const Button = ({ label, onClick, forwardRef }) => {
 	return (
-		<button onClick={onClick} className="btn">
+		<button onClick={onClick} className="btn" ref={forwardRef}>
 			{label}
 		</button>
 	);

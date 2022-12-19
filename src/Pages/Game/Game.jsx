@@ -39,8 +39,7 @@ const Game = () => {
 	const [users, setUsers] = useState(null);
 	const navigate = useNavigate();
 	const btnRef = useRef();
-
-	//!calculer % complétion pour progressBar
+	const [isloading, setIsLoading] = useState(true);
 
 	// récuperer les questions de cette partie + le temps de chacune + le niveau
 	useEffect(() => {
@@ -66,6 +65,7 @@ const Game = () => {
 				if (isMounted && gameQuestion) {
 					console.log(gameQuestion["hydra:member"]);
 					setQuestions(gameQuestion["hydra:member"]);
+					setIsLoading(false);
 				}
 			} catch (error) {
 				console.log(error);
@@ -188,6 +188,13 @@ const Game = () => {
 				);
 			} else if (media.includes("png")) {
 				return <img src={media} alt="image" />;
+			} else if (media.includes("mp3")) {
+				return (
+					<audio src={media} autoPlay controls>
+						{/* eslint-disable-next-line react/no-unescaped-entities */}
+						Votre navigateur ne supporte pas l'élément <code>audio</code>.
+					</audio>
+				);
 			}
 		}
 		return;
@@ -230,8 +237,8 @@ const Game = () => {
 			} else {
 				const isGameCorrected = await fetchIsGameCorrected();
 				if (isGameCorrected) {
-					// btnRef.current.innerText = "Afficher les résultats";
-					return navigate("/palmares");
+					btnRef.current.innerText = "Afficher les résultats";
+					return navigate(`/palmares/${gameId}`);
 				}
 				return toast.info(
 					"Veuillez attendre que le Maître du Jeu corrige la partie",
@@ -273,6 +280,7 @@ const Game = () => {
 	return (
 		<>
 			<Header />
+
 			<main>
 				{!isLastQuestion ? (
 					<>
@@ -317,7 +325,7 @@ const Game = () => {
 							<Button
 								label={"Correction en cours..."}
 								onClick={handleButton}
-								// ref={btnRef}
+								forwardRef={btnRef}
 							/>
 						)}
 					</>

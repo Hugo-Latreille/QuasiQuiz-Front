@@ -84,7 +84,7 @@ const Connexion = () => {
 			try {
 				const result = await axios.post(usersRoute, {
 					email,
-					password,
+					plainPassword: password,
 					pseudo,
 					avatar: avatars[selectedAvatar],
 				});

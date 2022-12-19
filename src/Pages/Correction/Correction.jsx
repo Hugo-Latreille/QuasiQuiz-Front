@@ -269,12 +269,9 @@ const Correction = () => {
                     </>
                   )}
 
-                  <div className="true-false-next">
+                  <div className="true-false">
                     <button className="true" onClick={handleTrue} ref={trueRef}>
                       Vrai
-                    </button>
-                    <button className="next" onClick={handleNext}>
-                      Suivant
                     </button>
                     <button
                       className="false"
@@ -282,6 +279,11 @@ const Correction = () => {
                       ref={falseRef}
                     >
                       Faux
+                    </button>
+                  </div>
+                  <div className="next">
+                    <button className="next" onClick={handleNext}>
+                      Suivant
                     </button>
                   </div>
                 </div>

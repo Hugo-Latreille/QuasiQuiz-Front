@@ -39,8 +39,7 @@ const Game = () => {
 	const [users, setUsers] = useState(null);
 	const navigate = useNavigate();
 	const btnRef = useRef();
-
-	//!calculer % complétion pour progressBar
+	const [isloading, setIsLoading] = useState(true);
 
 	// récuperer les questions de cette partie + le temps de chacune + le niveau
 	useEffect(() => {
@@ -66,6 +65,7 @@ const Game = () => {
 				if (isMounted && gameQuestion) {
 					console.log(gameQuestion["hydra:member"]);
 					setQuestions(gameQuestion["hydra:member"]);
+					setIsLoading(false);
 				}
 			} catch (error) {
 				console.log(error);
@@ -280,6 +280,7 @@ const Game = () => {
 	return (
 		<>
 			<Header />
+
 			<main>
 				{!isLastQuestion ? (
 					<>

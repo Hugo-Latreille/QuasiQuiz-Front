@@ -4,7 +4,13 @@ import Button from "../../Components/Button/Button";
 import "./_lobby.scss";
 import { useContext, useEffect } from "react";
 import useAxiosJWT from "../../utils/useAxiosJWT";
-import { gameHasUsersRoute, gamesRoute, usersRoute } from "../../utils/axios";
+import {
+	gameHasUsersRoute,
+	gamesRoute,
+	host,
+	mercureHubUrl,
+	usersRoute,
+} from "../../utils/axios";
 import { UserContext } from "../../App";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -17,7 +23,7 @@ const Lobby = () => {
 	const { user } = useContext(UserContext);
 	const [gameId, setGameId] = useState(null);
 	const [otherUsers, setOtherUsers] = useState(null);
-	// const [isNewGame, setIsNewGame] = useState(null);
+	const [userId, setUserId] = useState(null);
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -34,6 +40,7 @@ const Lobby = () => {
 					}
 				);
 				const userId = userData["hydra:member"][0].id;
+				setUserId(userId);
 
 				const { data } = await axiosJWT.get(`${gamesRoute}?is_open=true`, {
 					signal: controller.signal,
@@ -128,9 +135,30 @@ const Lobby = () => {
 		};
 		getGameUsers();
 
+		const url = new URL(mercureHubUrl);
+		url.searchParams.append("topic", `${host}${gameHasUsersRoute}/{id}`);
+		const eventSource = new EventSource(url);
+		eventSource.onmessage = (e) => {
+			console.log(JSON.parse(e.data));
+			const newUser = JSON.parse(e.data);
+			if (userId !== newUser.userId.id) {
+				setOtherUsers((prev) => [
+					...prev,
+					{
+						id: newUser.userId.id,
+						pseudo: newUser.userId.pseudo,
+						avatar: newUser.userId.avatar,
+						email: newUser.userId.email,
+						isGameMaster: newUser.is_game_master,
+					},
+				]);
+			}
+		};
+
 		return () => {
 			isMounted = false;
 			controller.abort();
+			eventSource.close();
 		};
 	}, [gameId]);
 

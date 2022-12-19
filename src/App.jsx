@@ -17,6 +17,7 @@ import PasswordEdit from "./Pages/PasswordEdit/PasswordEdit";
 import Message from "./Pages/Message/Message";
 import LobbySkel from "./Pages/Skeleton/LobbySkel";
 import GameSkel from "./Pages/Skeleton/GameSkel";
+import PalmaSkel from "./Pages/Skeleton/PalmaSkel";
 
 export const UserContext = createContext();
 
@@ -109,6 +110,7 @@ function App() {
         <Route path="message" element={<Message />} />
         <Route path="lobbyskel" element={<LobbySkel />} />
         <Route path="gameskel" element={<GameSkel />} />
+        <Route path="palmaskel" element={<PalmaSkel />} />
         {/* </Route>
 				</Route> */}
         <Route path="*" element={<Error />} />

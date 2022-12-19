@@ -21,6 +21,7 @@ import Button from "../../Components/Button/Button";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Message from "../Message/Message";
+import { v4 as uuidv4 } from "uuid";
 
 //? set FOCUS sur le champ de réponse (inputRef.current.focus())
 const Game = () => {
@@ -45,9 +46,8 @@ const Game = () => {
 	const [isloading, setIsLoading] = useState(true);
 	const [answersCount, setAnswerCount] = useState(0);
 
-	//! quand game terminée pour TOUT LE MONDE, passage automatique à la correction
-	//! correction : possible : passage écran suivant...ou animation. Possibilité d'afficher vrai/faux en direct ?? uniquement si patch bdd...
-	//! quand correction terminée, passage automatique au palmarès
+	//! soit ici dès que game corrigée, alors on move les users vers palmares
+	//! SOIT correction : possible : passage écran suivant...ou animation. Possibilité d'afficher vrai/faux en direct ?? uniquement si patch bdd...
 
 	// récuperer les questions de cette partie + le temps de chacune + le niveau
 	useEffect(() => {
@@ -235,10 +235,13 @@ const Game = () => {
 		url.searchParams.append("topic", `${host}${userAnswersRoute}/{id}`);
 		const eventSource = new EventSource(url);
 		eventSource.onmessage = (e) => {
-			console.log("userAnswer", e);
+			// console.log("userAnswer", e);
 			// console.log(JSON.parse(e.data));
 			count++;
-			if (count === users.length * questions.length && isUserGameMaster()) {
+			// if (count === users.length * questions.length && isUserGameMaster()) {
+			// 	return navigate(`/correction/${gameId}`);
+			// }
+			if (count === users.length * questions.length) {
 				return navigate(`/correction/${gameId}`);
 			}
 		};
@@ -312,13 +315,12 @@ const Game = () => {
 			<main>
 				{!isLastQuestion ? (
 					<>
-						<p style={{ color: "white" }}>{selectedQuestion}</p>
 						{thisQuestion && (
 							<div className="game-content">
 								<Timer
 									remainingTime={remainingTime}
 									forwardRef={timerRef}
-									time={time}
+									time={noMoreTime}
 								/>
 								<div className="game-box">
 									<div className="media">{getParseMedia()}</div>

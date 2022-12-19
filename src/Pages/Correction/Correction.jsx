@@ -7,6 +7,8 @@ import {
 	gameHasUsersRoute,
 	gameQuestions,
 	gamesRoute,
+	host,
+	mercureHubUrl,
 	scoresRoute,
 	userAnswersRoute,
 	usersRoute,
@@ -19,9 +21,9 @@ import Button from "../../Components/Button/Button";
 const Correction = () => {
 	const navigate = useNavigate();
 	const { gameId } = useParams();
-	// const { user } = useContext(UserContext);
-	// const [userId, setUserId] = useState(null);
-	// const [users, setUsers] = useState(null);
+	const { user } = useContext(UserContext);
+	const [userId, setUserId] = useState(null);
+	const [users, setUsers] = useState(null);
 	const [questions, setQuestions] = useState([]);
 	const [selectedQuestion, setSelectedQuestion] = useState(0);
 	const [thisQuestion, setThisQuestion] = useState(null);
@@ -40,14 +42,14 @@ const Correction = () => {
 		const controller = new AbortController();
 		const getQuestions = async () => {
 			try {
-				// const { data: userData } = await axiosJWT.get(
-				// 	`${usersRoute}?email=${user.email}`,
-				// 	{
-				// 		signal: controller.signal,
-				// 	}
-				// );
-				// const userId = userData["hydra:member"][0].id;
-				// setUserId(userId);
+				const { data: userData } = await axiosJWT.get(
+					`${usersRoute}?email=${user.email}`,
+					{
+						signal: controller.signal,
+					}
+				);
+				const userId = userData["hydra:member"][0].id;
+				setUserId(userId);
 
 				const { data: gameQuestion } = await axiosJWT.get(
 					`${gameQuestions}?game=${gameId}`,
@@ -63,24 +65,24 @@ const Correction = () => {
 				console.log(error);
 			}
 		};
-		// const getUsers = async () => {
-		// 	try {
-		// 		if (gameId) {
-		// 			const { data: usersInGame } = await axiosJWT.get(
-		// 				`${gameHasUsersRoute}?game=${gameId}`
-		// 			);
-		// 			if (usersInGame) {
-		// 				console.log(usersInGame["hydra:member"]);
-		// 				setUsers(usersInGame["hydra:member"]);
-		// 			}
-		// 		}
-		// 	} catch (error) {
-		// 		console.log(error);
-		// 	}
-		// };
+		const getUsers = async () => {
+			try {
+				if (gameId) {
+					const { data: usersInGame } = await axiosJWT.get(
+						`${gameHasUsersRoute}?game=${gameId}`
+					);
+					if (usersInGame) {
+						console.log(usersInGame["hydra:member"]);
+						setUsers(usersInGame["hydra:member"]);
+					}
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		};
 
 		getQuestions();
-		// getUsers();
+		getUsers();
 
 		return () => {
 			isMounted = false;
@@ -136,37 +138,130 @@ const Correction = () => {
 		return;
 	};
 
+	const isUserGameMaster = () => {
+		return users?.filter(
+			(thisUser) =>
+				thisUser.is_game_master === true && thisUser.userId.email === user.email
+		).length === 1
+			? true
+			: false;
+	};
+
+	useEffect(() => {
+		const url = new URL(mercureHubUrl);
+		url.searchParams.append("topic", `${host}${userAnswersRoute}/{id}`);
+		url.searchParams.append("topic", `${host}${scoresRoute}/{id}`);
+		const eventSource = new EventSource(url);
+		eventSource.onmessage = (e) => {
+			console.log("userAnswer", JSON.parse(e.data));
+			const data = JSON.parse(e.data);
+			if (!isUserGameMaster()) {
+				if (data["@context"].includes("UserAnswer")) {
+					if (data.is_true === true) {
+						falseRef.current.classList.remove("false__active");
+						trueRef.current.classList.add("true__active");
+					} else {
+						trueRef.current.classList.remove("true__active");
+						falseRef.current.classList.add("false__active");
+					}
+				}
+				//! si le score évolue, on passe question suivante etc.
+				if (data["@context"].includes("Score")) {
+					falseRef.current.classList.remove("false__active");
+					trueRef.current.classList.remove("true__active");
+					console.log(thisQuestionAnswers?.length);
+					if (!isLastAnswer) {
+						return setSelectedQuestionAnswer((prev) => prev + 1);
+					}
+					if (isLastQuestion) {
+						return console.log("fin des réponses");
+					}
+					setSelectedQuestionAnswer(0);
+					setSelectedQuestion((prev) => prev + 1);
+				}
+			}
+		};
+		return () => {
+			eventSource.close();
+		};
+	}, [thisQuestionAnswers]);
+
+	// const handleNext = async () => {
+	// 	if (isTrue === null) return;
+	// 	if (isTrue === false) {
+	// 		try {
+	// 			await axiosJWT.patch(
+	// 				`${userAnswersRoute}/${thisQuestionAnswer.id}`,
+	// 				{
+	// 					isTrue: false,
+	// 				},
+	// 				{
+	// 					headers: { "Content-Type": "application/merge-patch+json" },
+	// 				}
+	// 			);
+	// 			// console.log("patch", patchUser);
+	// 		} catch (error) {
+	// 			console.log(error);
+	// 		}
+	// 	}
+
+	// 	if (isTrue) {
+	// 		try {
+	// 			await axiosJWT.patch(
+	// 				`${userAnswersRoute}/${thisQuestionAnswer.id}`,
+	// 				{
+	// 					isTrue: true,
+	// 				},
+	// 				{
+	// 					headers: { "Content-Type": "application/merge-patch+json" },
+	// 				}
+	// 			);
+
+	// 			const { data: userScore } = await axiosJWT.get(
+	// 				`${scoresRoute}?game=${gameId}&userId=${thisQuestionAnswer.userId.id}`
+	// 			);
+	// 			// console.log(userScore);
+	// 			if (userScore["hydra:member"].length === 0) {
+	// 				const { data: userScore } = await axiosJWT.post(scoresRoute, {
+	// 					game: `/api/games/${thisQuestion.game.id}`,
+	// 					userId: `/api/users/${thisQuestionAnswer.userId.id}`,
+	// 					score: thisQuestion.question.level,
+	// 				});
+	// 				console.log(userScore);
+	// 			}
+	// 			//sinon patch le score
+	// 			await axiosJWT.patch(
+	// 				`${scoresRoute}/${userScore["hydra:member"][0].id}`,
+	// 				{
+	// 					score:
+	// 						userScore["hydra:member"][0].score + thisQuestion.question.level,
+	// 				},
+	// 				{
+	// 					headers: { "Content-Type": "application/merge-patch+json" },
+	// 				}
+	// 			);
+	// 		} catch (error) {
+	// 			console.log(error);
+	// 		}
+	// 	}
+	// 	falseRef.current.classList.remove("false__active");
+	// 	trueRef.current.classList.remove("true__active");
+	// 	console.log(isLastQuestion);
+	// 	if (!isLastAnswer) {
+	// 		return setSelectedQuestionAnswer((prev) => prev + 1);
+	// 	}
+	// 	if (isLastQuestion) {
+	// 		return console.log("fin des réponses");
+	// 	}
+	// 	setSelectedQuestionAnswer(0);
+	// 	setSelectedQuestion((prev) => prev + 1);
+	// };
+
 	const handleNext = async () => {
 		if (isTrue === null) return;
-		if (isTrue === false) {
-			try {
-				await axiosJWT.patch(
-					`${userAnswersRoute}/${thisQuestionAnswer.id}`,
-					{
-						isTrue: false,
-					},
-					{
-						headers: { "Content-Type": "application/merge-patch+json" },
-					}
-				);
-				// console.log("patch", patchUser);
-			} catch (error) {
-				console.log(error);
-			}
-		}
 
 		if (isTrue) {
 			try {
-				await axiosJWT.patch(
-					`${userAnswersRoute}/${thisQuestionAnswer.id}`,
-					{
-						isTrue: true,
-					},
-					{
-						headers: { "Content-Type": "application/merge-patch+json" },
-					}
-				);
-
 				const { data: userScore } = await axiosJWT.get(
 					`${scoresRoute}?game=${gameId}&userId=${thisQuestionAnswer.userId.id}`
 				);
@@ -194,29 +289,87 @@ const Correction = () => {
 				console.log(error);
 			}
 		}
-		falseRef.current.classList.remove("false__active");
-		trueRef.current.classList.remove("true__active");
-		console.log(isLastQuestion);
-		if (!isLastAnswer) {
-			return setSelectedQuestionAnswer((prev) => prev + 1);
+		if (isTrue === false) {
+			try {
+				const { data: userScore } = await axiosJWT.get(
+					`${scoresRoute}?game=${gameId}&userId=${thisQuestionAnswer.userId.id}`
+				);
+				// console.log(userScore);
+				if (userScore["hydra:member"].length === 0) {
+					const { data: userScore } = await axiosJWT.post(scoresRoute, {
+						game: `/api/games/${thisQuestion.game.id}`,
+						userId: `/api/users/${thisQuestionAnswer.userId.id}`,
+						score: 0,
+					});
+					console.log(userScore);
+				}
+				//sinon patch le score
+				await axiosJWT.patch(
+					`${scoresRoute}/${userScore["hydra:member"][0].id}`,
+					{
+						score: userScore["hydra:member"][0].score + 0,
+					},
+					{
+						headers: { "Content-Type": "application/merge-patch+json" },
+					}
+				);
+			} catch (error) {
+				console.log(error);
+			}
 		}
-		if (isLastQuestion) {
-			return console.log("fin des réponses");
+
+		if (isUserGameMaster()) {
+			falseRef.current.classList.remove("false__active");
+			trueRef.current.classList.remove("true__active");
+			console.log(isLastQuestion);
+			if (!isLastAnswer) {
+				return setSelectedQuestionAnswer((prev) => prev + 1);
+			}
+			if (isLastQuestion) {
+				return console.log("fin des réponses");
+			}
+			setSelectedQuestionAnswer(0);
+			setSelectedQuestion((prev) => prev + 1);
 		}
-		setSelectedQuestionAnswer(0);
-		setSelectedQuestion((prev) => prev + 1);
 	};
 
-	const handleTrue = () => {
-		falseRef.current.classList.remove("false__active");
-		trueRef.current.classList.add("true__active");
-		setIsTrue(true);
+	const handleTrue = async () => {
+		try {
+			await axiosJWT.patch(
+				`${userAnswersRoute}/${thisQuestionAnswer.id}`,
+				{
+					isTrue: true,
+				},
+				{
+					headers: { "Content-Type": "application/merge-patch+json" },
+				}
+			);
+			falseRef.current.classList.remove("false__active");
+			trueRef.current.classList.add("true__active");
+			setIsTrue(true);
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
-	const handleFalse = () => {
-		trueRef.current.classList.remove("true__active");
-		falseRef.current.classList.add("false__active");
-		setIsTrue(false);
+	const handleFalse = async () => {
+		try {
+			trueRef.current.classList.remove("true__active");
+			falseRef.current.classList.add("false__active");
+			await axiosJWT.patch(
+				`${userAnswersRoute}/${thisQuestionAnswer.id}`,
+				{
+					isTrue: false,
+				},
+				{
+					headers: { "Content-Type": "application/merge-patch+json" },
+				}
+			);
+			setIsTrue(false);
+			// console.log("patch", patchUser);
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	const handleEndCorrection = async () => {
@@ -267,21 +420,37 @@ const Correction = () => {
 										</>
 									)}
 
-									<div className="true-false-next">
-										<button className="true" onClick={handleTrue} ref={trueRef}>
-											Vrai
-										</button>
-										<button className="next" onClick={handleNext}>
-											Suivant
-										</button>
-										<button
-											className="false"
-											onClick={handleFalse}
-											ref={falseRef}
-										>
-											Faux
-										</button>
-									</div>
+									{isUserGameMaster() ? (
+										<div className="true-false-next">
+											<button
+												className="true"
+												onClick={handleTrue}
+												ref={trueRef}
+											>
+												Vrai
+											</button>
+											<button className="next" onClick={handleNext}>
+												Suivant
+											</button>
+											<button
+												className="false"
+												onClick={handleFalse}
+												ref={falseRef}
+											>
+												Faux
+											</button>
+										</div>
+									) : (
+										<div className="true-false-next">
+											<button className="true" ref={trueRef}>
+												Vrai
+											</button>
+
+											<button className="false" ref={falseRef}>
+												Faux
+											</button>
+										</div>
+									)}
 								</div>
 								<ProgressBar
 									level={thisQuestion.question.level}

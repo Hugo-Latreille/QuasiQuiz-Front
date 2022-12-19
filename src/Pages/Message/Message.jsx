@@ -5,13 +5,6 @@ import useAxiosJWT from "../../utils/useAxiosJWT";
 const Message = () => {
 	const axiosJWT = useAxiosJWT();
 
-	useEffect(() => {
-		const url = new URL("https://localhost");
-		url.searchParams.append("topic", `https://www.localhost:8000/{id}`);
-		const eventSource = new EventSource(url);
-		console.log(eventSource);
-	}, []);
-
 	const handleTest = async () => {
 		const { data: test } = await axiosJWT.post(messagesRoute, {
 			message: "coucou",
@@ -20,6 +13,11 @@ const Message = () => {
 		});
 		console.log(test);
 	};
+
+	const url = new URL("https://localhost/.well-known/mercure");
+	url.searchParams.append("topic", "https://localhost:8000/api/messages/");
+	const eventSource = new EventSource(url);
+	eventSource.onmessage = (e) => console.log(e);
 
 	return <button onClick={handleTest}>TEST</button>;
 };

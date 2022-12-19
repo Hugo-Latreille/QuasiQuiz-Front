@@ -16,6 +16,7 @@ import PersistLogin from "./utils/PersistLogin";
 import PasswordEdit from "./Pages/PasswordEdit/PasswordEdit";
 import Message from "./Pages/Message/Message";
 import LobbySkel from "./Pages/Skeleton/LobbySkel";
+import GameSkel from "./Pages/Skeleton/GameSkel";
 
 export const UserContext = createContext();
 
@@ -107,6 +108,7 @@ function App() {
         <Route path="password/:userId" element={<PasswordEdit />} />
         <Route path="message" element={<Message />} />
         <Route path="lobbyskel" element={<LobbySkel />} />
+        <Route path="gameskel" element={<GameSkel />} />
         {/* </Route>
 				</Route> */}
         <Route path="*" element={<Error />} />

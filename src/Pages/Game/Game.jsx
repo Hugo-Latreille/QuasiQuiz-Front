@@ -6,6 +6,8 @@ import {
 	gameHasUsersRoute,
 	gameQuestions,
 	gamesRoute,
+	host,
+	mercureHubUrl,
 	userAnswersRoute,
 	usersRoute,
 } from "../../utils/axios";
@@ -41,6 +43,7 @@ const Game = () => {
 	const navigate = useNavigate();
 	const btnRef = useRef();
 	const [isloading, setIsLoading] = useState(true);
+	const [answersCount, setAnswerCount] = useState(0);
 
 	//! quand game terminée pour TOUT LE MONDE, passage automatique à la correction
 	//! correction : possible : passage écran suivant...ou animation. Possibilité d'afficher vrai/faux en direct ?? uniquement si patch bdd...
@@ -204,6 +207,7 @@ const Game = () => {
 		}
 		return;
 	};
+
 	// fonction pour vérifier que tous les joueurs ont répondu à toutes les questions : userAnswer length === questions length
 	const areAllUsersDone = async () => {
 		try {
@@ -225,12 +229,31 @@ const Game = () => {
 		}
 	};
 
+	useEffect(() => {
+		let count = 0;
+		const url = new URL(mercureHubUrl);
+		url.searchParams.append("topic", `${host}${userAnswersRoute}/{id}`);
+		const eventSource = new EventSource(url);
+		eventSource.onmessage = (e) => {
+			console.log("userAnswer", e);
+			// console.log(JSON.parse(e.data));
+			count++;
+			if (count === users.length * questions.length && isUserGameMaster()) {
+				return navigate(`/correction/${gameId}`);
+			}
+		};
+		return () => {
+			eventSource.close();
+		};
+	}, [questions]);
+
 	const handleButton = async () => {
 		console.log(await areAllUsersDone());
 		const usersReadyorNot = await areAllUsersDone();
 		const notReadyToCorrect = usersReadyorNot.some(
 			(finished) => finished === false
 		);
+
 		if (notReadyToCorrect) {
 			return toast.info(
 				"Veuillez attendre que tous les joueurs aient terminé le quizz",

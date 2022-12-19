@@ -210,9 +210,9 @@ const Profile = () => {
 									.map((game) => (
 										<div className="party" key={game.id}>
 											<Link to={`/palmares/${game.game.id}`} className="date">
-												{DateTime.fromISO(
-													`${game.game.created_at}`
-												).toLocaleString(DateTime.DATETIME_MED)}
+												{DateTime.fromISO(`${game.game.created_at}`)
+													.setLocale("fr")
+													.toLocaleString(DateTime.DATETIME_MED)}
 											</Link>
 										</div>
 									))}

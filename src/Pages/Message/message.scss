@@ -1,0 +1,31 @@
+.messageContainer {
+	border: 1px solid white;
+	width: 500px;
+	height: 200px;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+
+.chatIcon {
+	position: absolute;
+	bottom: 4rem;
+	right: 2rem;
+
+	& svg {
+		fill: white;
+		height: 50px;
+		width: 50px;
+	}
+}
+
+.me {
+	color: yellow;
+	text-align: end;
+	padding-right: 2rem;
+}
+
+.other {
+	color: orange;
+	padding-left: 2rem;
+}

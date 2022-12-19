@@ -104,7 +104,6 @@ function App() {
 						<Route path="palmares/:gameId" element={<Palmares />} />
 						<Route path="profil" element={<Profile />} />
 						<Route path="password/:userId" element={<PasswordEdit />} />
-						<Route path="message" element={<Message />} />
 					</Route>
 				</Route>
 				<Route path="*" element={<Error />} />

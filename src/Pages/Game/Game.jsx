@@ -18,6 +18,7 @@ import Button from "../../Components/Button/Button";
 //? React Toastify
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Message from "../Message/Message";
 
 //? set FOCUS sur le champ de réponse (inputRef.current.focus())
 const Game = () => {
@@ -331,6 +332,7 @@ const Game = () => {
 					</>
 				)}
 			</main>
+			<Message gameId={gameId} userId={userId} />
 			<Footer />
 			<ToastContainer />
 		</>

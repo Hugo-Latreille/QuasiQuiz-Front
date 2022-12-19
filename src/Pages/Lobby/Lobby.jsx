@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 //? React Toastify
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Message from "../Message/Message";
 
 const Lobby = () => {
 	const axiosJWT = useAxiosJWT();
@@ -145,7 +146,6 @@ const Lobby = () => {
 	useEffect(() => {
 		const url = new URL(mercureHubUrl);
 		url.searchParams.append("topic", `${host}${gameHasUsersRoute}/{id}`);
-		url.searchParams.append("topic", `${host}${messagesRoute}/{id}`);
 		url.searchParams.append("topic", `${host}${gamesRoute}/{id}`);
 		const eventSource = new EventSource(url);
 		eventSource.onmessage = (e) => {
@@ -299,13 +299,17 @@ const Lobby = () => {
 							)}
 						</div>
 					</div>
-					{otherUsers && isUserGameMaster() ? (
+					{/* {otherUsers && isUserGameMaster() ? (
 						<Button onClick={handleGame} label={"Lancer la partie"} />
 					) : (
 						<Button onClick={handleGame} label={"Rejoindre la partie"} />
+					)} */}
+					{otherUsers && isUserGameMaster() && (
+						<Button onClick={handleGame} label={"Lancer la partie"} />
 					)}
 				</div>
 			</main>
+			<Message gameId={gameId} userId={userId} />
 			<Footer />
 			<ToastContainer />
 		</>

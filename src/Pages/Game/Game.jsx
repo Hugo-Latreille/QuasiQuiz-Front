@@ -188,13 +188,19 @@ const Game = () => {
 	const getParseMedia = () => {
 		if (thisQuestion.question.media.length > 0) {
 			const media = thisQuestion.question.media[0].contentUrl;
+			console.log(media);
 			if (media.includes("mp4")) {
 				return (
 					<video width="750" height="500" controls autoPlay muted>
 						<source src={media} type="video/mp4" />
 					</video>
 				);
-			} else if (media.includes("png")) {
+			} else if (
+				media.includes("png") ||
+				media.includes("jpeg") ||
+				media.includes("jpg") ||
+				media.includes("gif")
+			) {
 				return <img src={media} alt="image" />;
 			} else if (media.includes("mp3")) {
 				return (

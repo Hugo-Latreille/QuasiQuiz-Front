@@ -71,7 +71,6 @@ const Connexion = () => {
 			setLoginPassword("");
 
 			if (decodedToken.roles[0] === "ROLE_ADMIN") {
-				console.log("Coucou", decodedToken.roles[0]);
 				return navigate("/admin/login");
 			}
 			// navigate("/test");

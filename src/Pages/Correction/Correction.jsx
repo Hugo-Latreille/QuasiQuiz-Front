@@ -133,8 +133,20 @@ const Correction = () => {
 						<source src={media} type="video/mp4" />
 					</video>
 				);
-			} else if (media.includes("png")) {
+			} else if (
+				media.includes("png") ||
+				media.includes("jpeg") ||
+				media.includes("jpg") ||
+				media.includes("gif")
+			) {
 				return <img src={media} alt="image" />;
+			} else if (media.includes("mp3")) {
+				return (
+					<audio src={media} autoPlay controls>
+						{/* eslint-disable-next-line react/no-unescaped-entities */}
+						Votre navigateur ne supporte pas l'élément <code>audio</code>.
+					</audio>
+				);
 			}
 		}
 		return;

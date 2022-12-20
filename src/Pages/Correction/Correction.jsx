@@ -167,9 +167,11 @@ const Correction = () => {
 				}
 				//! si le score évolue, on passe question suivante etc.
 				if (data["@context"].includes("Score")) {
+					console.log("SCORE EVENT");
+					console.log(thisQuestionAnswers?.length);
+					console.log(isLastAnswer);
 					falseRef.current.classList.remove("false__active");
 					trueRef.current.classList.remove("true__active");
-					console.log(thisQuestionAnswers?.length);
 					if (!isLastAnswer) {
 						return setSelectedQuestionAnswer((prev) => prev + 1);
 					}

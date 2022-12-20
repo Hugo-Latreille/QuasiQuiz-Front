@@ -52,10 +52,14 @@ const Message = ({ gameId, userId }) => {
 			console.log("Message", e);
 			console.log(JSON.parse(e.data));
 			setNotifications((prev) => prev + 1);
-			notifRef.current.classList.add("animate");
-			setTimeout(() => {
-				notifRef.current.classList.remove("animate");
-			}, 2000);
+
+			if (notifRef.current) {
+				notifRef.current.classList.add("animate");
+				setTimeout(() => {
+					notifRef.current.classList.remove("animate");
+				}, 2000);
+			}
+
 			bottomRef.current?.scrollIntoView({ behavior: "smooth" });
 			setMessages((prev) => [...prev, JSON.parse(e.data)]);
 		};

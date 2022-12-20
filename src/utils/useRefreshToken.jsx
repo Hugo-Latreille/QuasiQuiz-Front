@@ -8,6 +8,7 @@ const useRefreshToken = () => {
 
 	const refresh = async () => {
 		const { data } = await axios.get(refreshTokenRoute);
+
 		const decodedToken = jwt_decode(data.token);
 		addUser({
 			email: decodedToken.email,

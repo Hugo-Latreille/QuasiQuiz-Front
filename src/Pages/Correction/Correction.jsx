@@ -18,6 +18,7 @@ import { UserContext } from "../../App";
 import ProgressBar from "../../Components/ProgressBar/ProgressBar";
 import Button from "../../Components/Button/Button";
 import Message from "../Message/Message";
+import { DateTime } from "luxon";
 
 const Correction = () => {
 	const navigate = useNavigate();
@@ -149,12 +150,25 @@ const Correction = () => {
 	};
 
 	useEffect(() => {
+		const handleEndCorrection = async () => {
+			try {
+				await axiosJWT.patch(
+					`${gamesRoute}/${gameId}`,
+					{ isCorrected: true },
+					{ headers: { "Content-Type": "application/merge-patch+json" } }
+				);
+				navigate(`/palmares/${gameId}`);
+			} catch (error) {
+				console.log(error);
+			}
+		};
+
 		const url = new URL(mercureHubUrl);
 		url.searchParams.append("topic", `${host}${userAnswersRoute}/{id}`);
 		url.searchParams.append("topic", `${host}${scoresRoute}/{id}`);
 		const eventSource = new EventSource(url);
 		eventSource.onmessage = (e) => {
-			// console.log("userAnswer", JSON.parse(e.data));
+			console.log("EVENT", JSON.parse(e.data));
 			const data = JSON.parse(e.data);
 			if (!isUserGameMaster()) {
 				if (data["@context"].includes("UserAnswer")) {
@@ -166,10 +180,6 @@ const Correction = () => {
 						falseRef.current.classList.add("false__active");
 					}
 				}
-
-				// 			const isLastQuestion = selectedQuestion === questions?.length;
-				// const isLastAnswer =
-				// 	selectedQuestionAnswer + 1 === thisQuestionAnswers?.length;
 
 				if (data["@context"].includes("Score")) {
 					console.log("SCORE EVENT");
@@ -191,7 +201,7 @@ const Correction = () => {
 				isLastAnswer &&
 				selectedQuestion + 1 === questions?.length
 			) {
-				return navigate(`/palmares/${gameId}`);
+				handleEndCorrection();
 			}
 		};
 		return () => {
@@ -307,8 +317,9 @@ const Correction = () => {
 				const { data: userScore } = await axiosJWT.get(
 					`${scoresRoute}?game=${gameId}&userId=${thisQuestionAnswer.userId.id}`
 				);
-				// console.log(userScore);
+
 				if (userScore["hydra:member"].length === 0) {
+					console.log("ici");
 					const { data: userScore } = await axiosJWT.post(scoresRoute, {
 						game: `/api/games/${thisQuestion.game.id}`,
 						userId: `/api/users/${thisQuestionAnswer.userId.id}`,
@@ -317,15 +328,17 @@ const Correction = () => {
 					console.log(userScore);
 				}
 				//sinon patch le score
-				await axiosJWT.patch(
-					`${scoresRoute}/${userScore["hydra:member"][0].id}`,
-					{
-						score: userScore["hydra:member"][0].score + 0,
-					},
-					{
-						headers: { "Content-Type": "application/merge-patch+json" },
-					}
-				);
+				if (userScore) {
+					await axiosJWT.patch(
+						`${scoresRoute}/${userScore["hydra:member"][0].id}`,
+						{
+							updatedAt: DateTime.now().toString(),
+						},
+						{
+							headers: { "Content-Type": "application/merge-patch+json" },
+						}
+					);
+				}
 			} catch (error) {
 				console.log(error);
 			}
@@ -385,106 +398,85 @@ const Correction = () => {
 		}
 	};
 
-	const handleEndCorrection = async () => {
-		try {
-			await axiosJWT.patch(
-				`${gamesRoute}/${gameId}`,
-				{ isCorrected: true },
-				{ headers: { "Content-Type": "application/merge-patch+json" } }
-			);
-			navigate(`/palmares/${gameId}`);
-		} catch (error) {
-			console.log(error);
-		}
-	};
-
 	return (
 		<>
 			<Header />
 			<main>
-				{!isLastQuestion ? (
-					<>
-						{thisQuestion && (
-							<div className="game-content">
-								<div className="game-box">
-									<div className="media">{getParseMedia()}</div>
-									<div className="question">
-										<p>{thisQuestion.question.question}</p>
+				{thisQuestion && (
+					<div className="game-content">
+						<div className="game-box">
+							<div className="media">{getParseMedia()}</div>
+							<div className="question">
+								<p>{thisQuestion.question.question}</p>
+							</div>
+							{thisQuestionAnswer && (
+								<>
+									<div className="answer">
+										<div className="good-answer">
+											<p>Réponse attendue :</p>
+											<p>{thisQuestion.question.answer.answer}</p>
+										</div>
+										<div className="gamer-answer">
+											<p>{thisQuestionAnswer.answer}</p>
+										</div>
 									</div>
-									{thisQuestionAnswer && (
-										<>
-											<div className="answer">
-												<div className="good-answer">
-													<p>Réponse attendue :</p>
-													<p>{thisQuestion.question.answer.answer}</p>
-												</div>
-												<div className="gamer-answer">
-													<p>{thisQuestionAnswer.answer}</p>
-												</div>
-											</div>
-											<div className="gamer-pseudo">
-												<p>{thisQuestionAnswer.userId.pseudo}</p>
-												<img
-													className="avatar"
-													src={`data:image/svg+xml;base64,${thisQuestionAnswer.userId.avatar}`}
-													alt=""
-												/>
-											</div>
-										</>
-									)}
+									<div className="gamer-pseudo">
+										<p>{thisQuestionAnswer.userId.pseudo}</p>
+										<img
+											className="avatar"
+											src={`data:image/svg+xml;base64,${thisQuestionAnswer.userId.avatar}`}
+											alt=""
+										/>
+									</div>
+								</>
+							)}
 
-									{isUserGameMaster() ? (
-										<div className="true-false-next">
-											<button
-												className="true"
-												onClick={handleTrue}
-												ref={trueRef}
-											>
-												Vrai
-											</button>
-											<button className="next" onClick={handleNext}>
-												Suivant
-											</button>
-											<button
-												className="false"
-												onClick={handleFalse}
-												ref={falseRef}
-											>
-												Faux
-											</button>
-										</div>
-									) : (
-										<div className="true-false-next">
-											<button className="true" ref={trueRef}>
-												Vrai
-											</button>
-
-											<button className="false" ref={falseRef}>
-												Faux
-											</button>
-										</div>
-									)}
-
-									<div>Nombre de points : {thisQuestion?.question.level}</div>
+							{isUserGameMaster() ? (
+								<div className="true-false-next">
+									<button
+										className="true"
+										onClick={() => handleTrue()}
+										ref={trueRef}
+									>
+										Vrai
+									</button>
+									<button className="next" onClick={handleNext}>
+										Suivant
+									</button>
+									<button
+										className="false"
+										onClick={handleFalse}
+										ref={falseRef}
+									>
+										Faux
+									</button>
 								</div>
-								<ProgressBar
-									level={thisQuestion.question.level}
-									progress={progressBarCalc()}
-								/>
-								{/* <div className="progressbar-box">
+							) : (
+								<div className="true-false-next">
+									<button className="true" ref={trueRef}>
+										Vrai
+									</button>
+
+									<button className="false" ref={falseRef}>
+										Faux
+									</button>
+								</div>
+							)}
+
+							<div>Nombre de points : {thisQuestion?.question.level}</div>
+						</div>
+						<ProgressBar
+							level={thisQuestion.question.level}
+							progress={progressBarCalc()}
+						/>
+						{/* <div className="progressbar-box">
 							<div className="lvl-border">
 								<div className="lvl-content"></div>
 							</div>
 						</div> */}
-							</div>
-						)}
-					</>
-				) : (
-					<Button
-						label={"Valider la correction"}
-						onClick={handleEndCorrection}
-					/>
+					</div>
 				)}
+
 				<Message gameId={gameId} userId={userId} />
 			</main>
 			<Footer />

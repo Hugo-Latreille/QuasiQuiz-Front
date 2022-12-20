@@ -313,40 +313,40 @@ const Game = () => {
 			<Header />
 
 			<main>
-				{!isLastQuestion ? (
-					<>
-						{thisQuestion && (
-							<div className="game-content">
-								<Timer
-									remainingTime={remainingTime}
-									forwardRef={timerRef}
-									time={noMoreTime}
-								/>
-								<div className="game-box">
-									<div className="media">{getParseMedia()}</div>
-									<div className="question">
-										<p>{thisQuestion.question.question}</p>
-									</div>
-									<div className="answer">
-										<form>
-											<input
-												ref={inputRef}
-												type="text"
-												name=""
-												value={answer}
-												onChange={(e) => setAnswer(e.target.value)}
-											/>
-										</form>
-									</div>
-								</div>
-
-								<ProgressBar
-									level={thisQuestion.question.level}
-									progress={progressBarCalc()}
-								/>
+				{/* {!isLastQuestion ? (
+					<> */}
+				{thisQuestion && (
+					<div className="game-content">
+						<Timer
+							remainingTime={remainingTime}
+							forwardRef={timerRef}
+							time={noMoreTime}
+						/>
+						<div className="game-box">
+							<div className="media">{getParseMedia()}</div>
+							<div className="question">
+								<p>{thisQuestion.question.question}</p>
 							</div>
-						)}
-					</>
+							<div className="answer">
+								<form>
+									<input
+										ref={inputRef}
+										type="text"
+										name=""
+										value={answer}
+										onChange={(e) => setAnswer(e.target.value)}
+									/>
+								</form>
+							</div>
+						</div>
+
+						<ProgressBar
+							level={thisQuestion.question.level}
+							progress={progressBarCalc()}
+						/>
+					</div>
+				)}
+				{/* </>
 				) : (
 					<>
 						{isUserGameMaster() ? (
@@ -359,7 +359,7 @@ const Game = () => {
 							/>
 						)}
 					</>
-				)}
+				)} */}
 			</main>
 			<Message gameId={gameId} userId={userId} />
 			<Footer />

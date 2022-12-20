@@ -170,7 +170,7 @@ const Correction = () => {
 				// 			const isLastQuestion = selectedQuestion === questions?.length;
 				// const isLastAnswer =
 				// 	selectedQuestionAnswer + 1 === thisQuestionAnswers?.length;
-				//! si le score évolue, on passe question suivante etc.
+
 				if (data["@context"].includes("Score")) {
 					console.log("SCORE EVENT");
 					falseRef.current.classList.remove("false__active");
@@ -185,6 +185,13 @@ const Correction = () => {
 					setSelectedQuestionAnswer(0);
 					setSelectedQuestion((prev) => prev + 1);
 				}
+			}
+			if (
+				data["@context"].includes("Score") &&
+				isLastAnswer &&
+				selectedQuestion + 1 === questions?.length
+			) {
+				return navigate(`/palmares/${gameId}`);
 			}
 		};
 		return () => {

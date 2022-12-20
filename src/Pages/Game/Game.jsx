@@ -328,7 +328,7 @@ const Game = () => {
 								<p>{thisQuestion.question.question}</p>
 							</div>
 							<div className="answer">
-								<form>
+								<form onSubmit={(e) => e.preventDefault()}>
 									<input
 										ref={inputRef}
 										type="text"

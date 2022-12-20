@@ -45,6 +45,7 @@ const Message = ({ gameId, userId }) => {
 	}, [gameId]);
 
 	useEffect(() => {
+		bottomRef.current?.scrollIntoView({ behavior: "smooth" });
 		const url = new URL(mercureHubUrl);
 		url.searchParams.append("topic", `${host}${messagesRoute}/{id}`);
 		const eventSource = new EventSource(url);
@@ -60,7 +61,6 @@ const Message = ({ gameId, userId }) => {
 				}, 2000);
 			}
 
-			bottomRef.current?.scrollIntoView({ behavior: "smooth" });
 			setMessages((prev) => [...prev, JSON.parse(e.data)]);
 		};
 		return () => {

@@ -68,6 +68,10 @@ const Message = ({ gameId, userId }) => {
 		};
 	}, [messages]);
 
+	useEffect(() => {
+		chatOpen && bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+	}, [chatOpen]);
+
 	const handleMessage = async (e) => {
 		e.preventDefault();
 		try {

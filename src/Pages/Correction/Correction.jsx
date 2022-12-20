@@ -17,6 +17,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { UserContext } from "../../App";
 import ProgressBar from "../../Components/ProgressBar/ProgressBar";
 import Button from "../../Components/Button/Button";
+import Message from "../Message/Message";
 
 const Correction = () => {
 	const navigate = useNavigate();
@@ -153,7 +154,7 @@ const Correction = () => {
 		url.searchParams.append("topic", `${host}${scoresRoute}/{id}`);
 		const eventSource = new EventSource(url);
 		eventSource.onmessage = (e) => {
-			console.log("userAnswer", JSON.parse(e.data));
+			// console.log("userAnswer", JSON.parse(e.data));
 			const data = JSON.parse(e.data);
 			if (!isUserGameMaster()) {
 				if (data["@context"].includes("UserAnswer")) {
@@ -165,18 +166,21 @@ const Correction = () => {
 						falseRef.current.classList.add("false__active");
 					}
 				}
+
+				// 			const isLastQuestion = selectedQuestion === questions?.length;
+				// const isLastAnswer =
+				// 	selectedQuestionAnswer + 1 === thisQuestionAnswers?.length;
 				//! si le score évolue, on passe question suivante etc.
 				if (data["@context"].includes("Score")) {
 					console.log("SCORE EVENT");
-					console.log(thisQuestionAnswers?.length);
-					console.log(isLastAnswer);
 					falseRef.current.classList.remove("false__active");
 					trueRef.current.classList.remove("true__active");
+
 					if (!isLastAnswer) {
 						return setSelectedQuestionAnswer((prev) => prev + 1);
 					}
-					if (isLastQuestion) {
-						return console.log("fin des réponses");
+					if (selectedQuestion + 1 === questions?.length) {
+						return navigate(`/palmares/${gameId}`);
 					}
 					setSelectedQuestionAnswer(0);
 					setSelectedQuestion((prev) => prev + 1);
@@ -186,7 +190,7 @@ const Correction = () => {
 		return () => {
 			eventSource.close();
 		};
-	}, [thisQuestionAnswers]);
+	}, [thisQuestionAnswers, selectedQuestionAnswer, selectedQuestion]);
 
 	// const handleNext = async () => {
 	// 	if (isTrue === null) return;
@@ -453,6 +457,8 @@ const Correction = () => {
 											</button>
 										</div>
 									)}
+
+									<div>Nombre de points : {thisQuestion?.question.level}</div>
 								</div>
 								<ProgressBar
 									level={thisQuestion.question.level}
@@ -472,6 +478,7 @@ const Correction = () => {
 						onClick={handleEndCorrection}
 					/>
 				)}
+				<Message gameId={gameId} userId={userId} />
 			</main>
 			<Footer />
 		</>

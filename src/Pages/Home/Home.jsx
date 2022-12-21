@@ -22,19 +22,17 @@ const Home = () => {
 							Après vous être connecté, vous arriverez dans un salon où vous
 							pourrez apprécier la présence de vos amis. Une fois que tout le
 							monde est prêt vous pourrez lancer la partie. Le premier joueur
-							entrant dans le salon devient <a className="gm">Maître du Jeu</a>,
-							avec tout ce que cela implique, ça va de soi.
+							entrant dans le salon devient{" "}
+							<span className="gm">Maître du Jeu</span>, avec tout ce que cela
+							implique, ça va de soi.
 						</p>
 						<p>Le jeu se déroule en 2 étapes :</p>
 						<ul>
+							<li>La première consiste à jouer !</li>
 							<li>
-								<a>La première consiste à jouer !</a>
-							</li>
-							<li>
-								<p>
-									La deuxième consiste à corriger les réponses et c'est le{" "}
-									<a className="gm">MJ</a> qui aura cette dure responsabilité.
-								</p>
+								La deuxième consiste à corriger les réponses et c'est le{" "}
+								<span className="gm">MJ</span> qui aura cette dure
+								responsabilité.
 							</li>
 						</ul>
 						<p>

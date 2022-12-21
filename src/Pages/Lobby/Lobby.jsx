@@ -90,13 +90,13 @@ const Lobby = () => {
 
 						console.log(addUserInGame);
 					}
-					setIsLoading(false);
 				}
 			} catch (error) {
 				console.log(error);
 			}
 		};
 		isGameOpen();
+		setIsLoading(false);
 
 		return () => {
 			isMounted = false;

@@ -96,33 +96,30 @@ function App() {
           <Route path="login" element={<Connexion />} />
         </Route>
 
-        {/* Routes privées */}
-        <Route element={<PersistLogin />}>
-          <Route element={<RequireAuth />}>
-            <Route path="/test" element={<WelcomeTest />} />
-            <Route path="/authTest" element={<AuthTest />} />
-            <Route path="lobby" element={<Lobby />} />
-            <Route path="game/:gameId" element={<Game />} />
-            <Route path="correction/:gameId" element={<Correction />} />
-            <Route path="palmares/:gameId" element={<Palmares />} />
-            <Route path="profil" element={<Profile />} />
-            <Route path="password/:userId" element={<PasswordEdit />} />
-            <Route path="message" element={<Message />} />
-            {/* <Route path="lobbyskel" element={<LobbySkel />} />
-            <Route path="gameskel" element={<GameSkel />} />
-            <Route path="palmaskel" element={<PalmaSkel />} /> */}
-          </Route>
-        </Route>
-        <Route path="*" element={<Error />} />
-      </Routes>
-      {background && (
-        <Routes>
-          <Route path="login" element={<Connexion />} />
-          <Route path="password/:userId" element={<PasswordEdit />} />
-        </Routes>
-      )}
-    </Provider>
-  );
+				{/* Routes privées */}
+				<Route element={<PersistLogin />}>
+					<Route element={<RequireAuth />}>
+						<Route path="/test" element={<WelcomeTest />} />
+						<Route path="/authTest" element={<AuthTest />} />
+						<Route path="lobby" element={<Lobby />} />
+						<Route path="game/:gameId" element={<Game />} />
+						<Route path="correction/:gameId" element={<Correction />} />
+						<Route path="palmares/:gameId" element={<Palmares />} />
+						<Route path="profil" element={<Profile />} />
+						<Route path="password/:userId" element={<PasswordEdit />} />
+					</Route>
+				</Route>
+				<Route path="*" element={<Error />} />
+			</Routes>
+			{background && (
+				<Routes>
+					<Route path="login" element={<Connexion />} />
+					<Route path="password/:userId" element={<PasswordEdit />} />
+				</Routes>
+			)}
+		</Provider>
+	);
+
 }
 
 export default App;

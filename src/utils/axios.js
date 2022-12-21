@@ -1,5 +1,5 @@
 import axios from "axios";
-const host = `https://localhost:8000`;
+export const host = `https://localhost:8000`;
 
 export default axios.create({
 	baseURL: host,
@@ -17,9 +17,9 @@ export const scoresRoute = "/api/scores";
 export const gameHasUsersRoute = "/api/game_has_users";
 export const refreshTokenRoute = `/api/token/refresh`;
 export const logoutToken = `/api/token/invalidate`;
-
 export const multiAvatarAPIKey = "27JS9MXha6pgzn";
 export const multiAvatarRoute = "https://api.multiavatar.com/`";
+export const mercureHubUrl = "http://localhost:3000/.well-known/mercure";
 
 export const axiosJWT = axios.create({
 	baseURL: host,

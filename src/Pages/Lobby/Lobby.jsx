@@ -4,20 +4,28 @@ import Button from "../../Components/Button/Button";
 import "./_lobby.scss";
 import { useContext, useEffect } from "react";
 import useAxiosJWT from "../../utils/useAxiosJWT";
-import { gameHasUsersRoute, gamesRoute, usersRoute } from "../../utils/axios";
+import {
+	gameHasUsersRoute,
+	gamesRoute,
+	host,
+	mercureHubUrl,
+	messagesRoute,
+	usersRoute,
+} from "../../utils/axios";
 import { UserContext } from "../../App";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 //? React Toastify
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Message from "../Message/Message";
 
 const Lobby = () => {
 	const axiosJWT = useAxiosJWT();
 	const { user } = useContext(UserContext);
 	const [gameId, setGameId] = useState(null);
 	const [otherUsers, setOtherUsers] = useState(null);
-	// const [isNewGame, setIsNewGame] = useState(null);
+	const [userId, setUserId] = useState(null);
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -34,6 +42,7 @@ const Lobby = () => {
 					}
 				);
 				const userId = userData["hydra:member"][0].id;
+				setUserId(userId);
 
 				const { data } = await axiosJWT.get(`${gamesRoute}?is_open=true`, {
 					signal: controller.signal,
@@ -133,6 +142,49 @@ const Lobby = () => {
 			controller.abort();
 		};
 	}, [gameId]);
+
+	useEffect(() => {
+		const url = new URL(mercureHubUrl);
+		url.searchParams.append("topic", `${host}${gameHasUsersRoute}/{id}`);
+		url.searchParams.append("topic", `${host}${gamesRoute}/{id}`);
+		const eventSource = new EventSource(url);
+		eventSource.onmessage = (e) => {
+			console.log(JSON.parse(e.data));
+			const data = JSON.parse(e.data);
+
+			if (
+				data["@context"].includes("GameHasUser") &&
+				otherUsers &&
+				userId !== data.userId.id
+			) {
+				console.log(userId, data.userId.id);
+				console.log("UserEvent", data);
+				return setOtherUsers((prev) => [
+					...prev,
+					{
+						id: data.userId.id,
+						pseudo: data.userId.pseudo,
+						avatar: data.userId.avatar,
+						email: data.userId.email,
+						isGameMaster: data.is_game_master,
+					},
+				]);
+			}
+			if (
+				data["@context"].includes("Game") &&
+				!data["@context"].includes("GameHasUser")
+			) {
+				if (data.is_open === false) {
+					console.log("GameEvent", data);
+					return navigate(`/game/${gameId}`);
+				}
+			}
+		};
+
+		return () => {
+			eventSource.close();
+		};
+	}, [otherUsers]);
 
 	// 3-si GM, affichage bouton partie et au lancement, le game devient fermée, on appelle la route générant les questions, navigate vers question / pour les autres joueurs, bouton "rejoindre la partie"
 
@@ -247,13 +299,17 @@ const Lobby = () => {
 							)}
 						</div>
 					</div>
-					{otherUsers && isUserGameMaster() ? (
+					{/* {otherUsers && isUserGameMaster() ? (
 						<Button onClick={handleGame} label={"Lancer la partie"} />
 					) : (
 						<Button onClick={handleGame} label={"Rejoindre la partie"} />
+					)} */}
+					{otherUsers && isUserGameMaster() && (
+						<Button onClick={handleGame} label={"Lancer la partie"} />
 					)}
 				</div>
 			</main>
+			<Message gameId={gameId} userId={userId} />
 			<Footer />
 			<ToastContainer />
 		</>

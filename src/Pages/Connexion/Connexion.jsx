@@ -50,6 +50,13 @@ const Connexion = () => {
 					headers: { "Authorization": `Bearer ${data.token}` },
 				}
 			);
+
+			if (!userData["hydra:member"][0].is_verified) {
+				return toast.error(
+					"Merci de valider le lien envoyé par email pour pouvoir vous connecter",
+					toastOptions
+				);
+			}
 			const userId = userData["hydra:member"][0].id;
 
 			await axiosJWT.patch(
@@ -64,7 +71,6 @@ const Connexion = () => {
 			setLoginPassword("");
 
 			if (decodedToken.roles[0] === "ROLE_ADMIN") {
-				console.log("Coucou", decodedToken.roles[0]);
 				return navigate("/admin/login");
 			}
 			// navigate("/test");
@@ -89,7 +95,10 @@ const Connexion = () => {
 					avatar: avatars[selectedAvatar],
 				});
 				console.log(result);
-				toast.success("Vous pouvez désormais vous connecter", toastOptions);
+				toast.success(
+					"Veuillez valider le lien de vérification envoyé sur votre mail",
+					toastOptions
+				);
 				setEmail("");
 				setPseudo("");
 				setPassword("");

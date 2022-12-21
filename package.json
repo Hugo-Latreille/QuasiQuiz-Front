@@ -21,7 +21,8 @@
 		"react-icons": "^4.7.1",
 		"react-router-dom": "^6.4.4",
 		"react-toastify": "^9.1.1",
-		"shortid": "^2.2.16"
+		"shortid": "^2.2.16",
+		"uuid": "^9.0.0"
 	},
 	"devDependencies": {
 		"@types/react": "^18.0.24",

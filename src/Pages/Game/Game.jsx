@@ -6,6 +6,8 @@ import {
 	gameHasUsersRoute,
 	gameQuestions,
 	gamesRoute,
+	host,
+	mercureHubUrl,
 	userAnswersRoute,
 	usersRoute,
 } from "../../utils/axios";
@@ -18,6 +20,8 @@ import Button from "../../Components/Button/Button";
 //? React Toastify
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Message from "../Message/Message";
+import { v4 as uuidv4 } from "uuid";
 
 //? set FOCUS sur le champ de réponse (inputRef.current.focus())
 const Game = () => {
@@ -40,6 +44,10 @@ const Game = () => {
 	const navigate = useNavigate();
 	const btnRef = useRef();
 	const [isloading, setIsLoading] = useState(true);
+	const [answersCount, setAnswerCount] = useState(0);
+
+	//! soit ici dès que game corrigée, alors on move les users vers palmares
+	//! SOIT correction : possible : passage écran suivant...ou animation. Possibilité d'afficher vrai/faux en direct ?? uniquement si patch bdd...
 
 	// récuperer les questions de cette partie + le temps de chacune + le niveau
 	useEffect(() => {
@@ -180,13 +188,19 @@ const Game = () => {
 	const getParseMedia = () => {
 		if (thisQuestion.question.media.length > 0) {
 			const media = thisQuestion.question.media[0].contentUrl;
+			console.log(media);
 			if (media.includes("mp4")) {
 				return (
 					<video width="750" height="500" controls autoPlay muted>
 						<source src={media} type="video/mp4" />
 					</video>
 				);
-			} else if (media.includes("png")) {
+			} else if (
+				media.includes("png") ||
+				media.includes("jpeg") ||
+				media.includes("jpg") ||
+				media.includes("gif")
+			) {
 				return <img src={media} alt="image" />;
 			} else if (media.includes("mp3")) {
 				return (
@@ -199,6 +213,7 @@ const Game = () => {
 		}
 		return;
 	};
+
 	// fonction pour vérifier que tous les joueurs ont répondu à toutes les questions : userAnswer length === questions length
 	const areAllUsersDone = async () => {
 		try {
@@ -220,12 +235,34 @@ const Game = () => {
 		}
 	};
 
+	useEffect(() => {
+		let count = 0;
+		const url = new URL(mercureHubUrl);
+		url.searchParams.append("topic", `${host}${userAnswersRoute}/{id}`);
+		const eventSource = new EventSource(url);
+		eventSource.onmessage = (e) => {
+			// console.log("userAnswer", e);
+			// console.log(JSON.parse(e.data));
+			count++;
+			// if (count === users.length * questions.length && isUserGameMaster()) {
+			// 	return navigate(`/correction/${gameId}`);
+			// }
+			if (count === users.length * questions.length) {
+				return navigate(`/correction/${gameId}`);
+			}
+		};
+		return () => {
+			eventSource.close();
+		};
+	}, [questions]);
+
 	const handleButton = async () => {
 		console.log(await areAllUsersDone());
 		const usersReadyorNot = await areAllUsersDone();
 		const notReadyToCorrect = usersReadyorNot.some(
 			(finished) => finished === false
 		);
+
 		if (notReadyToCorrect) {
 			return toast.info(
 				"Veuillez attendre que tous les joueurs aient terminé le quizz",
@@ -282,41 +319,40 @@ const Game = () => {
 			<Header />
 
 			<main>
-				{!isLastQuestion ? (
-					<>
-						<p style={{ color: "white" }}>{selectedQuestion}</p>
-						{thisQuestion && (
-							<div className="game-content">
-								<Timer
-									remainingTime={remainingTime}
-									forwardRef={timerRef}
-									time={time}
-								/>
-								<div className="game-box">
-									<div className="media">{getParseMedia()}</div>
-									<div className="question">
-										<p>{thisQuestion.question.question}</p>
-									</div>
-									<div className="answer">
-										<form>
-											<input
-												ref={inputRef}
-												type="text"
-												name=""
-												value={answer}
-												onChange={(e) => setAnswer(e.target.value)}
-											/>
-										</form>
-									</div>
-								</div>
-
-								<ProgressBar
-									level={thisQuestion.question.level}
-									progress={progressBarCalc()}
-								/>
+				{/* {!isLastQuestion ? (
+					<> */}
+				{thisQuestion && (
+					<div className="game-content">
+						<Timer
+							remainingTime={remainingTime}
+							forwardRef={timerRef}
+							time={noMoreTime}
+						/>
+						<div className="game-box">
+							<div className="media">{getParseMedia()}</div>
+							<div className="question">
+								<p>{thisQuestion.question.question}</p>
 							</div>
-						)}
-					</>
+							<div className="answer">
+								<form onSubmit={(e) => e.preventDefault()}>
+									<input
+										ref={inputRef}
+										type="text"
+										name=""
+										value={answer}
+										onChange={(e) => setAnswer(e.target.value)}
+									/>
+								</form>
+							</div>
+						</div>
+
+						<ProgressBar
+							level={thisQuestion.question.level}
+							progress={progressBarCalc()}
+						/>
+					</div>
+				)}
+				{/* </>
 				) : (
 					<>
 						{isUserGameMaster() ? (
@@ -329,8 +365,9 @@ const Game = () => {
 							/>
 						)}
 					</>
-				)}
+				)} */}
 			</main>
+			<Message gameId={gameId} userId={userId} />
 			<Footer />
 			<ToastContainer />
 		</>

@@ -102,14 +102,14 @@ const Palmares = () => {
 											src={`data:image/svg+xml;base64,${user.userId.avatar}`}
 											alt=""
 										/>
-										<a href="" className="pseudo">
+										<a href="#" className="pseudo">
 											{user.userId.pseudo}
 										</a>
 									</div>
-									<a href="" className="pts">
+									<a href="#" className="pts">
 										{user.score}pts
 									</a>
-									<a href="" className="position">
+									<a href="#" className="position">
 										{user.position}
 									</a>
 								</div>

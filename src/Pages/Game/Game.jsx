@@ -22,6 +22,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Message from "../Message/Message";
 import { v4 as uuidv4 } from "uuid";
+import Gameskel from "../Skeleton/GameSkel";
 
 //? set FOCUS sur le champ de réponse (inputRef.current.focus())
 const Game = () => {
@@ -43,7 +44,7 @@ const Game = () => {
 	const [users, setUsers] = useState(null);
 	const navigate = useNavigate();
 	const btnRef = useRef();
-	const [isloading, setIsLoading] = useState(true);
+	const [isLoading, setIsLoading] = useState(true);
 	const [answersCount, setAnswerCount] = useState(0);
 
 	//! soit ici dès que game corrigée, alors on move les users vers palmares
@@ -73,7 +74,6 @@ const Game = () => {
 				if (isMounted && gameQuestion) {
 					console.log(gameQuestion["hydra:member"]);
 					setQuestions(gameQuestion["hydra:member"]);
-					setIsLoading(false);
 				}
 			} catch (error) {
 				console.log(error);
@@ -97,6 +97,7 @@ const Game = () => {
 
 		getQuestions();
 		getUsers();
+		setIsLoading(false);
 
 		return () => {
 			isMounted = false;
@@ -317,42 +318,44 @@ const Game = () => {
 	return (
 		<>
 			<Header />
-
-			<main>
-				{/* {!isLastQuestion ? (
+			{isLoading ? (
+				<Gameskel />
+			) : (
+				<main>
+					{/* {!isLastQuestion ? (
 					<> */}
-				{thisQuestion && (
-					<div className="game-content">
-						<Timer
-							remainingTime={remainingTime}
-							forwardRef={timerRef}
-							time={noMoreTime}
-						/>
-						<div className="game-box">
-							<div className="media">{getParseMedia()}</div>
-							<div className="question">
-								<p>{thisQuestion.question.question}</p>
+					{thisQuestion && (
+						<div className="game-content">
+							<Timer
+								remainingTime={remainingTime}
+								forwardRef={timerRef}
+								time={noMoreTime}
+							/>
+							<div className="game-box">
+								<div className="media">{getParseMedia()}</div>
+								<div className="question">
+									<p>{thisQuestion.question.question}</p>
+								</div>
+								<div className="answer">
+									<form onSubmit={(e) => e.preventDefault()}>
+										<input
+											ref={inputRef}
+											type="text"
+											name=""
+											value={answer}
+											onChange={(e) => setAnswer(e.target.value)}
+										/>
+									</form>
+								</div>
 							</div>
-							<div className="answer">
-								<form onSubmit={(e) => e.preventDefault()}>
-									<input
-										ref={inputRef}
-										type="text"
-										name=""
-										value={answer}
-										onChange={(e) => setAnswer(e.target.value)}
-									/>
-								</form>
-							</div>
-						</div>
 
-						<ProgressBar
-							level={thisQuestion.question.level}
-							progress={progressBarCalc()}
-						/>
-					</div>
-				)}
-				{/* </>
+							<ProgressBar
+								level={thisQuestion.question.level}
+								progress={progressBarCalc()}
+							/>
+						</div>
+					)}
+					{/* </>
 				) : (
 					<>
 						{isUserGameMaster() ? (
@@ -366,7 +369,9 @@ const Game = () => {
 						)}
 					</>
 				)} */}
-			</main>
+				</main>
+			)}
+
 			<Message gameId={gameId} userId={userId} />
 			<Footer />
 			<ToastContainer />

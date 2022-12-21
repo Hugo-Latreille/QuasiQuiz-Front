@@ -3,6 +3,8 @@ import { Outlet } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../App";
 import useRefreshToken from "./useRefreshToken";
+// import Lobbyskel from "../Pages/Skeleton/LobbySkel";
+import Palmaskel from "../Pages/Skeleton/PalmaSkel";
 
 const PersistLogin = () => {
 	const [isLoading, setIsLoading] = useState(true);
@@ -28,6 +30,6 @@ const PersistLogin = () => {
 		return () => (isMounted = false);
 	}, []);
 
-	return <>{isLoading ? <p>Loading</p> : <Outlet />}</>;
+	return <>{isLoading ? <Palmaskel /> : <Outlet />}</>;
 };
 export default PersistLogin;

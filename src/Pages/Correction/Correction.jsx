@@ -19,6 +19,7 @@ import ProgressBar from "../../Components/ProgressBar/ProgressBar";
 // import Button from "../../Components/Button/Button";
 import Message from "../Message/Message";
 import { DateTime } from "luxon";
+import Gameskel from "../Skeleton/GameSkel";
 
 const Correction = () => {
 	const navigate = useNavigate();
@@ -33,6 +34,7 @@ const Correction = () => {
 	const [thisQuestionAnswer, setThisQuestionAnswer] = useState(null);
 	const [selectedQuestionAnswer, setSelectedQuestionAnswer] = useState(0);
 	const [isTrue, setIsTrue] = useState(null);
+	const [isLoading, setIsLoading] = useState(true);
 	const trueRef = useRef(null);
 	const falseRef = useRef(null);
 	const isLastQuestion = selectedQuestion === questions?.length;
@@ -85,6 +87,7 @@ const Correction = () => {
 
 		getQuestions();
 		getUsers();
+		setIsLoading(false);
 
 		return () => {
 			isMounted = false;
@@ -342,86 +345,95 @@ const Correction = () => {
 	return (
 		<>
 			<Header />
-			<main>
-				{thisQuestion && (
-					<div className="game-content">
-						<div className="game-box">
-							<div className="media">{getParseMedia()}</div>
-							<div className="question">
-								<p>{thisQuestion.question.question}</p>
+			{isLoading ? (
+				<Gameskel />
+			) : (
+				<main>
+					{thisQuestion && (
+						<div className="game-content">
+							<div className="game-box">
+								<div className="media">{getParseMedia()}</div>
+								<div className="question">
+									<p>{thisQuestion.question.question}</p>
+								</div>
+								{thisQuestionAnswer && (
+									<>
+										<div className="answer">
+											<div className="good-answer">
+												<p>Réponse attendue :</p>
+												<p>{thisQuestion.question.answer.answer}</p>
+											</div>
+											<div className="gamer-answer">
+												<p>{thisQuestionAnswer.answer}</p>
+											</div>
+										</div>
+										<div className="gamer-pseudo">
+											<p>{thisQuestionAnswer.userId.pseudo}</p>
+											<img
+												className="avatar"
+												src={`data:image/svg+xml;base64,${thisQuestionAnswer.userId.avatar}`}
+												alt=""
+											/>
+										</div>
+									</>
+								)}
+
+								{isUserGameMaster() ? (
+									<>
+										<div className="true-false">
+											<button
+												className="true"
+												onClick={handleTrue}
+												ref={trueRef}
+											>
+												Vrai
+											</button>
+											<button
+												className="false"
+												onClick={handleFalse}
+												ref={falseRef}
+											>
+												Faux
+											</button>
+										</div>
+										<div className="next">
+											<button className="next" onClick={handleNext}>
+												Suivant
+											</button>
+										</div>
+									</>
+								) : (
+									<>
+										<div className="true-false">
+											<button className="true" ref={trueRef}>
+												Vrai
+											</button>
+											<button className="false" ref={falseRef}>
+												Faux
+											</button>
+										</div>
+									</>
+								)}
+
+								<div>Nombre de points : {thisQuestion?.question.level}</div>
 							</div>
-							{thisQuestionAnswer && (
-								<>
-									<div className="answer">
-										<div className="good-answer">
-											<p>Réponse attendue :</p>
-											<p>{thisQuestion.question.answer.answer}</p>
-										</div>
-										<div className="gamer-answer">
-											<p>{thisQuestionAnswer.answer}</p>
-										</div>
-									</div>
-									<div className="gamer-pseudo">
-										<p>{thisQuestionAnswer.userId.pseudo}</p>
-										<img
-											className="avatar"
-											src={`data:image/svg+xml;base64,${thisQuestionAnswer.userId.avatar}`}
-											alt=""
-										/>
-									</div>
-								</>
-							)}
-
-							{isUserGameMaster() ? (
-								<>
-									<div className="true-false">
-										<button className="true" onClick={handleTrue} ref={trueRef}>
-											Vrai
-										</button>
-										<button
-											className="false"
-											onClick={handleFalse}
-											ref={falseRef}
-										>
-											Faux
-										</button>
-									</div>
-									<div className="next">
-										<button className="next" onClick={handleNext}>
-											Suivant
-										</button>
-									</div>
-								</>
-							) : (
-								<>
-									<div className="true-false">
-										<button className="true" ref={trueRef}>
-											Vrai
-										</button>
-										<button className="false" ref={falseRef}>
-											Faux
-										</button>
-									</div>
-								</>
-							)}
-
-							<div>Nombre de points : {thisQuestion?.question.level}</div>
-						</div>
-						<ProgressBar
-							level={thisQuestion.question.level}
-							progress={progressBarCalc()}
-						/>
-						{/* <div className="progressbar-box">
+							<ProgressBar
+								level={thisQuestion.question.level}
+								progress={progressBarCalc()}
+							/>
+							{/* <div className="progressbar-box">
 
 							<div className="lvl-border">
 								<div className="lvl-content"></div>
 							</div>
 						</div> */}
-					</div>
-				)}
+						</div>
+					)}
 
-				<Message gameId={gameId} userId={userId} />
-			</main>
+					<Message gameId={gameId} userId={userId} />
+				</main>
+			)}
+
 			<Footer />
 		</>
 	);

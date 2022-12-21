@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Message from "../Message/Message";
+import Lobbyskel from "../Skeleton/LobbySkel";
 
 const Lobby = () => {
 	const axiosJWT = useAxiosJWT();
@@ -26,6 +27,7 @@ const Lobby = () => {
 	const [gameId, setGameId] = useState(null);
 	const [otherUsers, setOtherUsers] = useState(null);
 	const [userId, setUserId] = useState(null);
+	const [isLoading, setIsLoading] = useState(true);
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -85,8 +87,10 @@ const Lobby = () => {
 								isGameMaster: false,
 							}
 						);
-						return console.log(addUserInGame);
+
+						console.log(addUserInGame);
 					}
+					setIsLoading(false);
 				}
 			} catch (error) {
 				console.log(error);
@@ -236,82 +240,90 @@ const Lobby = () => {
 
 	return (
 		<>
-			<Header />
-			<main>
-				<div className="lobby-content">
-					<div className="lobby-title">
-						<h1>La partie va bientôt commencer !</h1>
-					</div>
-					<div className="lobby-gamer">
-						<div className="gm-box">
-							{isUserGameMaster() ? (
-								<h4>Vous êtes le maître du jeu !</h4>
-							) : (
-								<h4>Vous lui devez allégeance !</h4>
-							)}
-							<div className="gm-card">
-								{otherUsers &&
-									otherUsers
-										?.filter((otherUser) => otherUser.isGameMaster === true)
-										.map((otherUser) => (
-											<div key={otherUser.id} className="gamer-img">
-												<img
-													src={`data:image/svg+xml;base64,${otherUser.avatar}`}
-													alt=""
-												/>
-												<h3>{otherUser.pseudo}</h3>
-											</div>
-										))}
+			{isLoading ? (
+				<Lobbyskel />
+			) : (
+				<>
+					<Header />
+					<main>
+						<div className="lobby-content">
+							<div className="lobby-title">
+								<h1>La partie va bientôt commencer !</h1>
 							</div>
-						</div>
-						<div className="gamer-box">
-							<h4>Joueur présents :</h4>
-							<div className="gc-grid">
-								{otherUsers &&
-									otherUsers
-										?.filter((otherUser) => otherUser.isGameMaster === false)
-										.map((otherUser) => (
-											<div key={otherUser?.id} className="gamer-card">
-												<div
-													className={
-														otherUser.email === user.email
-															? "gamer-img user"
-															: "gamer-img"
-													}
-												>
-													<img
-														src={`data:image/svg+xml;base64,${otherUser?.avatar}`}
-														alt=""
-													/>
-												</div>
-												<h3>{otherUser?.pseudo}</h3>
-											</div>
-										))}
+							<div className="lobby-gamer">
+								<div className="gm-box">
+									{isUserGameMaster() ? (
+										<h4>Vous êtes le maître du jeu !</h4>
+									) : (
+										<h4>Vous lui devez allégeance !</h4>
+									)}
+									<div className="gm-card">
+										{otherUsers &&
+											otherUsers
+												?.filter((otherUser) => otherUser.isGameMaster === true)
+												.map((otherUser) => (
+													<div key={otherUser.id} className="gamer-img">
+														<img
+															src={`data:image/svg+xml;base64,${otherUser.avatar}`}
+															alt=""
+														/>
+														<h3>{otherUser.pseudo}</h3>
+													</div>
+												))}
+									</div>
+								</div>
+								<div className="gamer-box">
+									<h4>Joueur présents :</h4>
+									<div className="gc-grid">
+										{otherUsers &&
+											otherUsers
+												?.filter(
+													(otherUser) => otherUser.isGameMaster === false
+												)
+												.map((otherUser) => (
+													<div key={otherUser?.id} className="gamer-card">
+														<div
+															className={
+																otherUser.email === user.email
+																	? "gamer-img user"
+																	: "gamer-img"
+															}
+														>
+															<img
+																src={`data:image/svg+xml;base64,${otherUser?.avatar}`}
+																alt=""
+															/>
+														</div>
+														<h3>{otherUser?.pseudo}</h3>
+													</div>
+												))}
+									</div>
+								</div>
+								<div className="legend">
+									{isUserGameMaster() === false && (
+										<ul>
+											<li id="gm-color">Le MJ</li>
+											<li id="g-color">Les Autres</li>
+											<li id="user-color">Vous</li>
+										</ul>
+									)}
+								</div>
 							</div>
-						</div>
-						<div className="legend">
-							{isUserGameMaster() === false && (
-								<ul>
-									<li id="gm-color">Le MJ</li>
-									<li id="g-color">Les Autres</li>
-									<li id="user-color">Vous</li>
-								</ul>
-							)}
-						</div>
-					</div>
-					{/* {otherUsers && isUserGameMaster() ? (
+							{/* {otherUsers && isUserGameMaster() ? (
 						<Button onClick={handleGame} label={"Lancer la partie"} />
 					) : (
 						<Button onClick={handleGame} label={"Rejoindre la partie"} />
 					)} */}
-					{otherUsers && isUserGameMaster() && (
-						<Button onClick={handleGame} label={"Lancer la partie"} />
-					)}
-				</div>
-			</main>
-			<Message gameId={gameId} userId={userId} />
-			<Footer />
-			<ToastContainer />
+							{otherUsers && isUserGameMaster() && (
+								<Button onClick={handleGame} label={"Lancer la partie"} />
+							)}
+						</div>
+					</main>
+					<Message gameId={gameId} userId={userId} />
+					<Footer />
+					<ToastContainer />{" "}
+				</>
+			)}
 		</>
 	);
 };

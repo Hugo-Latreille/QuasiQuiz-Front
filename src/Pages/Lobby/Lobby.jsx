@@ -9,7 +9,6 @@ import {
 	gamesRoute,
 	host,
 	mercureHubUrl,
-	messagesRoute,
 	usersRoute,
 } from "../../utils/axios";
 import { UserContext } from "../../App";

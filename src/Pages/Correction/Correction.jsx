@@ -3,6 +3,7 @@ import Footer from "../../Layouts/Footer";
 import "./_correction.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import {
+
 	axiosJWT,
 	gameHasUsersRoute,
 	gameQuestions,
@@ -12,6 +13,7 @@ import {
 	scoresRoute,
 	userAnswersRoute,
 	usersRoute,
+
 } from "../../utils/axios";
 import { useContext, useEffect, useRef, useState } from "react";
 import { UserContext } from "../../App";
@@ -21,6 +23,7 @@ import Message from "../Message/Message";
 import { DateTime } from "luxon";
 
 const Correction = () => {
+
 	const navigate = useNavigate();
 	const { gameId } = useParams();
 	const { user } = useContext(UserContext);
@@ -86,43 +89,45 @@ const Correction = () => {
 		getQuestions();
 		getUsers();
 
-		return () => {
-			isMounted = false;
-			controller.abort();
-		};
-	}, [gameId]);
-	useEffect(() => {
-		questions && setThisQuestion(questions[`${selectedQuestion}`]);
-	}, [questions, selectedQuestion]);
 
-	useEffect(() => {
-		const getAnswersByQuestion = async () => {
-			try {
-				if (thisQuestion) {
-					const { data: usersAnswers } = await axiosJWT.get(
-						`${userAnswersRoute}?question=${thisQuestion.question.id}&game=${gameId}`
-					);
-					if (usersAnswers) {
-						setThisQuestionAnswers(usersAnswers["hydra:member"]);
-						console.log(usersAnswers["hydra:member"]);
-					}
-				}
-			} catch (error) {
-				console.log(error);
-			}
-		};
-		getAnswersByQuestion();
-	}, [thisQuestion]);
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, [gameId]);
+  useEffect(() => {
+    questions && setThisQuestion(questions[`${selectedQuestion}`]);
+  }, [questions, selectedQuestion]);
 
-	useEffect(() => {
-		thisQuestionAnswers &&
-			setThisQuestionAnswer(thisQuestionAnswers[`${selectedQuestionAnswer}`]);
-	}, [thisQuestionAnswers, selectedQuestionAnswer]);
+  useEffect(() => {
+    const getAnswersByQuestion = async () => {
+      try {
+        if (thisQuestion) {
+          const { data: usersAnswers } = await axiosJWT.get(
+            `${userAnswersRoute}?question=${thisQuestion.question.id}&game=${gameId}`
+          );
+          if (usersAnswers) {
+            setThisQuestionAnswers(usersAnswers["hydra:member"]);
+            console.log(usersAnswers["hydra:member"]);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getAnswersByQuestion();
+  }, [thisQuestion]);
 
-	const progressBarCalc = () => {
-		const result = ((selectedQuestion + 1) / questions.length) * 100;
-		return result;
-	};
+  useEffect(() => {
+    thisQuestionAnswers &&
+      setThisQuestionAnswer(thisQuestionAnswers[`${selectedQuestionAnswer}`]);
+  }, [thisQuestionAnswers, selectedQuestionAnswer]);
+
+  const progressBarCalc = () => {
+    const result = ((selectedQuestion + 1) / questions.length) * 100;
+    return result;
+  };
+
 
 	const getParseMedia = () => {
 		if (thisQuestion.question.media.length > 0) {
@@ -482,10 +487,12 @@ const Correction = () => {
 							progress={progressBarCalc()}
 						/>
 						{/* <div className="progressbar-box">
+
 							<div className="lvl-border">
 								<div className="lvl-content"></div>
 							</div>
 						</div> */}
+
 					</div>
 				)}
 
@@ -494,6 +501,7 @@ const Correction = () => {
 			<Footer />
 		</>
 	);
+
 };
 
 export default Correction;

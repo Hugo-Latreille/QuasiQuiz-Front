@@ -1,21 +1,17 @@
 import {
-	ListGuesser,
-	FieldGuesser,
+	ListGuesser,	
 	ShowGuesser,
 	CreateGuesser,
-	InputGuesser,
-	EditGuesser,
+	
+	
 } from "@api-platform/admin";
 import {
 	TextField,
 	ReferenceField,
-	NumberField,
 	ChipField,
 	ReferenceInput,
 	AutocompleteInput,
 	DateField,
-	ReferenceArrayInput,
-	UrlField,
 	FileInput,
 	FileField,
 } from "react-admin";

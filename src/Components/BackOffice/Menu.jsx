@@ -8,20 +8,24 @@ export const MyMenu = (props) => (
 	<Menu {...props}>
 		{/* <Menu.DashboardItem /> */}
 		<Menu.Item
-			to="/users"
+			to="/admin/users"
 			primaryText="Utilisateurs"
 			leftIcon={<PeopleIcon />}
 		/>
 		<Menu.Item
-			to="/questions"
+			to="/admin/questions"
 			primaryText="Questions"
 			leftIcon={<QuizIcon />}
 		/>
 		<Menu.Item
-			to="/answers"
+			to="/admin/answers"
 			primaryText="Réponses"
 			leftIcon={<QuestionAnswerIcon />}
 		/>
-		<Menu.Item to="/media" primaryText="Média" leftIcon={<PermMediaIcon />} />
+		<Menu.Item
+			to="/admin/media"
+			primaryText="Média"
+			leftIcon={<PermMediaIcon />}
+		/>
 	</Menu>
 );

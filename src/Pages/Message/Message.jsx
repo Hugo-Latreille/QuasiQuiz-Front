@@ -86,6 +86,14 @@ const Message = ({ gameId, userId }) => {
 		}
 	};
 
+	const isMessageUserGameMaster = (message) => {
+		return message.game.gameHasUsers.filter(
+			(user) => user.userId.id === message.userId.id && user.is_game_master
+		).length === 1
+			? true
+			: false;
+	};
+
 	return (
 		<>
 			{!chatOpen ? (
@@ -104,12 +112,25 @@ const Message = ({ gameId, userId }) => {
 				<div className="messageContainer">
 					{messages &&
 						messages.map((message) => (
-							<p
-								key={message.id}
-								className={message.userId.id === userId ? "me" : "other"}
-							>
-								{message.userId.pseudo} : {message.message}
-							</p>
+							<div key={message.id}>
+								<p
+									className={
+										isMessageUserGameMaster(message)
+											? "gameMaster"
+											: message.userId.id === userId
+											? "me"
+											: "other"
+									}
+								>
+									{message.userId.pseudo} : {message.message}
+									{isMessageUserGameMaster(message) ? "oui" : "non"}
+								</p>
+
+								{/* <img
+									src={`data:image/svg+xml;base64,${message.userId.avatar}`}
+									alt=""
+								/> */}
+							</div>
 						))}
 					<div ref={bottomRef} />
 					<form onSubmit={handleMessage}>

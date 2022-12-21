@@ -18,6 +18,11 @@
 		right: 0;
 		left: 0;
 	}
+
+	& .gameMaster {
+		color: green;
+	}
+
 	& .me {
 		color: yellow;
 		text-align: end;

@@ -3,7 +3,6 @@ import Footer from "../../Layouts/Footer";
 import "./_correction.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-
 	axiosJWT,
 	gameHasUsersRoute,
 	gameQuestions,
@@ -13,17 +12,15 @@ import {
 	scoresRoute,
 	userAnswersRoute,
 	usersRoute,
-
 } from "../../utils/axios";
 import { useContext, useEffect, useRef, useState } from "react";
 import { UserContext } from "../../App";
 import ProgressBar from "../../Components/ProgressBar/ProgressBar";
-import Button from "../../Components/Button/Button";
+// import Button from "../../Components/Button/Button";
 import Message from "../Message/Message";
 import { DateTime } from "luxon";
 
 const Correction = () => {
-
 	const navigate = useNavigate();
 	const { gameId } = useParams();
 	const { user } = useContext(UserContext);
@@ -89,45 +86,43 @@ const Correction = () => {
 		getQuestions();
 		getUsers();
 
+		return () => {
+			isMounted = false;
+			controller.abort();
+		};
+	}, [gameId]);
+	useEffect(() => {
+		questions && setThisQuestion(questions[`${selectedQuestion}`]);
+	}, [questions, selectedQuestion]);
 
-    return () => {
-      isMounted = false;
-      controller.abort();
-    };
-  }, [gameId]);
-  useEffect(() => {
-    questions && setThisQuestion(questions[`${selectedQuestion}`]);
-  }, [questions, selectedQuestion]);
+	useEffect(() => {
+		const getAnswersByQuestion = async () => {
+			try {
+				if (thisQuestion) {
+					const { data: usersAnswers } = await axiosJWT.get(
+						`${userAnswersRoute}?question=${thisQuestion.question.id}&game=${gameId}`
+					);
+					if (usersAnswers) {
+						setThisQuestionAnswers(usersAnswers["hydra:member"]);
+						console.log(usersAnswers["hydra:member"]);
+					}
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		};
+		getAnswersByQuestion();
+	}, [thisQuestion]);
 
-  useEffect(() => {
-    const getAnswersByQuestion = async () => {
-      try {
-        if (thisQuestion) {
-          const { data: usersAnswers } = await axiosJWT.get(
-            `${userAnswersRoute}?question=${thisQuestion.question.id}&game=${gameId}`
-          );
-          if (usersAnswers) {
-            setThisQuestionAnswers(usersAnswers["hydra:member"]);
-            console.log(usersAnswers["hydra:member"]);
-          }
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getAnswersByQuestion();
-  }, [thisQuestion]);
+	useEffect(() => {
+		thisQuestionAnswers &&
+			setThisQuestionAnswer(thisQuestionAnswers[`${selectedQuestionAnswer}`]);
+	}, [thisQuestionAnswers, selectedQuestionAnswer]);
 
-  useEffect(() => {
-    thisQuestionAnswers &&
-      setThisQuestionAnswer(thisQuestionAnswers[`${selectedQuestionAnswer}`]);
-  }, [thisQuestionAnswers, selectedQuestionAnswer]);
-
-  const progressBarCalc = () => {
-    const result = ((selectedQuestion + 1) / questions.length) * 100;
-    return result;
-  };
-
+	const progressBarCalc = () => {
+		const result = ((selectedQuestion + 1) / questions.length) * 100;
+		return result;
+	};
 
 	const getParseMedia = () => {
 		if (thisQuestion.question.media.length > 0) {
@@ -225,77 +220,6 @@ const Correction = () => {
 			eventSource.close();
 		};
 	}, [thisQuestionAnswers, selectedQuestionAnswer, selectedQuestion]);
-
-	// const handleNext = async () => {
-	// 	if (isTrue === null) return;
-	// 	if (isTrue === false) {
-	// 		try {
-	// 			await axiosJWT.patch(
-	// 				`${userAnswersRoute}/${thisQuestionAnswer.id}`,
-	// 				{
-	// 					isTrue: false,
-	// 				},
-	// 				{
-	// 					headers: { "Content-Type": "application/merge-patch+json" },
-	// 				}
-	// 			);
-	// 			// console.log("patch", patchUser);
-	// 		} catch (error) {
-	// 			console.log(error);
-	// 		}
-	// 	}
-
-	// 	if (isTrue) {
-	// 		try {
-	// 			await axiosJWT.patch(
-	// 				`${userAnswersRoute}/${thisQuestionAnswer.id}`,
-	// 				{
-	// 					isTrue: true,
-	// 				},
-	// 				{
-	// 					headers: { "Content-Type": "application/merge-patch+json" },
-	// 				}
-	// 			);
-
-	// 			const { data: userScore } = await axiosJWT.get(
-	// 				`${scoresRoute}?game=${gameId}&userId=${thisQuestionAnswer.userId.id}`
-	// 			);
-	// 			// console.log(userScore);
-	// 			if (userScore["hydra:member"].length === 0) {
-	// 				const { data: userScore } = await axiosJWT.post(scoresRoute, {
-	// 					game: `/api/games/${thisQuestion.game.id}`,
-	// 					userId: `/api/users/${thisQuestionAnswer.userId.id}`,
-	// 					score: thisQuestion.question.level,
-	// 				});
-	// 				console.log(userScore);
-	// 			}
-	// 			//sinon patch le score
-	// 			await axiosJWT.patch(
-	// 				`${scoresRoute}/${userScore["hydra:member"][0].id}`,
-	// 				{
-	// 					score:
-	// 						userScore["hydra:member"][0].score + thisQuestion.question.level,
-	// 				},
-	// 				{
-	// 					headers: { "Content-Type": "application/merge-patch+json" },
-	// 				}
-	// 			);
-	// 		} catch (error) {
-	// 			console.log(error);
-	// 		}
-	// 	}
-	// 	falseRef.current.classList.remove("false__active");
-	// 	trueRef.current.classList.remove("true__active");
-	// 	console.log(isLastQuestion);
-	// 	if (!isLastAnswer) {
-	// 		return setSelectedQuestionAnswer((prev) => prev + 1);
-	// 	}
-	// 	if (isLastQuestion) {
-	// 		return console.log("fin des réponses");
-	// 	}
-	// 	setSelectedQuestionAnswer(0);
-	// 	setSelectedQuestion((prev) => prev + 1);
-	// };
 
 	const handleNext = async () => {
 		if (isTrue === null) return;
@@ -449,35 +373,36 @@ const Correction = () => {
 							)}
 
 							{isUserGameMaster() ? (
-								<div className="true-false-next">
-									<button
-										className="true"
-										onClick={() => handleTrue()}
-										ref={trueRef}
-									>
-										Vrai
-									</button>
-									<button className="next" onClick={handleNext}>
-										Suivant
-									</button>
-									<button
-										className="false"
-										onClick={handleFalse}
-										ref={falseRef}
-									>
-										Faux
-									</button>
-								</div>
+								<>
+									<div className="true-false">
+										<button className="true" onClick={handleTrue} ref={trueRef}>
+											Vrai
+										</button>
+										<button
+											className="false"
+											onClick={handleFalse}
+											ref={falseRef}
+										>
+											Faux
+										</button>
+									</div>
+									<div className="next">
+										<button className="next" onClick={handleNext}>
+											Suivant
+										</button>
+									</div>
+								</>
 							) : (
-								<div className="true-false-next">
-									<button className="true" ref={trueRef}>
-										Vrai
-									</button>
-
-									<button className="false" ref={falseRef}>
-										Faux
-									</button>
-								</div>
+								<>
+									<div className="true-false">
+										<button className="true" ref={trueRef}>
+											Vrai
+										</button>
+										<button className="false" ref={falseRef}>
+											Faux
+										</button>
+									</div>
+								</>
 							)}
 
 							<div>Nombre de points : {thisQuestion?.question.level}</div>
@@ -492,7 +417,6 @@ const Correction = () => {
 								<div className="lvl-content"></div>
 							</div>
 						</div> */}
-
 					</div>
 				)}
 
@@ -501,7 +425,6 @@ const Correction = () => {
 			<Footer />
 		</>
 	);
-
 };
 
 export default Correction;

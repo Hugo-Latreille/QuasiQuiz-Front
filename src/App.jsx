@@ -15,108 +15,114 @@ import WelcomeTest from "./Pages/JWTTest/WelcomeTest";
 import PersistLogin from "./utils/PersistLogin";
 import PasswordEdit from "./Pages/PasswordEdit/PasswordEdit";
 import Message from "./Pages/Message/Message";
+// import LobbySkel from "./Pages/Skeleton/LobbySkel";
+// import GameSkel from "./Pages/Skeleton/GameSkel";
+// import PalmaSkel from "./Pages/Skeleton/PalmaSkel";
 
 export const UserContext = createContext();
 
 const initialState = {
-	user: {
-		token: null,
-		email: null,
-		role: null,
-	},
+  user: {
+    token: null,
+    email: null,
+    role: null,
+  },
 };
 const actions = {
-	ADD_USER: "ADD_USER",
-	REMOVE_USER: "REMOVE_USER",
-	REFRESH_TOKEN: "REFRESH_TOKEN",
+  ADD_USER: "ADD_USER",
+  REMOVE_USER: "REMOVE_USER",
+  REFRESH_TOKEN: "REFRESH_TOKEN",
 };
 
 const userReducer = (state, action) => {
-	switch (action.type) {
-		case actions.ADD_USER:
-			return {
-				...state,
-				user: {
-					...state.user,
-					token: action.payload.token,
-					email: action.payload.email,
-					role: action.payload.role,
-				},
-			};
-		case actions.REMOVE_USER:
-			return {
-				...state,
-				user: {
-					...state.user,
-					token: "",
-					email: "",
-					role: [],
-				},
-			};
-		case actions.REFRESH_TOKEN:
-			return {
-				...state,
-				user: {
-					...state.user,
-					token: action.payload,
-				},
-			};
-		default:
-			return state;
-	}
+  switch (action.type) {
+    case actions.ADD_USER:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          token: action.payload.token,
+          email: action.payload.email,
+          role: action.payload.role,
+        },
+      };
+    case actions.REMOVE_USER:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          token: "",
+          email: "",
+          role: [],
+        },
+      };
+    case actions.REFRESH_TOKEN:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          token: action.payload,
+        },
+      };
+    default:
+      return state;
+  }
 };
 const Provider = ({ children }) => {
-	const [state, dispatch] = useReducer(userReducer, initialState);
-	const value = {
-		user: state.user,
-		addUser: (payload) => {
-			dispatch({ type: actions.ADD_USER, payload });
-		},
-		removeUser: () => {
-			dispatch({ type: actions.REMOVE_USER });
-		},
-		refreshToken: (payload) => {
-			dispatch({ type: actions.REFRESH_TOKEN, payload });
-		},
-	};
-	return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+  const [state, dispatch] = useReducer(userReducer, initialState);
+  const value = {
+    user: state.user,
+    addUser: (payload) => {
+      dispatch({ type: actions.ADD_USER, payload });
+    },
+    removeUser: () => {
+      dispatch({ type: actions.REMOVE_USER });
+    },
+    refreshToken: (payload) => {
+      dispatch({ type: actions.REFRESH_TOKEN, payload });
+    },
+  };
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
 
 function App() {
-	const location = useLocation();
-	const background = location.state && location.state.background;
+  const location = useLocation();
+  const background = location.state && location.state.background;
 
-	return (
-		<Provider>
-			<Routes location={background || location}>
-				<Route path="/" element={<Home />}>
-					<Route path="login" element={<Connexion />} />
-				</Route>
+  return (
+    <Provider>
+      <Routes location={background || location}>
+        <Route path="/" element={<Home />}>
+          <Route path="login" element={<Connexion />} />
+        </Route>
 
-				{/* Routes privées */}
-				<Route element={<PersistLogin />}>
-					<Route element={<RequireAuth />}>
-						<Route path="/test" element={<WelcomeTest />} />
-						<Route path="/authTest" element={<AuthTest />} />
-						<Route path="lobby" element={<Lobby />} />
-						<Route path="game/:gameId" element={<Game />} />
-						<Route path="correction/:gameId" element={<Correction />} />
-						<Route path="palmares/:gameId" element={<Palmares />} />
-						<Route path="profil" element={<Profile />} />
-						<Route path="password/:userId" element={<PasswordEdit />} />
-						<Route path="message" element={<Message />} />
-					</Route>
-				</Route>
-				<Route path="*" element={<Error />} />
-			</Routes>
-			{background && (
-				<Routes>
-					<Route path="login" element={<Connexion />} />
-					<Route path="password/:userId" element={<PasswordEdit />} />
-				</Routes>
-			)}
-		</Provider>
-	);
+        {/* Routes privées */}
+        <Route element={<PersistLogin />}>
+          <Route element={<RequireAuth />}>
+            <Route path="/test" element={<WelcomeTest />} />
+            <Route path="/authTest" element={<AuthTest />} />
+            <Route path="lobby" element={<Lobby />} />
+            <Route path="game/:gameId" element={<Game />} />
+            <Route path="correction/:gameId" element={<Correction />} />
+            <Route path="palmares/:gameId" element={<Palmares />} />
+            <Route path="profil" element={<Profile />} />
+            <Route path="password/:userId" element={<PasswordEdit />} />
+            <Route path="message" element={<Message />} />
+            {/* <Route path="lobbyskel" element={<LobbySkel />} />
+            <Route path="gameskel" element={<GameSkel />} />
+            <Route path="palmaskel" element={<PalmaSkel />} /> */}
+          </Route>
+        </Route>
+        <Route path="*" element={<Error />} />
+      </Routes>
+      {background && (
+        <Routes>
+          <Route path="login" element={<Connexion />} />
+          <Route path="password/:userId" element={<PasswordEdit />} />
+        </Routes>
+      )}
+    </Provider>
+  );
 }
 
 export default App;

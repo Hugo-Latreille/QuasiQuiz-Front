@@ -36,15 +36,16 @@
     }
 
     &-form {
+      // overflow-y: scroll;
       width: 70%;
       height: 100%;
     }
   }
 
-  &-logo {
-    width: 100%;
-    margin: 2rem auto;
-  }
+  // &-logo {
+  //   width: 100%;
+  //   margin: 2rem auto;
+  // }
 }
 
 .navigation-links {

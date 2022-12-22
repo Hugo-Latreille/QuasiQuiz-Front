@@ -123,7 +123,6 @@ const Message = ({ gameId, userId }) => {
 									}
 								>
 									{message.userId.pseudo} : {message.message}
-									{isMessageUserGameMaster(message) ? "oui" : "non"}
 								</p>
 
 								{/* <img

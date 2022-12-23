@@ -35,7 +35,7 @@ import inMemoryJwt from "../../Components/BackOffice/inMemoryJwt";
 import { Navigate, Route } from "react-router-dom";
 
 function Admin() {
-	const entrypoint = import.meta.env.VITE_API_ENTRYPOINT;
+	const entrypoint = "https://api.quasiquiz.net/api";
 
 	const getHeaders = () =>
 		inMemoryJwt.getToken()

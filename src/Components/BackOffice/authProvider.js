@@ -2,15 +2,12 @@ import inMemoryJWT from "./inMemoryJwt";
 
 const authProvider = {
 	login: ({ username, password }) => {
-		const request = new Request(
-			"https://quasiquizback.herokuapp.com/api/login",
-			{
-				method: "POST",
-				body: JSON.stringify({ email: username, password: password }),
-				headers: new Headers({ "Content-Type": "application/json" }),
-				withCredentials: true,
-			}
-		);
+		const request = new Request("https://api.quasiquiz.net/api/login", {
+			method: "POST",
+			body: JSON.stringify({ email: username, password: password }),
+			headers: new Headers({ "Content-Type": "application/json" }),
+			withCredentials: true,
+		});
 		return fetch(request)
 			.then((response) => {
 				if (response.status < 200 || response.status >= 300) {

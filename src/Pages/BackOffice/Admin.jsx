@@ -31,7 +31,7 @@ import {
 import { CustomLayout } from "../../Components/BackOffice/Layout";
 
 function Admin() {
-	const entrypoint = import.meta.env.VITE_API_ENTRYPOINT;
+	const entrypoint = "https://api.quasiquiz.net/api";
 
 	const dataProvider = hydraDataProvider({
 		entrypoint,

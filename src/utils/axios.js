@@ -1,5 +1,5 @@
 import axios from "axios";
-export const host = `https://quasiquizback.herokuapp.com`;
+export const host = `https://www.quasiquiz.net`;
 
 export default axios.create({
 	baseURL: host,

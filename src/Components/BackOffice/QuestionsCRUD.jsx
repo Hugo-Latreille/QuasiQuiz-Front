@@ -32,7 +32,7 @@ const QuestionsList = (props) => (
 			reference="answers"
 			link="show"
 		>
-			<ChipField source="answer" />
+			<TextField source="answer" />
 		</ReferenceField>
 	</ListGuesser>
 );
@@ -54,7 +54,7 @@ const QuestionShow = (props) => (
 
 const QuestionCreate = (props) => (
 	<CreateGuesser {...props} sx={{ width: "85vw" }}>
-		<InputGuesser source="question" />
+		<InputGuesser source="question" sx={{ width: "35vw" }} />
 		<InputGuesser source="timer" />
 		<InputGuesser source="level" />
 		<ReferenceArrayInput source="media" reference="media">
@@ -78,7 +78,7 @@ const QuestionCreate = (props) => (
 
 const QuestionEdit = (props) => (
 	<EditGuesser {...props} sx={{ width: "85vw" }}>
-		<InputGuesser source="question" />
+		<InputGuesser source="question" sx={{ width: "35vw" }} />
 		<InputGuesser source="timer" />
 		<InputGuesser source="level" />
 		<ReferenceArrayInput source="media" reference="media">

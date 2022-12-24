@@ -1,10 +1,4 @@
-import {
-	ListGuesser,	
-	ShowGuesser,
-	CreateGuesser,
-	
-	
-} from "@api-platform/admin";
+import { ListGuesser, ShowGuesser, CreateGuesser } from "@api-platform/admin";
 import {
 	TextField,
 	ReferenceField,
@@ -26,7 +20,7 @@ const MediaList = (props) => (
 			reference="questions"
 			link="show"
 		>
-			<ChipField source="question" />
+			<TextField source="question" />
 		</ReferenceField>
 		<DateField source="created_at" showTime locales="fr-FR" />
 		<DateField source="updated_at" showTime locales="fr-FR" />

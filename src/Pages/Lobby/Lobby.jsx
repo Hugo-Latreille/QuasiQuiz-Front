@@ -98,7 +98,6 @@ const Lobby = () => {
 			}
 		};
 		isGameOpen();
-		setIsLoading(false);
 
 		return () => {
 			isMounted = false;
@@ -135,6 +134,7 @@ const Lobby = () => {
 
 						console.log(allOtherUsers);
 						setOtherUsers(allOtherUsers);
+						setIsLoading(false);
 					}
 				}
 			} catch (error) {

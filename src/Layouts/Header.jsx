@@ -1,5 +1,4 @@
 import logo from "../assets/logo-full.svg";
-import BlankAvatar from "../assets/Blank-Avatar.png";
 import "./_header.scss";
 import Button from "../Components/Button/Button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -9,6 +8,7 @@ import axios, { logoutToken, usersRoute } from "../utils/axios";
 import useAxiosJWT from "../utils/useAxiosJWT";
 import { useEffect } from "react";
 import { useState } from "react";
+import { Skeleton } from "@mui/material";
 
 const Header = () => {
 	const location = useLocation();
@@ -107,11 +107,16 @@ const Header = () => {
 					</Link>
 				) : (
 					<div className="dropdown">
-						<img
-							onClick={dropdownFunc}
-							src={avatar ? `data:image/svg+xml;base64,${avatar}` : BlankAvatar}
-							className="dropbtn"
-						></img>
+						{avatar ? (
+							<img
+								onClick={dropdownFunc}
+								src={`data:image/svg+xml;base64,${avatar}`}
+								className="dropbtn"
+							></img>
+						) : (
+							<Skeleton variant="circular" width={40} height={40} />
+						)}
+
 						<div id="myDropdown" className="dropdown-content" ref={dropDown}>
 							<div className="list">
 								<p className="profile" onClick={handleProfile}>

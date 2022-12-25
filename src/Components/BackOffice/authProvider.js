@@ -2,7 +2,7 @@ import inMemoryJWT from "./inMemoryJwt";
 
 const authProvider = {
 	login: ({ username, password }) => {
-		const request = new Request("https://localhost:8000/api/login", {
+		const request = new Request("https://api.quasiquiz.net/api/login", {
 			method: "POST",
 			body: JSON.stringify({ email: username, password: password }),
 			headers: new Headers({ "Content-Type": "application/json" }),

@@ -5,12 +5,13 @@ import "./_lobby.scss";
 import { useContext, useEffect } from "react";
 import useAxiosJWT from "../../utils/useAxiosJWT";
 import {
-  gameHasUsersRoute,
-  gamesRoute,
-  host,
-  mercureHubUrl,
-  messagesRoute,
-  usersRoute,
+
+	gameHasUsersRoute,
+	gamesRoute,
+	host,
+	mercureHubUrl,
+	usersRoute,
+
 } from "../../utils/axios";
 import { UserContext } from "../../App";
 import { useState } from "react";
@@ -91,15 +92,16 @@ const Lobby = () => {
               }
             );
 
-            console.log(addUserInGame);
-          }
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    isGameOpen();
-    setIsLoading(false);
+
+						console.log(addUserInGame);
+					}
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		};
+		isGameOpen();
+
 
     return () => {
       isMounted = false;
@@ -134,15 +136,17 @@ const Lobby = () => {
                 isGameMaster: user.is_game_master,
               }));
 
-            console.log(allOtherUsers);
-            setOtherUsers(allOtherUsers);
-          }
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getGameUsers();
+						console.log(allOtherUsers);
+						setOtherUsers(allOtherUsers);
+						setIsLoading(false);
+					}
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		};
+		getGameUsers();
+
 
     return () => {
       isMounted = false;

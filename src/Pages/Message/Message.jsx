@@ -126,6 +126,7 @@ const Message = ({ gameId, userId }) => {
                   {message.userId.pseudo} : {message.message}
                 </p>
 
+
                 {/* <img
 									src={`data:image/svg+xml;base64,${message.userId.avatar}`}
 									alt=""

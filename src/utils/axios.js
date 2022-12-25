@@ -1,5 +1,5 @@
 import axios from "axios";
-export const host = `https://localhost:8000`;
+export const host = `https://api.quasiquiz.net`;
 
 export default axios.create({
 	baseURL: host,
@@ -19,7 +19,8 @@ export const refreshTokenRoute = `/api/token/refresh`;
 export const logoutToken = `/api/token/invalidate`;
 export const multiAvatarAPIKey = "27JS9MXha6pgzn";
 export const multiAvatarRoute = "https://api.multiavatar.com/`";
-export const mercureHubUrl = "http://localhost:3000/.well-known/mercure";
+export const mercureHubUrl =
+	"https://n1f0rt.stackhero-network.com/.well-known/mercure";
 
 export const axiosJWT = axios.create({
 	baseURL: host,

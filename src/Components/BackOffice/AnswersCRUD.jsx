@@ -54,12 +54,13 @@ const AnswerShow = (props) => (
 
 const AnswerCreate = (props) => (
 	<CreateGuesser {...props} sx={{ width: "85vw" }}>
-		<InputGuesser source="answer" />
+		<InputGuesser source="answer" sx={{ width: "35vw" }} />
 		<ReferenceArrayInput source="questions" reference="questions">
 			<AutocompleteArrayInput
 				filterToQuery={(searchText) => ({ question: searchText })}
 				optionText="question"
 				label="Question"
+				sx={{ width: "35vw" }}
 			/>
 		</ReferenceArrayInput>
 	</CreateGuesser>
@@ -67,12 +68,13 @@ const AnswerCreate = (props) => (
 
 const AnswerEdit = (props) => (
 	<EditGuesser {...props} sx={{ width: "85vw" }}>
-		<InputGuesser source="answer" />
+		<InputGuesser source="answer" sx={{ width: "35vw" }} />
 		<ReferenceArrayInput source="questions" reference="questions">
 			<AutocompleteArrayInput
 				filterToQuery={(searchText) => ({ question: searchText })}
 				optionText="question"
 				label="Question"
+				sx={{ width: "35vw" }}
 			/>
 		</ReferenceArrayInput>
 	</EditGuesser>

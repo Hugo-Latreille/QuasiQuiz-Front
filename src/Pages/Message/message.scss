@@ -1,119 +1,163 @@
+@use "../../styles/vars" as v;
+@use "../../styles/mixins" as m;
 @import url("https://fonts.googleapis.com/css?family=Roboto:400,700");
 
 .messageContainer {
-	border: 1px solid white;
-	width: 500px;
-	height: 200px;
-	position: absolute;
-	bottom: 4rem;
-	right: 0;
-	padding-top: 1rem;
-	overflow-y: auto;
+  background-color: v.$bg-color-chat;
+  border: 1px solid v.$primary-color;
+  border-radius: 0.5rem;
+  width: 80vw;
+  height: 70vh;
+  position: fixed;
+  bottom: 4rem;
+  right: 1rem;
+  padding: 3.5rem 1rem;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.26);
+  overflow-y: auto;
 
-	& input {
-		position: absolute;
-		width: 60%;
-		height: 1rem;
-		bottom: 0rem;
-		right: 0;
-		left: 0;
-	}
+  @include m.desktop-only {
+    height: 15rem;
+    width: 30rem;
+  }
 
-	& .gameMaster {
-		color: green;
-	}
+  input {
+    padding: 0.5rem;
+    background-color: v.$bg-color;
+    border-radius: 0.5rem;
+    border: 1px solid v.$primary-color;
+    color: v.$text-color;
+    position: absolute;
+    width: 60%;
+    height: 1rem;
+    bottom: 0.5rem;
+    right: 0;
+    left: 0.5rem;
 
-	& .me {
-		color: yellow;
-		text-align: end;
-		padding-right: 2rem;
-	}
+    &:focus {
+      border: none;
+    }
+  }
 
-	& .other {
-		color: orange;
-		padding-left: 2rem;
-	}
+  button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 0.5rem;
+    right: 0.5rem;
+    height: 2.5rem;
+    width: 2.5rem;
+    border: none;
+    border-radius: 50%;
+    background-color: v.$primary-color;
+    @include m.desktop-only {
+      &:hover {
+        border: 2px solid v.$primary-color;
+        background-color: v.$bg-color;
+        color: v.$primary-color;
+      }
+    }
+    .mdsend {
+      font-size: 1.5rem;
+    }
+  }
 
-	& .send {
-		position: absolute;
-		width: 35%;
-		height: 1.5rem;
-		bottom: 0rem;
-		right: 0;
-	}
+  .gameMaster {
+    @include m.secondary-font;
+    color: v.$gm-color;
+  }
 
-	& .close {
-		position: absolute;
-		top: 0;
-		right: 0;
-		& svg {
-			fill: white;
-		}
-	}
+  .me {
+    @include m.secondary-font;
+    color: v.$user-color;
+    text-align: end;
+    // padding-right: 2rem;
+  }
+
+  .other {
+    @include m.secondary-font;
+    color: v.$g-color;
+    padding-left: 2rem;
+  }
+
+  .close {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    & svg {
+      fill: v.$random;
+      font-size: 2.5rem;
+      @include m.desktop-only {
+        &:hover {
+          fill: v.$user-color;
+        }
+      }
+    }
+  }
 }
 
 .chatIcon {
-	position: absolute;
-	bottom: 4rem;
-	right: 2rem;
+  position: absolute;
+  bottom: 4rem;
+  right: 2rem;
 
-	& svg {
-		fill: white;
-		height: 50px;
-		width: 50px;
-	}
-	& .notifications {
-		border-radius: 20px;
-		border: 2px solid #fff;
-		width: 20px;
-		height: 20px;
-		background-color: #ff6b6b;
-		position: absolute;
-		top: -5px;
-		left: -10px;
-		font-size: 10px;
-		text-align: center;
-		line-height: 20px;
-		font-family: "Roboto", sans-serif;
-		font-weight: 400;
-		color: #fff;
-		font-weight: 700;
-		&.animate {
-			transform-origin: center bottom;
-			animation-duration: 1s;
-			animation-fill-mode: both;
-			animation-iteration-count: 2;
-			animation-name: rubberBand;
-		}
-	}
+  & svg {
+    fill: white;
+    height: 50px;
+    width: 50px;
+  }
+  & .notifications {
+    border-radius: 20px;
+    border: 2px solid #fff;
+    width: 20px;
+    height: 20px;
+    background-color: #ff6b6b;
+    position: absolute;
+    top: -5px;
+    left: -10px;
+    font-size: 10px;
+    text-align: center;
+    line-height: 20px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    color: #fff;
+    font-weight: 700;
+    &.animate {
+      transform-origin: center bottom;
+      animation-duration: 1s;
+      animation-fill-mode: both;
+      animation-iteration-count: 2;
+      animation-name: rubberBand;
+    }
+  }
 }
 
 @keyframes rubberBand {
-	0% {
-		transform: scale3d(1, 1, 1);
-	}
+  0% {
+    transform: scale3d(1, 1, 1);
+  }
 
-	30% {
-		transform: scale3d(1.25, 0.75, 1);
-	}
+  30% {
+    transform: scale3d(1.25, 0.75, 1);
+  }
 
-	40% {
-		transform: scale3d(0.75, 1.25, 1);
-	}
+  40% {
+    transform: scale3d(0.75, 1.25, 1);
+  }
 
-	50% {
-		transform: scale3d(1.15, 0.85, 1);
-	}
+  50% {
+    transform: scale3d(1.15, 0.85, 1);
+  }
 
-	65% {
-		transform: scale3d(0.95, 1.05, 1);
-	}
+  65% {
+    transform: scale3d(0.95, 1.05, 1);
+  }
 
-	75% {
-		transform: scale3d(1.05, 0.95, 1);
-	}
+  75% {
+    transform: scale3d(1.05, 0.95, 1);
+  }
 
-	100% {
-		transform: scale3d(1, 1, 1);
-	}
+  100% {
+    transform: scale3d(1, 1, 1);
+  }
 }

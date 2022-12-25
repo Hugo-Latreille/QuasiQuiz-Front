@@ -5,6 +5,7 @@ import { host, mercureHubUrl, messagesRoute } from "../../utils/axios";
 import useAxiosJWT from "../../utils/useAxiosJWT";
 import { BsFillChatLeftDotsFill } from "react-icons/bs";
 import { AiOutlineCloseCircle } from "react-icons/ai";
+import { MdSend } from "react-icons/md";
 
 const Message = ({ gameId, userId }) => {
 	const axiosJWT = useAxiosJWT();
@@ -87,7 +88,7 @@ const Message = ({ gameId, userId }) => {
 	};
 
 	const isMessageUserGameMaster = (message) => {
-		return message.game.gameHasUsers.filter(
+		return message?.game?.gameHasUsers?.filter(
 			(user) => user.userId.id === message.userId.id && user.is_game_master
 		).length === 1
 			? true
@@ -110,37 +111,52 @@ const Message = ({ gameId, userId }) => {
 				</div>
 			) : (
 				<div className="messageContainer">
-					{messages &&
-						messages.map((message) => (
-							<div key={message.id}>
-								<p
+					<div className="messages">
+						{messages &&
+							messages.map((message) => (
+								<div
+									key={message.id}
 									className={
-										isMessageUserGameMaster(message)
-											? "gameMaster"
-											: message.userId.id === userId
-											? "me"
-											: "other"
+										message.userId.id === userId ? " chatMsg me" : "chatMsg"
 									}
 								>
-									{message.userId.pseudo} : {message.message}
-								</p>
-
-								{/* <img
-									src={`data:image/svg+xml;base64,${message.userId.avatar}`}
-									alt=""
-								/> */}
-							</div>
-						))}
-					<div ref={bottomRef} />
-					<form onSubmit={handleMessage}>
-						<input
-							type="text"
-							value={chatMessage}
-							onChange={(e) => setChatMessage(e.target.value)}
-						/>
-						<button className="send" type="submit">
-							Envoyer
-						</button>
+									<img
+										className={
+											isMessageUserGameMaster(message)
+												? "chatAvatar avatarGm"
+												: message.userId.id === userId
+												? " chatAvatar avatarMe"
+												: "chatAvatar avatarOther"
+										}
+										src={`data:image/svg+xml;base64,${message.userId.avatar}`}
+										alt=""
+									/>
+									<p
+										className={
+											isMessageUserGameMaster(message)
+												? "textGameMaster"
+												: message.userId.id === userId
+												? "textMe"
+												: "textOther"
+										}
+									>
+										{message.userId.pseudo} > {message.message}
+									</p>
+								</div>
+							))}
+						<div ref={bottomRef} />
+					</div>
+					<div className="postMessage">
+						<form onSubmit={handleMessage}>
+							<input
+								type="text"
+								value={chatMessage}
+								onChange={(e) => setChatMessage(e.target.value)}
+							/>
+							<button className="send" type="submit">
+								<MdSend className="mdsend" />
+							</button>
+						</form>
 						<div className="close">
 							<AiOutlineCloseCircle
 								onClick={() => {
@@ -149,7 +165,7 @@ const Message = ({ gameId, userId }) => {
 								}}
 							/>
 						</div>
-					</form>
+					</div>
 				</div>
 			)}
 		</>

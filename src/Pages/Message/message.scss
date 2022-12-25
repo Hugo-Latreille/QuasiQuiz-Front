@@ -1,53 +1,121 @@
+@use "../../styles/vars" as v;
+@use "../../styles/mixins" as m;
 @import url("https://fonts.googleapis.com/css?family=Roboto:400,700");
 
 .messageContainer {
-	border: 1px solid white;
-	width: 500px;
-	height: 200px;
-	position: absolute;
+	background-color: v.$bg-color-chat;
+	border: 1px solid v.$primary-color;
+	border-radius: 0.5rem;
+	width: 80vw;
+	height: 70vh;
+	position: fixed;
 	bottom: 4rem;
-	right: 0;
-	padding-top: 1rem;
-	overflow-y: auto;
+	right: 1rem;
+	padding: 3.5rem 1rem;
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.26);
+	overflow-y: hidden;
 
-	& input {
+	@include m.desktop-only {
+		height: 15rem;
+		width: 30rem;
+	}
+
+	& .messages {
+		overflow-y: auto;
+		height: 100%;
+		padding-right: 1.5rem;
+	}
+
+	.chatMsg {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		@include m.secondary-font;
+		margin-bottom: 0.5rem;
+
+		&.me {
+			justify-content: end;
+		}
+
+		& .textMe {
+			color: v.$user-color;
+		}
+
+		& .textOther {
+			color: v.$g-color;
+		}
+		& .textGameMaster {
+			color: v.$gm-color;
+		}
+		& .chatAvatar {
+			height: 1.5rem;
+			border: 2px solid;
+			border-radius: 50%;
+			&.avatarGm {
+				border-color: v.$gm-color;
+			}
+			&.avatarMe {
+				border-color: v.$user-color;
+			}
+			&.avatarOther {
+				border-color: v.$g-color;
+			}
+		}
+	}
+	input {
+		padding: 0.5rem;
+		background-color: v.$bg-color;
+		border-radius: 0.5rem;
+		border: 1px solid v.$primary-color;
+		color: v.$text-color;
 		position: absolute;
-		width: 60%;
+		width: 80%;
 		height: 1rem;
-		bottom: 0rem;
+		bottom: 0.5rem;
 		right: 0;
-		left: 0;
+		left: 0.5rem;
+
+		&:focus {
+			border: none;
+		}
 	}
 
-	& .gameMaster {
-		color: green;
-	}
-
-	& .me {
-		color: yellow;
-		text-align: end;
-		padding-right: 2rem;
-	}
-
-	& .other {
-		color: orange;
-		padding-left: 2rem;
-	}
-
-	& .send {
+	button {
+		display: flex;
+		justify-content: center;
+		align-items: center;
 		position: absolute;
-		width: 35%;
-		height: 1.5rem;
-		bottom: 0rem;
-		right: 0;
+		bottom: 0.5rem;
+		right: 0.5rem;
+		height: 2.5rem;
+		width: 2.5rem;
+		border: none;
+		border-radius: 50%;
+		background-color: v.$primary-color;
+		@include m.desktop-only {
+			&:hover {
+				border: 2px solid v.$primary-color;
+				background-color: v.$bg-color;
+				color: v.$primary-color;
+			}
+		}
+		.mdsend {
+			font-size: 1.5rem;
+		}
 	}
 
-	& .close {
+	.close {
 		position: absolute;
-		top: 0;
-		right: 0;
+		top: 0.1rem;
+		right: 0.1rem;
 		& svg {
 			fill: white;
+			font-size: 1.5rem;
+			@include m.desktop-only {
+				&:hover {
+					fill: v.$user-color;
+				}
+			}
 		}
 	}
 }

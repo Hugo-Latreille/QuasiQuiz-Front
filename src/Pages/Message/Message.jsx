@@ -6,6 +6,9 @@ import useAxiosJWT from "../../utils/useAxiosJWT";
 import { BsFillChatLeftDotsFill } from "react-icons/bs";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { MdSend } from "react-icons/md";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
+import { BsEmojiSmile } from "react-icons/bs";
 
 const Message = ({ gameId, userId }) => {
 	const axiosJWT = useAxiosJWT();
@@ -13,6 +16,7 @@ const Message = ({ gameId, userId }) => {
 	const [chatMessage, setChatMessage] = useState("");
 	const [chatOpen, setChatOpen] = useState(false);
 	const [notifications, setNotifications] = useState(0);
+	const [emojisPicker, setEmojisPicker] = useState(false);
 	const notifRef = useRef(null);
 	const bottomRef = useRef(null);
 
@@ -140,7 +144,7 @@ const Message = ({ gameId, userId }) => {
 												: "textOther"
 										}
 									>
-										{message.userId.pseudo} > {message.message}
+										{message.userId.pseudo} &gt; {message.message}
 									</p>
 								</div>
 							))}
@@ -153,6 +157,9 @@ const Message = ({ gameId, userId }) => {
 								value={chatMessage}
 								onChange={(e) => setChatMessage(e.target.value)}
 							/>
+							<div className="emoji" onClick={() => setEmojisPicker(true)}>
+								<BsEmojiSmile />
+							</div>
 							<button className="send" type="submit">
 								<MdSend className="mdsend" />
 							</button>
@@ -166,6 +173,23 @@ const Message = ({ gameId, userId }) => {
 							/>
 						</div>
 					</div>
+					{emojisPicker === true && (
+						<div className="emojisPicker">
+							<Picker
+								data={data}
+								locale="fr"
+								theme="dark"
+								onEmojiSelect={(e) => {
+									console.log(e);
+									setChatMessage((prev) => prev + e.native);
+									setEmojisPicker(false);
+								}}
+							/>
+							<div className="closeEmojis">
+								<AiOutlineCloseCircle onClick={() => setEmojisPicker(false)} />
+							</div>
+						</div>
+					)}
 				</div>
 			)}
 		</>

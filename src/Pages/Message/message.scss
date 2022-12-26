@@ -18,6 +18,7 @@
 	@include m.desktop-only {
 		height: 15rem;
 		width: 30rem;
+		word-break: break-all;
 	}
 
 	& .messages {
@@ -62,45 +63,58 @@
 			}
 		}
 	}
-	input {
-		padding: 0.5rem;
-		background-color: v.$bg-color;
-		border-radius: 0.5rem;
-		border: 1px solid v.$primary-color;
-		color: v.$text-color;
-		position: absolute;
-		width: 80%;
-		height: 1rem;
-		bottom: 0.5rem;
-		right: 0;
-		left: 0.5rem;
 
-		&:focus {
-			border: none;
-		}
-	}
+	.postMessage {
+		input {
+			padding: 0.5rem;
+			background-color: v.$bg-color;
+			border-radius: 0.5rem;
+			border: 1px solid v.$primary-color;
+			color: v.$text-color;
+			position: absolute;
+			width: 70%;
+			height: 1rem;
+			bottom: 0.5rem;
+			right: 0;
+			left: 0.5rem;
 
-	button {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		position: absolute;
-		bottom: 0.5rem;
-		right: 0.5rem;
-		height: 2.5rem;
-		width: 2.5rem;
-		border: none;
-		border-radius: 50%;
-		background-color: v.$primary-color;
-		@include m.desktop-only {
-			&:hover {
-				border: 2px solid v.$primary-color;
-				background-color: v.$bg-color;
-				color: v.$primary-color;
+			&:focus {
+				border: none;
 			}
 		}
-		.mdsend {
-			font-size: 1.5rem;
+
+		& .emoji {
+			position: absolute;
+			bottom: 0.8rem;
+			right: 5rem;
+			& svg {
+				fill: v.$primary-color;
+				font-size: 1.5rem;
+				&:hover {
+					fill: white;
+				}
+			}
+		}
+
+		button {
+			position: absolute;
+			bottom: 0.5rem;
+			right: 0.5rem;
+			height: 2.5rem;
+			width: 2.5rem;
+			border: none;
+			border-radius: 50%;
+			background-color: v.$primary-color;
+			@include m.desktop-only {
+				&:hover {
+					border: 2px solid v.$primary-color;
+					background-color: v.$bg-color;
+					color: v.$primary-color;
+				}
+			}
+			.mdsend {
+				font-size: 1.5rem;
+			}
 		}
 	}
 
@@ -183,5 +197,22 @@
 
 	100% {
 		transform: scale3d(1, 1, 1);
+	}
+}
+
+.emojisPicker {
+	position: fixed;
+	bottom: 4rem;
+	right: 6rem;
+
+	& .closeEmojis {
+		z-index: 2;
+		position: absolute;
+		top: 0rem;
+		right: 0rem;
+		& svg {
+			fill: white;
+			font-size: 1.2rem;
+		}
 	}
 }

@@ -9,6 +9,7 @@ import {
 	gamesRoute,
 	host,
 	mercureHubUrl,
+	questionsRoute,
 	usersRoute,
 } from "../../utils/axios";
 import { UserContext } from "../../App";
@@ -27,6 +28,8 @@ const Lobby = () => {
 	const [otherUsers, setOtherUsers] = useState(null);
 	const [userId, setUserId] = useState(null);
 	const [isLoading, setIsLoading] = useState(true);
+	const [maxQuestions, setMaxQuestions] = useState(0);
+	const [rangeValue, setRangeValue] = useState(5);
 	const navigate = useNavigate();
 	const players = otherUsers?.filter(
 		(otherUser) => otherUser.isGameMaster === false
@@ -97,7 +100,23 @@ const Lobby = () => {
 				console.log(error);
 			}
 		};
+
+		const maxQuestions = async () => {
+			try {
+				const { data: allQuestions } = await axiosJWT.get(`${questionsRoute}`, {
+					signal: controller.signal,
+				});
+				if (isMounted && allQuestions) {
+					const questionsNumber = allQuestions["hydra:member"].length;
+					setMaxQuestions(questionsNumber);
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		};
+
 		isGameOpen();
+		maxQuestions();
 
 		return () => {
 			isMounted = false;
@@ -204,7 +223,6 @@ const Lobby = () => {
 	};
 
 	// /game/{GameId<\d+>}/questions/{nbrOfQuestions<\d+>
-
 	const handleGame = async (e) => {
 		e.preventDefault();
 
@@ -216,8 +234,7 @@ const Lobby = () => {
 				},
 				{ headers: { "Content-Type": "application/merge-patch+json" } }
 			);
-			//!TODO ajouter choix nombre de questions, calcul nombre total max
-			await axiosJWT.get(`/game/${gameId}/questions`);
+			await axiosJWT.get(`/game/${gameId}/questions/${rangeValue}`);
 			return navigate(`/game/${gameId}`);
 		}
 
@@ -320,7 +337,20 @@ const Lobby = () => {
 						<Button onClick={handleGame} label={"Rejoindre la partie"} />
 					)} */}
 							{otherUsers && isUserGameMaster() && (
-								<Button onClick={handleGame} label={"Lancer la partie"} />
+								<>
+									<div className="rangeContainer">
+										<input
+											type="range"
+											className="inputRange"
+											min="3"
+											max={maxQuestions}
+											value={rangeValue}
+											onChange={(e) => setRangeValue(Number(e.target.value))}
+										/>
+										<p>{rangeValue} questions</p>
+									</div>
+									<Button onClick={handleGame} label={"Lancer la partie"} />
+								</>
 							)}
 						</div>
 					</main>

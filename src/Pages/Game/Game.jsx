@@ -47,9 +47,6 @@ const Game = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [answersCount, setAnswerCount] = useState(0);
 
-	//! soit ici dès que game corrigée, alors on move les users vers palmares
-	//! SOIT correction : possible : passage écran suivant...ou animation. Possibilité d'afficher vrai/faux en direct ?? uniquement si patch bdd...
-
 	// récuperer les questions de cette partie + le temps de chacune + le niveau
 	useEffect(() => {
 		let isMounted = true;
@@ -152,7 +149,7 @@ const Game = () => {
 
 	useEffect(() => {
 		if (remainingTime === 0) {
-			return setNoMoreTime(true);
+			// return setNoMoreTime(true);
 		}
 	}, [remainingTime]);
 

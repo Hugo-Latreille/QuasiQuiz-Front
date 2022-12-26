@@ -347,7 +347,7 @@ const Lobby = () => {
 											value={rangeValue}
 											onChange={(e) => setRangeValue(Number(e.target.value))}
 										/>
-										<p>{rangeValue} questions</p>
+										<p>Quiz de {rangeValue} questions</p>
 									</div>
 									<Button onClick={handleGame} label={"Lancer la partie"} />
 								</>

@@ -31,6 +31,13 @@ const ProgressBar = ({ level, progress }) => {
 						key={progress}
 						style={style}
 					></div>
+					<div className="progressLegend">
+						<ul>
+							<li className="progressLegend__one">Niveau 1</li>
+							<li className="progressLegend__two">Niveau 2</li>
+							<li className="progressLegend__three">Niveau 3</li>
+						</ul>
+					</div>
 				</div>
 			</div>
 		</div>

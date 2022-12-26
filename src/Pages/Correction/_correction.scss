@@ -27,7 +27,9 @@
 			p {
 				@include m.secondary-font;
 				color: v.$text-color;
-				font-size: larger;
+				font-size: 1.5rem;
+				text-align: center;
+				width: 40vw;
 			}
 		}
 
@@ -39,30 +41,50 @@
 			.good-answer {
 				@include m.secondary-font;
 				color: v.$text-color;
-				margin-bottom: 1rem;
+				margin-bottom: 1.5rem;
+				&__legend {
+					font-style: italic;
+					margin-bottom: 0.5rem;
+				}
+				&__true {
+					font-weight: bold;
+					font-size: 1.2rem;
+					color: v.$g-color;
+				}
 			}
 			.gamer-answer {
-				border: 1px solid v.$primary-color;
-				border-radius: 0.5rem;
-				padding: 0.5rem;
-				p {
+				margin: 1.5rem 0;
+				display: flex;
+				gap: 1.5rem;
+				&__answer {
+					border: 1px solid v.$primary-color;
+					min-width: 10rem;
+					min-height: 1rem;
+					border-radius: 0.5rem;
+					padding: 0.5rem;
+					line-height: 2rem;
 					color: v.$primary-color;
 					@include m.principal-font;
-					font-size: larger;
+					font-size: 1.4rem;
+				}
+				& .gamer-pseudo {
+					@include m.principal-font;
+					color: v.$primary-color;
+					display: flex;
+					flex-direction: column;
+					gap: 0.1rem;
+					align-items: center;
+					justify-content: center;
+					& .avatar {
+						height: 2rem;
+						border-radius: 0.5rem;
+					}
 				}
 			}
 		}
-		.gamer-pseudo {
-			@include m.principal-font;
-			color: v.$primary-color;
-			& .avatar {
-				height: 3rem;
-				border-radius: 0.5rem;
-				margin-right: 0.5rem;
-			}
-		}
+
 		.true-false {
-			margin-top: 2rem;
+			margin-top: 1.5rem;
 			display: flex;
 			justify-content: center;
 			align-items: center;
@@ -71,6 +93,7 @@
 			button {
 				padding: 0.5rem 1rem;
 				border-radius: 0.5rem;
+				cursor: pointer;
 				&.true {
 					@include m.principal-font;
 					border: 1px solid v.$g-color;
@@ -107,6 +130,7 @@
 			button {
 				padding: 0.5rem 1rem;
 				border-radius: 0.5rem;
+				cursor: pointer;
 				&.next {
 					@include m.principal-font;
 					border: 1px solid v.$text-color;
@@ -119,21 +143,6 @@
 					}
 				}
 			}
-		}
-	}
-	.progressbar-box {
-		// margin: 3rem 0.5rem;
-		position: fixed;
-		bottom: 3rem;
-		height: 1rem;
-		width: 90%;
-		border: 1px solid v.$g-color;
-		border-radius: 0.5rem;
-		.lvl-border {
-			height: 1rem;
-			width: 50%;
-			background-color: v.$g-color;
-			border-radius: 0.5rem;
 		}
 	}
 }

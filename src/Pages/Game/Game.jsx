@@ -94,7 +94,6 @@ const Game = () => {
 
 		getQuestions();
 		getUsers();
-		setIsLoading(false);
 
 		return () => {
 			isMounted = false;
@@ -107,8 +106,11 @@ const Game = () => {
 	}, [questions, selectedQuestion]);
 
 	useEffect(() => {
-		thisQuestion && console.log(thisQuestion);
-		thisQuestion && setTime(thisQuestion.question.timer);
+		if (thisQuestion) {
+			console.log(thisQuestion);
+			setTime(thisQuestion.question.timer);
+			setIsLoading(false);
+		}
 	}, [thisQuestion]);
 
 	useEffect(() => {
@@ -149,7 +151,7 @@ const Game = () => {
 
 	useEffect(() => {
 		if (remainingTime === 0) {
-			// return setNoMoreTime(true);
+			return setNoMoreTime(true);
 		}
 	}, [remainingTime]);
 
@@ -331,7 +333,7 @@ const Game = () => {
 							<div className="game-box">
 								<div className="media">{getParseMedia()}</div>
 								<div className="question">
-									<p>{thisQuestion.question.question}</p>
+									<p>&laquo; {thisQuestion.question.question} &raquo;</p>
 								</div>
 								<div className="answer">
 									<form onSubmit={(e) => e.preventDefault()}>

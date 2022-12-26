@@ -54,8 +54,10 @@
 			p {
 				@include m.secondary-font;
 				color: v.$text-color;
-				font-size: larger;
+				font-size: 1.5rem;
 				margin: 1.5rem 0;
+				text-align: center;
+				width: 40vw;
 			}
 		}
 

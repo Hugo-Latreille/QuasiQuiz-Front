@@ -112,6 +112,9 @@ const Profile = () => {
 
 	const handleAvatar = async () => {
 		try {
+			if (!selectedAvatar) {
+				return;
+			}
 			await axiosJWT.patch(
 				`${usersRoute}/${userData.id}`,
 				{
@@ -157,7 +160,10 @@ const Profile = () => {
 											);
 										})}
 										{avatars && (
-											<AiOutlineCheck onClick={handleAvatar} className="edit" />
+											<AiOutlineCheck
+												onClick={handleAvatar}
+												className="avatarEdit"
+											/>
 										)}
 									</div>
 								</div>
@@ -173,14 +179,18 @@ const Profile = () => {
 						</div>
 						<div className="profile-info">
 							{editPseudo ? (
-								<>
+								<div className="profile-info__edit">
 									<input
+										className="pseudoEdit"
 										type="text"
 										value={pseudo}
 										onChange={(e) => setPseudo(e.target.value)}
 									/>
-									<AiOutlineCheck onClick={handlePseudo} className="edit" />
-								</>
+									<AiOutlineCheck
+										className="pseudoEditCheck"
+										onClick={handlePseudo}
+									/>
+								</div>
 							) : (
 								<h1 className="pseudo">
 									{pseudo}
@@ -191,7 +201,7 @@ const Profile = () => {
 								</h1>
 							)}
 
-							<a href="">{userData.email}</a>
+							<p>{userData.email}</p>
 
 							<Link
 								className="link-mod"

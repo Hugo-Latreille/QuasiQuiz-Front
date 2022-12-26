@@ -87,7 +87,6 @@ const Correction = () => {
 
 		getQuestions();
 		getUsers();
-		setIsLoading(false);
 
 		return () => {
 			isMounted = false;
@@ -118,8 +117,10 @@ const Correction = () => {
 	}, [thisQuestion]);
 
 	useEffect(() => {
-		thisQuestionAnswers &&
+		if (thisQuestionAnswers) {
 			setThisQuestionAnswer(thisQuestionAnswers[`${selectedQuestionAnswer}`]);
+			setIsLoading(false);
+		}
 	}, [thisQuestionAnswers, selectedQuestionAnswer]);
 
 	const progressBarCalc = () => {
@@ -354,26 +355,34 @@ const Correction = () => {
 							<div className="game-box">
 								<div className="media">{getParseMedia()}</div>
 								<div className="question">
-									<p>{thisQuestion.question.question}</p>
+									<p>&laquo; {thisQuestion.question.question} &raquo;</p>
 								</div>
 								{thisQuestionAnswer && (
 									<>
 										<div className="answer">
 											<div className="good-answer">
-												<p>Réponse attendue :</p>
-												<p>{thisQuestion.question.answer.answer}</p>
+												<p className="good-answer__legend">
+													Réponse attendue :
+												</p>
+												<p className="good-answer__true">
+													{thisQuestion.question.answer.answer}
+												</p>
 											</div>
 											<div className="gamer-answer">
-												<p>{thisQuestionAnswer.answer}</p>
+												<div className="gamer-pseudo">
+													<img
+														className="avatar"
+														src={`data:image/svg+xml;base64,${thisQuestionAnswer.userId.avatar}`}
+														alt=""
+													/>
+													<p>{thisQuestionAnswer.userId.pseudo}</p>
+												</div>
+												<p className="gamer-answer__answer">
+													{thisQuestionAnswer.answer === ""
+														? "Aucune réponse"
+														: thisQuestionAnswer.answer}
+												</p>
 											</div>
-										</div>
-										<div className="gamer-pseudo">
-											<p>{thisQuestionAnswer.userId.pseudo}</p>
-											<img
-												className="avatar"
-												src={`data:image/svg+xml;base64,${thisQuestionAnswer.userId.avatar}`}
-												alt=""
-											/>
 										</div>
 									</>
 								)}
@@ -415,7 +424,7 @@ const Correction = () => {
 									</>
 								)}
 
-								<div>Nombre de points : {thisQuestion?.question.level}</div>
+								{/* <div>Nombre de points : {thisQuestion?.question.level}</div> */}
 							</div>
 							<ProgressBar
 								level={thisQuestion.question.level}

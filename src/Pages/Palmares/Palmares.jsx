@@ -2,7 +2,8 @@
 import Header from "../../Layouts/Header";
 import Footer from "../../Layouts/Footer";
 import Button from "../../Components/Button/Button";
-
+// import "./fireworks.scss";
+import "./fireworks2.scss";
 import "./_palmares.scss";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -82,10 +83,27 @@ const Palmares = () => {
 		}
 	};
 
+	const fireworks = () => {
+		let test = [];
+		for (let i = 0; i < 20; i++) {
+			test.push(
+				<div key={i} className={`pattern${i} fireworks fire${i}`}>
+					<div className="ring_1"></div>
+					<div className="ring_2"></div>
+				</div>
+			);
+		}
+		return test;
+	};
+
 	return (
 		<>
 			<Header />
 			<main>
+				{fireworks()}
+				<div className="artifice"></div>
+				<div className="artifice"></div>
+				<div className="artifice"></div>
 				<div className="palmares-content">
 					<div className="title">
 						<h1>Résultats</h1>

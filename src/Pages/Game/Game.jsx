@@ -45,10 +45,6 @@ const Game = () => {
 	const navigate = useNavigate();
 	const btnRef = useRef();
 	const [isLoading, setIsLoading] = useState(true);
-	const [answersCount, setAnswerCount] = useState(0);
-
-	//! soit ici dès que game corrigée, alors on move les users vers palmares
-	//! SOIT correction : possible : passage écran suivant...ou animation. Possibilité d'afficher vrai/faux en direct ?? uniquement si patch bdd...
 
 	// récuperer les questions de cette partie + le temps de chacune + le niveau
 	useEffect(() => {
@@ -97,7 +93,6 @@ const Game = () => {
 
 		getQuestions();
 		getUsers();
-		setIsLoading(false);
 
 		return () => {
 			isMounted = false;
@@ -110,8 +105,11 @@ const Game = () => {
 	}, [questions, selectedQuestion]);
 
 	useEffect(() => {
-		thisQuestion && console.log(thisQuestion);
-		thisQuestion && setTime(thisQuestion.question.timer);
+		if (thisQuestion) {
+			console.log(thisQuestion);
+			setTime(thisQuestion.question.timer);
+			setIsLoading(false);
+		}
 	}, [thisQuestion]);
 
 	useEffect(() => {
@@ -132,7 +130,8 @@ const Game = () => {
 				"style",
 				"animation: countdown " + time + "s linear forwards"
 			);
-			inputRef.current.focus();
+			//TODO régler focus que pour desktop ?
+			// inputRef.current.focus();
 			setRemainingTime(time);
 			startTimer();
 		}
@@ -334,7 +333,7 @@ const Game = () => {
 							<div className="game-box">
 								<div className="media">{getParseMedia()}</div>
 								<div className="question">
-									<p>{thisQuestion.question.question}</p>
+									<p>&laquo; {thisQuestion.question.question} &raquo;</p>
 								</div>
 								<div className="answer">
 									<form onSubmit={(e) => e.preventDefault()}>

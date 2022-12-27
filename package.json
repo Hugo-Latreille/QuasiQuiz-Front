@@ -10,8 +10,11 @@
 	},
 	"dependencies": {
 		"@api-platform/admin": "^3.4.3",
+		"@emoji-mart/data": "^1.1.0",
+		"@emoji-mart/react": "^1.1.0",
 		"axios": "^1.2.1",
 		"buffer": "^6.0.3",
+		"emoji-mart": "^5.4.0",
 		"jwt-decode": "^3.1.2",
 		"luxon": "^3.1.1",
 		"ra-data-json-server": "^4.5.2",

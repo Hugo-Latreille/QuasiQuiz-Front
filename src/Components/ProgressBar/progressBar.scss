@@ -1,9 +1,15 @@
 @use "../../styles/vars" as v;
+@use "../../styles/mixins" as m;
 
 #progress {
 	max-width: 400px;
-	width: 100%;
 	margin: 0 auto;
+	width: 80%;
+	@include m.desktop-only {
+		width: 100%;
+		// position: absolute;
+		bottom: 6rem;
+	}
 }
 
 /**
@@ -37,12 +43,41 @@
 	opacity: 0;
 }
 
+.progressLegend {
+	margin-top: 0.5rem;
+	@include m.principal-font;
+
+	@include m.desktop-only {
+		grid-column: 1 / 3;
+	}
+
+	ul {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		li {
+			list-style: none;
+			margin: 0 0.5rem;
+			font-size: 0.75rem;
+		}
+	}
+	&__one {
+		color: rgb(146, 194, 25);
+	}
+	&__two {
+		color: rgb(224, 224, 47);
+	}
+	&__three {
+		color: orange;
+	}
+}
+
 .levelOne {
-	background-color: blue;
+	background-color: rgb(146, 194, 25);
 }
 
 .levelTwo {
-	background-color: yellow;
+	background-color: rgb(224, 224, 47);
 }
 
 .levelThree {

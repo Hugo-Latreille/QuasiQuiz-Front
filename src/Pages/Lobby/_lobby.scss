@@ -109,6 +109,7 @@
 						justify-content: center;
 						width: 100%;
 						flex-wrap: wrap;
+						margin-top: 1.5rem;
 					}
 
 					.gamer-card {
@@ -167,6 +168,48 @@
 					}
 				}
 			}
+		}
+	}
+	& .rangeContainer {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		margin-bottom: 1.5rem;
+		& .inputRange {
+			-webkit-appearance: none;
+			appearance: none;
+			width: 10rem;
+			height: 0.6rem;
+			outline: none;
+			border-radius: 5px;
+			background: #24292e;
+			color: v.$primary-color;
+			opacity: 0.8;
+			transition: opacity 0.2s;
+
+			&:hover {
+				opacity: 1;
+			}
+			&::-webkit-slider-thumb {
+				-webkit-appearance: none;
+				appearance: none;
+				width: 1.2rem;
+				height: 1.2rem;
+				background: v.$primary-color;
+				border-radius: 50%;
+				cursor: pointer;
+			}
+			&::-moz-range-thumb {
+				width: 1.2rem;
+				height: 1.2rem;
+				background: v.$primary-color;
+				border-radius: 50%;
+				cursor: pointer;
+			}
+		}
+		& p {
+			@include m.principal-font;
+			color: v.$primary-color;
 		}
 	}
 }

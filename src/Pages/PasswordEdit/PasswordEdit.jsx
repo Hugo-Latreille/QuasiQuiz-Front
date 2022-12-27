@@ -1,5 +1,6 @@
 import "./../Connexion/Connexion.scss";
 import "./../Connexion/Register.scss";
+import "./passwordEdit.scss";
 import ReactDOM from "react-dom";
 import { useNavigate, useParams } from "react-router-dom";
 //? React Toastify
@@ -114,6 +115,7 @@ const PasswordEdit = () => {
 								/>
 								<div
 									className="eye_register_pass"
+									id="eye"
 									onClick={() => setPasswordVisibility(!passwordVisibility)}
 								>
 									{passwordVisibility ? (
@@ -124,6 +126,7 @@ const PasswordEdit = () => {
 								</div>
 								<div
 									className="eye_register_confirm"
+									id="eye-confirm"
 									onClick={() => setPasswordVisibility(!passwordVisibility)}
 								>
 									{passwordVisibility ? (

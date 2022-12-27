@@ -27,10 +27,7 @@ const Profile = () => {
 	const [pseudo, setPseudo] = useState("");
 	const [avatar, setAvatar] = useState(null);
 	const [avatars, setAvatars] = useState(null);
-	const [selectedAvatar, setSelectedAvatar] = useState(null);
 	const [editAvatar, setEditAvatar] = useState(false);
-
-	//todo logique de patch pseudo / password / avatar
 
 	useEffect(() => {
 		let isMounted = true;
@@ -60,9 +57,6 @@ const Profile = () => {
 						console.log(userGames["hydra:member"]);
 					}
 				}
-
-				//TODO : uniquement games CORRIGEES : ajout filtre boolean sur entité !!!
-
 				// const {data:userHistory}
 			} catch (error) {
 				console.log(error);
@@ -110,16 +104,16 @@ const Profile = () => {
 		getAvatars();
 	}, []);
 
-	const handleAvatar = async () => {
+	const handleAvatar = async (index) => {
 		try {
 			await axiosJWT.patch(
 				`${usersRoute}/${userData.id}`,
 				{
-					avatar: avatars[selectedAvatar],
+					avatar: avatars[index],
 				},
 				{ headers: { "Content-Type": "application/merge-patch+json" } }
 			);
-			setAvatar(avatars[selectedAvatar]);
+			setAvatar(avatars[index]);
 			setEditAvatar(false);
 		} catch (error) {
 			console.log(error);
@@ -141,24 +135,16 @@ const Profile = () => {
 									<div className="avatars">
 										{avatars?.map((avatar, index) => {
 											return (
-												<div
-													key={index}
-													className={`avatar ${
-														selectedAvatar === index ? "selected" : ""
-													}`}
-												>
+												<div key={index} className="avatar">
 													<img
 														src={`data:image/svg+xml;base64,${avatar}`}
 														alt="avatar"
 														key={avatar}
-														onClick={() => setSelectedAvatar(index)}
+														onClick={() => handleAvatar(index)}
 													/>
 												</div>
 											);
 										})}
-										{avatars && (
-											<AiOutlineCheck onClick={handleAvatar} className="edit" />
-										)}
 									</div>
 								</div>
 							) : (
@@ -173,14 +159,18 @@ const Profile = () => {
 						</div>
 						<div className="profile-info">
 							{editPseudo ? (
-								<>
+								<div className="profile-info__edit">
 									<input
+										className="pseudoEdit"
 										type="text"
 										value={pseudo}
 										onChange={(e) => setPseudo(e.target.value)}
 									/>
-									<AiOutlineCheck onClick={handlePseudo} className="edit" />
-								</>
+									<AiOutlineCheck
+										className="pseudoEditCheck"
+										onClick={handlePseudo}
+									/>
+								</div>
 							) : (
 								<h1 className="pseudo">
 									{pseudo}
@@ -191,7 +181,7 @@ const Profile = () => {
 								</h1>
 							)}
 
-							<a href="">{userData.email}</a>
+							<p>{userData.email}</p>
 
 							<Link
 								className="link-mod"

@@ -5,13 +5,14 @@ import Button from "../../Components/Button/Button";
 
 import "./_palmares.scss";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { axiosJWT, scoresRoute } from "../../utils/axios";
 
 const Palmares = () => {
 	const { gameId } = useParams();
 	const [scores, setScores] = useState(null);
 	const [count, setCount] = useState(0);
+	const navigate = useNavigate();
 
 	//TODO si utilisateur = moi, alors signe distinctif
 
@@ -115,7 +116,7 @@ const Palmares = () => {
 								</div>
 							))}
 					</div>
-					<Button label={"Rejouer"} />
+					<Button label={"Rejouer"} onClick={() => navigate("/lobby")} />
 				</div>
 			</main>
 			<Footer />

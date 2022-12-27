@@ -5,7 +5,10 @@
 	position: relative;
 	width: 100px;
 	height: 100px;
-	margin: 20px auto 0;
+
+	@include m.desktop-only {
+		margin: 20px auto 0;
+	}
 }
 
 .timer-text {

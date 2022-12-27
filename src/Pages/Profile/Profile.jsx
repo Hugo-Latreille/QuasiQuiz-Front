@@ -30,7 +30,7 @@ const Profile = () => {
 	const [selectedAvatar, setSelectedAvatar] = useState(null);
 	const [editAvatar, setEditAvatar] = useState(false);
 
-	//todo logique de patch pseudo / password / avatar
+	//! handleAvatar en 1 click !
 
 	useEffect(() => {
 		let isMounted = true;

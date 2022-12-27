@@ -124,8 +124,9 @@
 		margin-left: 0.5rem;
 		cursor: pointer;
 		position: absolute;
-		right: -3rem;
+		right: 0rem;
 		bottom: 2rem;
+		z-index: 10;
 	}
 	& .title-container {
 		h1 {

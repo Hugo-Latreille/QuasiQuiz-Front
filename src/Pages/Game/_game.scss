@@ -29,6 +29,7 @@
 }
 .game-content {
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	margin: 3rem 0;
@@ -36,11 +37,15 @@
 	.game-box {
 		width: 60vw;
 		display: flex;
+		flex-direction: column;
 		text-align: center;
 		justify-content: center;
 		align-items: center;
-		// gap: 2rem;
-		margin-top: 2rem;
+
+		@include m.desktop-only {
+			gap: 2rem;
+			margin-top: 2rem;
+		}
 
 		.media {
 			video {
@@ -65,7 +70,7 @@
 			background-color: v.$bg-color;
 			border: 0.2rem solid v.$primary-color;
 			border-radius: 0.5rem;
-			padding: 0.8rem;
+			padding: 0.9rem;
 			width: 15rem;
 			color: v.$primary-color;
 			@include m.principal-font;

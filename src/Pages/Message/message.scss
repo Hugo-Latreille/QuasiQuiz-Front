@@ -72,11 +72,14 @@
 			border: 1px solid v.$primary-color;
 			color: v.$text-color;
 			position: absolute;
-			width: 70%;
+			width: 60%;
 			height: 1rem;
 			bottom: 0.5rem;
 			right: 0;
 			left: 0.5rem;
+			@include m.desktop-only {
+				width: 70%;
+			}
 
 			&:focus {
 				border: none;
@@ -86,13 +89,16 @@
 		& .emoji {
 			position: absolute;
 			bottom: 0.8rem;
-			right: 5rem;
+			right: 4.5rem;
 			& svg {
 				fill: v.$primary-color;
 				font-size: 1.5rem;
 				&:hover {
 					fill: white;
 				}
+			}
+			@include m.desktop-only {
+				right: 5rem;
 			}
 		}
 
@@ -135,9 +141,13 @@
 }
 
 .chatIcon {
-	position: absolute;
-	bottom: 4rem;
-	right: 2rem;
+	position: fixed;
+	bottom: 05vh;
+	right: 0.5rem;
+	@include m.desktop-only {
+		bottom: 4rem;
+		right: 2rem;
+	}
 
 	& svg {
 		fill: white;
@@ -202,8 +212,13 @@
 
 .emojisPicker {
 	position: fixed;
-	bottom: 4rem;
-	right: 6rem;
+	bottom: 5vh;
+	right: 1rem;
+
+	@include m.desktop-only {
+		bottom: 4rem;
+		right: 6rem;
+	}
 
 	& .closeEmojis {
 		z-index: 2;

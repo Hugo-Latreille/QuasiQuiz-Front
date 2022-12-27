@@ -351,8 +351,8 @@ const Correction = () => {
 			) : (
 				<main>
 					{thisQuestion && (
-						<div className="game-content">
-							<div className="game-box">
+						<div className="correction-content">
+							<div className="correction-box">
 								<div className="media">{getParseMedia()}</div>
 								<div className="question">
 									<p>&laquo; {thisQuestion.question.question} &raquo;</p>

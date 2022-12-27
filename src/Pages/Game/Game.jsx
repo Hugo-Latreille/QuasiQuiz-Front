@@ -45,7 +45,6 @@ const Game = () => {
 	const navigate = useNavigate();
 	const btnRef = useRef();
 	const [isLoading, setIsLoading] = useState(true);
-	const [answersCount, setAnswerCount] = useState(0);
 
 	// récuperer les questions de cette partie + le temps de chacune + le niveau
 	useEffect(() => {
@@ -131,7 +130,8 @@ const Game = () => {
 				"style",
 				"animation: countdown " + time + "s linear forwards"
 			);
-			inputRef.current.focus();
+			//TODO régler focus que pour desktop ?
+			// inputRef.current.focus();
 			setRemainingTime(time);
 			startTimer();
 		}

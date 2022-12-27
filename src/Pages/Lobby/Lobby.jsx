@@ -35,6 +35,8 @@ const Lobby = () => {
 		(otherUser) => otherUser.isGameMaster === false
 	);
 
+	//! pb de mise à jour quand on arrive dans salon déjà peuplé
+
 	useEffect(() => {
 		let isMounted = true;
 		const controller = new AbortController();

@@ -3,8 +3,13 @@
 
 #progress {
 	max-width: 400px;
-	width: 100%;
 	margin: 0 auto;
+	width: 80%;
+	@include m.desktop-only {
+		width: 100%;
+		// position: absolute;
+		bottom: 6rem;
+	}
 }
 
 /**

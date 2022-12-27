@@ -106,9 +106,9 @@ const Profile = () => {
 
 	const handleAvatar = async (index) => {
 		try {
-			if (!index) {
-				return;
-			}
+			// if (!index) {
+			// 	return;
+			// }
 			await axiosJWT.patch(
 				`${usersRoute}/${userData.id}`,
 				{
@@ -138,7 +138,7 @@ const Profile = () => {
 									<div className="avatars">
 										{avatars?.map((avatar, index) => {
 											return (
-												<div key={index}>
+												<div key={index} className="avatar">
 													<img
 														src={`data:image/svg+xml;base64,${avatar}`}
 														alt="avatar"

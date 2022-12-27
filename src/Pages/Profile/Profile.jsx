@@ -27,10 +27,7 @@ const Profile = () => {
 	const [pseudo, setPseudo] = useState("");
 	const [avatar, setAvatar] = useState(null);
 	const [avatars, setAvatars] = useState(null);
-	const [selectedAvatar, setSelectedAvatar] = useState(null);
 	const [editAvatar, setEditAvatar] = useState(false);
-
-	//! handleAvatar en 1 click !
 
 	useEffect(() => {
 		let isMounted = true;
@@ -60,9 +57,6 @@ const Profile = () => {
 						console.log(userGames["hydra:member"]);
 					}
 				}
-
-				//TODO : uniquement games CORRIGEES : ajout filtre boolean sur entité !!!
-
 				// const {data:userHistory}
 			} catch (error) {
 				console.log(error);
@@ -110,19 +104,19 @@ const Profile = () => {
 		getAvatars();
 	}, []);
 
-	const handleAvatar = async () => {
+	const handleAvatar = async (index) => {
 		try {
-			if (!selectedAvatar) {
+			if (!index) {
 				return;
 			}
 			await axiosJWT.patch(
 				`${usersRoute}/${userData.id}`,
 				{
-					avatar: avatars[selectedAvatar],
+					avatar: avatars[index],
 				},
 				{ headers: { "Content-Type": "application/merge-patch+json" } }
 			);
-			setAvatar(avatars[selectedAvatar]);
+			setAvatar(avatars[index]);
 			setEditAvatar(false);
 		} catch (error) {
 			console.log(error);
@@ -144,27 +138,16 @@ const Profile = () => {
 									<div className="avatars">
 										{avatars?.map((avatar, index) => {
 											return (
-												<div
-													key={index}
-													className={`avatar ${
-														selectedAvatar === index ? "selected" : ""
-													}`}
-												>
+												<div key={index}>
 													<img
 														src={`data:image/svg+xml;base64,${avatar}`}
 														alt="avatar"
 														key={avatar}
-														onClick={() => setSelectedAvatar(index)}
+														onClick={() => handleAvatar(index)}
 													/>
 												</div>
 											);
 										})}
-										{avatars && (
-											<AiOutlineCheck
-												onClick={handleAvatar}
-												className="avatarEdit"
-											/>
-										)}
 									</div>
 								</div>
 							) : (

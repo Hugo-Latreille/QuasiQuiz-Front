@@ -30,6 +30,7 @@ const Lobby = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [maxQuestions, setMaxQuestions] = useState(0);
 	const [rangeValue, setRangeValue] = useState(5);
+	const [lobbyCreated, setLobbyCreated] = useState(null);
 	const navigate = useNavigate();
 	const players = otherUsers?.filter(
 		(otherUser) => otherUser.isGameMaster === false
@@ -94,10 +95,11 @@ const Lobby = () => {
 								isGameMaster: false,
 							}
 						);
-
 						console.log(addUserInGame);
+						setLobbyCreated(true);
 					}
 				}
+				setLobbyCreated(true);
 			} catch (error) {
 				console.log(error);
 			}
@@ -128,7 +130,6 @@ const Lobby = () => {
 
 	// on récupère tous les utilisateurs de GHU pour cette partie, on stock pseudo/img/MJ, on map pour afficher
 	useEffect(() => {
-		// console.log("ICIIIIIIIIIIIIIII", gameId);
 		let isMounted = true;
 		const controller = new AbortController();
 		const getGameUsers = async () => {
@@ -168,7 +169,7 @@ const Lobby = () => {
 			isMounted = false;
 			controller.abort();
 		};
-	}, [gameId]);
+	}, [gameId, lobbyCreated]);
 
 	useEffect(() => {
 		const url = new URL(mercureHubUrl);

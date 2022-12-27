@@ -106,9 +106,6 @@ const Profile = () => {
 
 	const handleAvatar = async (index) => {
 		try {
-			// if (!index) {
-			// 	return;
-			// }
 			await axiosJWT.patch(
 				`${usersRoute}/${userData.id}`,
 				{

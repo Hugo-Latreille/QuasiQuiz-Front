@@ -87,7 +87,6 @@ const Header = () => {
 	};
 
 	const handleProfile = () => {
-		console.log("coucou");
 		navigate("/profil");
 	};
 	return (

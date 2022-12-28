@@ -73,7 +73,7 @@ const Connexion = () => {
 			if (decodedToken.roles[0] === "ROLE_ADMIN") {
 				return navigate("/admin/login");
 			}
-			// navigate("/test");
+
 			navigate("/lobby");
 		} catch (error) {
 			console.log(error);

@@ -95,7 +95,7 @@ const Lobby = () => {
 								isGameMaster: false,
 							}
 						);
-						console.log(addUserInGame);
+						// console.log(addUserInGame);
 						setLobbyCreated(true);
 					}
 				}
@@ -154,7 +154,7 @@ const Lobby = () => {
 								isGameMaster: user.is_game_master,
 							}));
 
-						console.log(allOtherUsers);
+						// console.log(allOtherUsers);
 						setOtherUsers(allOtherUsers);
 						setIsLoading(false);
 					}
@@ -175,18 +175,19 @@ const Lobby = () => {
 		const url = new URL(mercureHubUrl);
 		url.searchParams.append("topic", `${host}${gameHasUsersRoute}/{id}`);
 		url.searchParams.append("topic", `${host}${gamesRoute}/{id}`);
+		url.searchParams.append("topic", `${host}${usersRoute}/{id}`);
 		const eventSource = new EventSource(url);
 		eventSource.onmessage = (e) => {
-			console.log(JSON.parse(e.data));
+			// console.log("EVENT", JSON.parse(e.data));
 			const data = JSON.parse(e.data);
 
 			if (
-				data["@context"].includes("GameHasUser") &&
+				data["@context"]?.includes("GameHasUser") &&
 				otherUsers &&
 				userId !== data.userId.id
 			) {
-				console.log(userId, data.userId.id);
-				console.log("UserEvent", data);
+				// console.log(userId, data.userId.id);
+				// console.log("GameUserEvent", data);
 				return setOtherUsers((prev) => [
 					...prev,
 					{
@@ -199,20 +200,72 @@ const Lobby = () => {
 				]);
 			}
 			if (
-				data["@context"].includes("Game") &&
-				!data["@context"].includes("GameHasUser")
+				data["@context"]?.includes("Game") &&
+				!data["@context"]?.includes("GameHasUser")
 			) {
 				if (data.is_open === false) {
-					console.log("GameEvent", data);
+					// console.log("GameEvent", data);
 					return navigate(`/game/${gameId}`);
 				}
 			}
+			if (
+				data["@context"]?.includes("User") &&
+				!data["@context"]?.includes("GameHasUser") &&
+				data.is_ready === false &&
+				userId !== data.id
+			) {
+				// console.log("un user s'est déconnecté", data.id);
+				toast.info(`${data.pseudo} vient de se déconnecter`, toastOptions);
+				deleteUserFromGame(data.id);
+			}
 		};
-
 		return () => {
 			eventSource.close();
 		};
 	}, [otherUsers]);
+
+	const deleteUserFromGame = async (userIDToDelete) => {
+		try {
+			const { data: userInThisGame } = await axiosJWT.get(
+				`${gameHasUsersRoute}?game=${gameId}&userId=${userIDToDelete}`
+			);
+			const idToDelete = userInThisGame["hydra:member"][0].id;
+			await axiosJWT.delete(`${gameHasUsersRoute}/${idToDelete}`);
+
+			if (userInThisGame["hydra:member"][0].is_game_master) {
+				const { data: newGM } = await axiosJWT.get(
+					`${gameHasUsersRoute}?game=${gameId}&userId=${players[0].id}`
+				);
+
+				toast.info(
+					`${players[0].pseudo} est le nouveau maître du jeu`,
+					toastOptions
+				);
+				await axiosJWT.patch(
+					`${gameHasUsersRoute}/${newGM["hydra:member"][0].id}`,
+					{
+						isGameMaster: true,
+					},
+					{ headers: { "Content-Type": "application/merge-patch+json" } }
+				);
+				return setOtherUsers((prev) =>
+					prev
+						.filter((user) => user.id !== userIDToDelete)
+						.map((newGm) => {
+							if (newGm.id === players[0].id) {
+								return { ...newGm, isGameMaster: true };
+							}
+						})
+				);
+			}
+
+			setOtherUsers((prev) =>
+				prev.filter((user) => user.id !== userIDToDelete)
+			);
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	// 3-si GM, affichage bouton partie et au lancement, le game devient fermée, on appelle la route générant les questions, navigate vers question / pour les autres joueurs, bouton "rejoindre la partie"
 

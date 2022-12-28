@@ -55,8 +55,8 @@ const Message = ({ gameId, userId }) => {
 		url.searchParams.append("topic", `${host}${messagesRoute}/{id}`);
 		const eventSource = new EventSource(url);
 		eventSource.onmessage = (e) => {
-			console.log("Message", e);
-			console.log(JSON.parse(e.data));
+			// console.log("Message", e);
+			// console.log(JSON.parse(e.data));
 			setNotifications((prev) => prev + 1);
 
 			if (notifRef.current) {
@@ -180,7 +180,7 @@ const Message = ({ gameId, userId }) => {
 								locale="fr"
 								theme="dark"
 								onEmojiSelect={(e) => {
-									console.log(e);
+									// console.log(e);
 									setChatMessage((prev) => prev + e.native);
 									setEmojisPicker(false);
 								}}

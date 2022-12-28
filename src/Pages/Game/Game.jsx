@@ -5,7 +5,7 @@ import {
 	axiosJWT,
 	gameHasUsersRoute,
 	gameQuestions,
-	gamesRoute,
+	// gamesRoute,
 	host,
 	mercureHubUrl,
 	userAnswersRoute,
@@ -16,13 +16,14 @@ import ProgressBar from "../../Components/ProgressBar/ProgressBar";
 import { useNavigate, useParams } from "react-router-dom";
 import Timer from "../../Components/Timer/Timer";
 import { UserContext } from "../../App";
-import Button from "../../Components/Button/Button";
+// import Button from "../../Components/Button/Button";
 //? React Toastify
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Message from "../Message/Message";
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
 import Gameskel from "../Skeleton/GameSkel";
+import { isMobile } from "react-device-detect";
 
 //? set FOCUS sur le champ de réponse (inputRef.current.focus())
 const Game = () => {
@@ -43,7 +44,7 @@ const Game = () => {
 	const [answer, setAnswer] = useState("");
 	const [users, setUsers] = useState(null);
 	const navigate = useNavigate();
-	const btnRef = useRef();
+	// const btnRef = useRef();
 	const [isLoading, setIsLoading] = useState(true);
 
 	// récuperer les questions de cette partie + le temps de chacune + le niveau
@@ -131,7 +132,9 @@ const Game = () => {
 				"animation: countdown " + time + "s linear forwards"
 			);
 			//TODO régler focus que pour desktop ?
-			// inputRef.current.focus();
+			if (!isMobile) {
+				inputRef.current.focus();
+			}
 			setRemainingTime(time);
 			startTimer();
 		}
@@ -215,25 +218,25 @@ const Game = () => {
 	};
 
 	// fonction pour vérifier que tous les joueurs ont répondu à toutes les questions : userAnswer length === questions length
-	const areAllUsersDone = async () => {
-		try {
-			const usersArray = await Promise.all(
-				users.map(async (user) => {
-					const { data: usersAnswers } = await axiosJWT.get(
-						`${userAnswersRoute}?userId=${user.userId.id}&game=${gameId}`
-					);
-					if (usersAnswers) {
-						return usersAnswers["hydra:member"].length === questions.length
-							? true
-							: false;
-					}
-				})
-			);
-			return usersArray;
-		} catch (error) {
-			console.log(error);
-		}
-	};
+	// const areAllUsersDone = async () => {
+	// 	try {
+	// 		const usersArray = await Promise.all(
+	// 			users.map(async (user) => {
+	// 				const { data: usersAnswers } = await axiosJWT.get(
+	// 					`${userAnswersRoute}?userId=${user.userId.id}&game=${gameId}`
+	// 				);
+	// 				if (usersAnswers) {
+	// 					return usersAnswers["hydra:member"].length === questions.length
+	// 						? true
+	// 						: false;
+	// 				}
+	// 			})
+	// 		);
+	// 		return usersArray;
+	// 	} catch (error) {
+	// 		console.log(error);
+	// 	}
+	// };
 
 	useEffect(() => {
 		let count = 0;
@@ -256,63 +259,63 @@ const Game = () => {
 		};
 	}, [questions]);
 
-	const handleButton = async () => {
-		console.log(await areAllUsersDone());
-		const usersReadyorNot = await areAllUsersDone();
-		const notReadyToCorrect = usersReadyorNot.some(
-			(finished) => finished === false
-		);
+	// const handleButton = async () => {
+	// 	console.log(await areAllUsersDone());
+	// 	const usersReadyorNot = await areAllUsersDone();
+	// 	const notReadyToCorrect = usersReadyorNot.some(
+	// 		(finished) => finished === false
+	// 	);
 
-		if (notReadyToCorrect) {
-			return toast.info(
-				"Veuillez attendre que tous les joueurs aient terminé le quizz",
-				toastOptions
-			);
-		} else {
-			if (isUserGameMaster()) {
-				return navigate(`/correction/${gameId}`);
-			} else {
-				const isGameCorrected = await fetchIsGameCorrected();
-				if (isGameCorrected) {
-					btnRef.current.innerText = "Afficher les résultats";
-					return navigate(`/palmares/${gameId}`);
-				}
-				return toast.info(
-					"Veuillez attendre que le Maître du Jeu corrige la partie",
-					toastOptions
-				);
-			}
-		}
-	};
+	// 	if (notReadyToCorrect) {
+	// 		return toast.info(
+	// 			"Veuillez attendre que tous les joueurs aient terminé le quizz",
+	// 			toastOptions
+	// 		);
+	// 	} else {
+	// 		if (isUserGameMaster()) {
+	// 			return navigate(`/correction/${gameId}`);
+	// 		} else {
+	// 			const isGameCorrected = await fetchIsGameCorrected();
+	// 			if (isGameCorrected) {
+	// 				btnRef.current.innerText = "Afficher les résultats";
+	// 				return navigate(`/palmares/${gameId}`);
+	// 			}
+	// 			return toast.info(
+	// 				"Veuillez attendre que le Maître du Jeu corrige la partie",
+	// 				toastOptions
+	// 			);
+	// 		}
+	// 	}
+	// };
 
-	const fetchIsGameCorrected = async () => {
-		try {
-			const { data: thisGame } = await axiosJWT.get(`${gamesRoute}/${gameId}`);
-			// setIsGameCorrected("")
-			if (thisGame) {
-				return thisGame.is_corrected === true ? true : false;
-			}
-		} catch (error) {
-			console.log(error);
-		}
-	};
+	// const fetchIsGameCorrected = async () => {
+	// 	try {
+	// 		const { data: thisGame } = await axiosJWT.get(`${gamesRoute}/${gameId}`);
+	// 		// setIsGameCorrected("")
+	// 		if (thisGame) {
+	// 			return thisGame.is_corrected === true ? true : false;
+	// 		}
+	// 	} catch (error) {
+	// 		console.log(error);
+	// 	}
+	// };
 
-	const isUserGameMaster = () => {
-		return users?.filter(
-			(thisUser) =>
-				thisUser.is_game_master === true && thisUser.userId.email === user.email
-		).length === 1
-			? true
-			: false;
-	};
+	// const isUserGameMaster = () => {
+	// 	return users?.filter(
+	// 		(thisUser) =>
+	// 			thisUser.is_game_master === true && thisUser.userId.email === user.email
+	// 	).length === 1
+	// 		? true
+	// 		: false;
+	// };
 
-	const toastOptions = {
-		position: "top-right",
-		autoClose: 6000,
-		pauseOnHover: true,
-		draggable: true,
-		theme: "dark",
-	};
+	// const toastOptions = {
+	// 	position: "top-right",
+	// 	autoClose: 6000,
+	// 	pauseOnHover: true,
+	// 	draggable: true,
+	// 	theme: "dark",
+	// };
 
 	return (
 		<>

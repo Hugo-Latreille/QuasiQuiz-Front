@@ -414,10 +414,10 @@ const Correction = () => {
 								) : (
 									<>
 										<div className="true-false">
-											<button className="true" ref={trueRef}>
+											<button className="true noHover" ref={trueRef}>
 												Vrai
 											</button>
-											<button className="false" ref={falseRef}>
+											<button className="false noHover" ref={falseRef}>
 												Faux
 											</button>
 										</div>

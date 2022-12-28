@@ -127,6 +127,9 @@
 					}
 				}
 			}
+			& .noHover {
+				pointer-events: none;
+			}
 		}
 		.next {
 			button {

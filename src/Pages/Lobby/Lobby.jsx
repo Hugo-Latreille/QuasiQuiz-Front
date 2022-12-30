@@ -57,6 +57,7 @@ const Lobby = () => {
 				const { data } = await axiosJWT.get(`${gamesRoute}?is_open=true`, {
 					signal: controller.signal,
 				});
+
 				if (isMounted && data) {
 					if (data["hydra:member"].length === 0) {
 						// si pas de partie, on en créé une,  is_open true, et on y ajoute l'utilisateur en tant que MJ
@@ -95,7 +96,7 @@ const Lobby = () => {
 								isGameMaster: false,
 							}
 						);
-						// console.log(addUserInGame);
+						console.log("addUserinGame", addUserInGame);
 						setLobbyCreated(true);
 					}
 				}
@@ -143,6 +144,7 @@ const Lobby = () => {
 					);
 					if (isMounted && usersInGame) {
 						const allGameUsers = usersInGame["hydra:member"];
+						console.log("UsersInGame", allGameUsers);
 
 						const allOtherUsers = allGameUsers
 							// ?.filter((gameUser) => gameUser.userId.email !== user.email)
@@ -178,7 +180,7 @@ const Lobby = () => {
 		url.searchParams.append("topic", `${host}${usersRoute}/{id}`);
 		const eventSource = new EventSource(url);
 		eventSource.onmessage = (e) => {
-			// console.log("EVENT", JSON.parse(e.data));
+			console.log("EVENT", JSON.parse(e.data));
 			const data = JSON.parse(e.data);
 
 			if (

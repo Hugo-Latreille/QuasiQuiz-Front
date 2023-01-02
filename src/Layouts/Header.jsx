@@ -4,19 +4,28 @@ import Button from "../Components/Button/Button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useRef } from "react";
 import { UserContext } from "../App";
-import axios, { logoutToken, usersRoute } from "../utils/axios";
+import axios, {
+	gameHasUsersRoute,
+	gamesRoute,
+	logoutToken,
+	usersRoute,
+} from "../utils/axios";
 import useAxiosJWT from "../utils/useAxiosJWT";
 import { useEffect } from "react";
 import { useState } from "react";
 import { Skeleton } from "@mui/material";
 
-const Header = () => {
+const Header = ({ gameId }) => {
 	const location = useLocation();
 	const { user, removeUser } = useContext(UserContext);
 	const axiosJWT = useAxiosJWT();
 	const dropDown = useRef(null);
 	const [avatar, setAvatar] = useState(null);
 	const navigate = useNavigate();
+
+	//TODO récup game id props
+	//TODO uniquement si un seul joueur dans la game, supp gameHasUser + patch game is closed
+	//! quand plusieurs joueurs lobby ? celui qui reste devient GM
 
 	//** callback pour le dropdown */
 	const dropdownFunc = () => {
@@ -73,6 +82,23 @@ const Header = () => {
 			}
 		);
 		const userId = userData["hydra:member"][0].id;
+
+		const { data: userInThisGame } = await axiosJWT.get(
+			`${gameHasUsersRoute}?game=${gameId}`
+		);
+
+		if (userInThisGame["hydra:member"].length === 1 && gameId) {
+			await axiosJWT.delete(
+				`${gameHasUsersRoute}/${userInThisGame["hydra:member"][0].id}`
+			);
+			await axiosJWT.patch(
+				`${gamesRoute}/${gameId}`,
+				{
+					isOpen: false,
+				},
+				{ headers: { "Content-Type": "application/merge-patch+json" } }
+			);
+		}
 
 		await axiosJWT.patch(
 			`${usersRoute}/${userId}`,

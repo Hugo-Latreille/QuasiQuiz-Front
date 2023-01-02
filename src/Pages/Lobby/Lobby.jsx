@@ -321,7 +321,7 @@ const Lobby = () => {
 				<Lobbyskel />
 			) : (
 				<>
-					<Header />
+					<Header gameId={gameId} />
 					<main>
 						<div className="lobby-content">
 							<div className="lobby-title">

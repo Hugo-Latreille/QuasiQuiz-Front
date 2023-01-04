@@ -94,7 +94,7 @@ const Connexion = () => {
 					pseudo,
 					avatar: avatars[selectedAvatar],
 				});
-				console.log(result);
+				// console.log(result);
 				toast.success(
 					"Veuillez valider le lien de vérification envoyé sur votre mail",
 					toastOptions

@@ -31,7 +31,7 @@ import {
 import { CustomLayout } from "../../Components/BackOffice/Layout";
 
 function Admin() {
-	const entrypoint = "https://api.quasiquiz.net/api";
+	const entrypoint = "https://api.quasiquiz.fr/api";
 
 	const dataProvider = hydraDataProvider({
 		entrypoint,

@@ -33,7 +33,7 @@ const Game = () => {
 					}
 				);
 				if (isMounted && gameQuestion) {
-					console.log(gameQuestion);
+					// console.log(gameQuestion);
 					setQuestions(gameQuestion["hydra:member"]);
 				}
 			} catch (error) {

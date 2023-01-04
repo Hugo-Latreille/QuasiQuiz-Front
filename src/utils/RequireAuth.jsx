@@ -6,7 +6,7 @@ const RequireAuth = () => {
 	const { user } = useContext(UserContext);
 	const token = user?.token;
 	const location = useLocation();
-	console.log("REQUIRE AUTH", user);
+	// console.log("REQUIRE AUTH", user);
 
 	return token ? (
 		<Outlet />

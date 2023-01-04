@@ -29,7 +29,7 @@ const Palmares = () => {
 					}
 				);
 				if (isMounted && gameScores) {
-					console.log(gameScores["hydra:member"]);
+					// console.log(gameScores["hydra:member"]);
 					setScores(gameScores["hydra:member"]);
 				}
 			} catch (error) {

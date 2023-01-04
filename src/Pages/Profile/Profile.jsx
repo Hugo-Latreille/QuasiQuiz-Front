@@ -46,7 +46,7 @@ const Profile = () => {
 					setUserData(userData["hydra:member"][0]);
 					setPseudo(userData["hydra:member"][0].pseudo);
 					setAvatar(userData["hydra:member"][0].avatar);
-					console.log(userData["hydra:member"][0]);
+					// console.log(userData["hydra:member"][0]);
 					const userId = userData["hydra:member"][0].id;
 
 					const { data: userGames } = await axiosJWT.get(
@@ -54,7 +54,7 @@ const Profile = () => {
 					);
 					if (userGames) {
 						setUserGames(userGames["hydra:member"]);
-						console.log(userGames["hydra:member"]);
+						// console.log(userGames["hydra:member"]);
 					}
 				}
 				// const {data:userHistory}

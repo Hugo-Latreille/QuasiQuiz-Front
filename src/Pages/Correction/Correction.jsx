@@ -62,7 +62,7 @@ const Correction = () => {
 					}
 				);
 				if (isMounted && gameQuestion) {
-					console.log(gameQuestion["hydra:member"]);
+					// console.log(gameQuestion["hydra:member"]);
 					setQuestions(gameQuestion["hydra:member"]);
 				}
 			} catch (error) {
@@ -76,7 +76,7 @@ const Correction = () => {
 						`${gameHasUsersRoute}?game=${gameId}`
 					);
 					if (usersInGame) {
-						console.log(usersInGame["hydra:member"]);
+						// console.log(usersInGame["hydra:member"]);
 						setUsers(usersInGame["hydra:member"]);
 					}
 				}
@@ -106,7 +106,7 @@ const Correction = () => {
 					);
 					if (usersAnswers) {
 						setThisQuestionAnswers(usersAnswers["hydra:member"]);
-						console.log(usersAnswers["hydra:member"]);
+						// console.log(usersAnswers["hydra:member"]);
 					}
 				}
 			} catch (error) {
@@ -184,7 +184,7 @@ const Correction = () => {
 		url.searchParams.append("topic", `${host}${scoresRoute}/{id}`);
 		const eventSource = new EventSource(url);
 		eventSource.onmessage = (e) => {
-			console.log("EVENT", JSON.parse(e.data));
+			// console.log("EVENT", JSON.parse(e.data));
 			const data = JSON.parse(e.data);
 			if (!isUserGameMaster()) {
 				if (data["@context"].includes("UserAnswer")) {
@@ -198,7 +198,7 @@ const Correction = () => {
 				}
 
 				if (data["@context"].includes("Score")) {
-					console.log("SCORE EVENT");
+					// console.log("SCORE EVENT");
 					falseRef.current.classList.remove("false__active");
 					trueRef.current.classList.remove("true__active");
 
@@ -240,7 +240,7 @@ const Correction = () => {
 						userId: `/api/users/${thisQuestionAnswer.userId.id}`,
 						score: thisQuestion.question.level,
 					});
-					console.log(userScore);
+					// console.log(userScore);
 				}
 				//sinon patch le score
 				await axiosJWT.patch(
@@ -264,13 +264,13 @@ const Correction = () => {
 				);
 
 				if (userScore["hydra:member"].length === 0) {
-					console.log("ici");
+					// console.log("ici");
 					const { data: userScore } = await axiosJWT.post(scoresRoute, {
 						game: `/api/games/${thisQuestion.game.id}`,
 						userId: `/api/users/${thisQuestionAnswer.userId.id}`,
 						score: 0,
 					});
-					console.log(userScore);
+					// console.log(userScore);
 				}
 				//sinon patch le score
 				if (userScore) {
@@ -292,7 +292,7 @@ const Correction = () => {
 		if (isUserGameMaster()) {
 			falseRef.current.classList.remove("false__active");
 			trueRef.current.classList.remove("true__active");
-			console.log(isLastQuestion);
+			// console.log(isLastQuestion);
 			if (!isLastAnswer) {
 				return setSelectedQuestionAnswer((prev) => prev + 1);
 			}

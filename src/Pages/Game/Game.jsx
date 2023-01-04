@@ -69,7 +69,7 @@ const Game = () => {
 					}
 				);
 				if (isMounted && gameQuestion) {
-					console.log(gameQuestion["hydra:member"]);
+					// console.log(gameQuestion["hydra:member"]);
 					setQuestions(gameQuestion["hydra:member"]);
 				}
 			} catch (error) {
@@ -84,7 +84,7 @@ const Game = () => {
 					);
 					if (usersInGame) {
 						setUsers(usersInGame["hydra:member"]);
-						console.log(usersInGame);
+						// console.log(usersInGame);
 					}
 				}
 			} catch (error) {
@@ -107,7 +107,7 @@ const Game = () => {
 
 	useEffect(() => {
 		if (thisQuestion) {
-			console.log(thisQuestion);
+			// console.log(thisQuestion);
 			setTime(thisQuestion.question.timer);
 			setIsLoading(false);
 		}
@@ -191,7 +191,7 @@ const Game = () => {
 	const getParseMedia = () => {
 		if (thisQuestion.question.media.length > 0) {
 			const media = thisQuestion.question.media[0].contentUrl;
-			console.log(media);
+			// console.log(media);
 			if (media.includes("mp4")) {
 				return (
 					<video width="750" height="500" controls autoPlay muted>

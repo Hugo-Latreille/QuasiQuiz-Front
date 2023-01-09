@@ -4,9 +4,9 @@
 html,
 body {
 	overflow-x: hidden;
-	@include m.desktop-only {
-		overflow-y: hidden;
-	}
+	// @include m.desktop-only {
+	// 	overflow-y: hidden;
+	// }
 }
 
 body {
@@ -16,6 +16,9 @@ body {
 		min-height: 78vh;
 		margin-top: 12vh;
 		margin-bottom: 10vh;
+		@include m.desktop-only {
+			overflow-y: hidden;
+		}
 
 		// margin: 5rem 0;
 

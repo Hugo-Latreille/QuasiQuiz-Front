@@ -15,7 +15,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Skeleton } from "@mui/material";
 
-const Header = ({ gameId }) => {
+const Header = ({ gameId, players }) => {
 	const location = useLocation();
 	const { user, removeUser } = useContext(UserContext);
 	const axiosJWT = useAxiosJWT();
@@ -84,22 +84,16 @@ const Header = ({ gameId }) => {
 		const userId = userData["hydra:member"][0].id;
 
 		const { data: userInThisGame } = await axiosJWT.get(
+			`${gameHasUsersRoute}?game=${gameId}&userId=${userId}`
+		);
+		const isGameMaster = userInThisGame["hydra:member"][0].is_game_master;
+		const userInGameId = userInThisGame["hydra:member"][0].id;
+
+		const { data: usersInThisGame } = await axiosJWT.get(
 			`${gameHasUsersRoute}?game=${gameId}`
 		);
 
-		if (userInThisGame["hydra:member"].length === 1 && gameId) {
-			await axiosJWT.delete(
-				`${gameHasUsersRoute}/${userInThisGame["hydra:member"][0].id}`
-			);
-			await axiosJWT.patch(
-				`${gamesRoute}/${gameId}`,
-				{
-					isOpen: false,
-				},
-				{ headers: { "Content-Type": "application/merge-patch+json" } }
-			);
-		}
-
+		await axiosJWT.delete(`${gameHasUsersRoute}/${userInGameId}`);
 		await axiosJWT.patch(
 			`${usersRoute}/${userId}`,
 			{
@@ -108,6 +102,30 @@ const Header = ({ gameId }) => {
 			{ headers: { "Content-Type": "application/merge-patch+json" } }
 		);
 
+		if (usersInThisGame["hydra:member"].length === 1 && gameId) {
+			await axiosJWT.patch(
+				`${gamesRoute}/${gameId}`,
+				{
+					isOpen: false,
+				},
+				{ headers: { "Content-Type": "application/merge-patch+json" } }
+			);
+		} else {
+			if (isGameMaster) {
+				const { data: newGM } = await axiosJWT.get(
+					`${gameHasUsersRoute}?game=${gameId}&userId=${players[0].id}`
+				);
+
+				await axiosJWT.patch(
+					`${gameHasUsersRoute}/${newGM["hydra:member"][0].id}`,
+					{
+						isGameMaster: true,
+					},
+					{ headers: { "Content-Type": "application/merge-patch+json" } }
+				);
+			}
+		}
+
 		await axios.get(logoutToken);
 		removeUser();
 	};
@@ -115,6 +133,7 @@ const Header = ({ gameId }) => {
 	const handleProfile = () => {
 		navigate("/profil");
 	};
+
 	return (
 		<>
 			<div className="header">

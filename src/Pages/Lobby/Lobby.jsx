@@ -33,7 +33,7 @@ const Lobby = () => {
 	const [lobbyCreated, setLobbyCreated] = useState(null);
 	const navigate = useNavigate();
 	const players = otherUsers?.filter(
-		(otherUser) => otherUser.isGameMaster === false
+		(otherUser) => otherUser?.isGameMaster === false
 	);
 
 	//! pb de mise à jour quand on arrive dans salon déjà peuplé
@@ -96,7 +96,7 @@ const Lobby = () => {
 								isGameMaster: false,
 							}
 						);
-						console.log("addUserinGame", addUserInGame);
+						// console.log("addUserinGame", addUserInGame);
 						setLobbyCreated(true);
 					}
 				}
@@ -144,7 +144,7 @@ const Lobby = () => {
 					);
 					if (isMounted && usersInGame) {
 						const allGameUsers = usersInGame["hydra:member"];
-						console.log("UsersInGame", allGameUsers);
+						// console.log("UsersInGame", allGameUsers);
 
 						const allOtherUsers = allGameUsers
 							// ?.filter((gameUser) => gameUser.userId.email !== user.email)
@@ -179,8 +179,8 @@ const Lobby = () => {
 		url.searchParams.append("topic", `${host}${gamesRoute}/{id}`);
 		url.searchParams.append("topic", `${host}${usersRoute}/{id}`);
 		const eventSource = new EventSource(url);
-		eventSource.onmessage = (e) => {
-			console.log("EVENT", JSON.parse(e.data));
+		eventSource.onmessage = async (e) => {
+			// console.log("EVENT", JSON.parse(e.data));
 			const data = JSON.parse(e.data);
 
 			if (
@@ -188,18 +188,27 @@ const Lobby = () => {
 				otherUsers &&
 				userId !== data.userId.id
 			) {
+				if (
+					otherUsers.filter((user) => user.id === data.userId.id).length === 0
+				) {
+					toast.info(
+						`${data.userId.pseudo} vient de se connecter`,
+						toastOptions
+					);
+
+					return setOtherUsers((prev) => [
+						...prev,
+						{
+							id: data.userId.id,
+							pseudo: data.userId.pseudo,
+							avatar: data.userId.avatar,
+							email: data.userId.email,
+							isGameMaster: data.is_game_master,
+						},
+					]);
+				}
 				// console.log(userId, data.userId.id);
 				// console.log("GameUserEvent", data);
-				return setOtherUsers((prev) => [
-					...prev,
-					{
-						id: data.userId.id,
-						pseudo: data.userId.pseudo,
-						avatar: data.userId.avatar,
-						email: data.userId.email,
-						isGameMaster: data.is_game_master,
-					},
-				]);
 			}
 			if (
 				data["@context"]?.includes("Game") &&
@@ -216,9 +225,33 @@ const Lobby = () => {
 				data.is_ready === false &&
 				userId !== data.id
 			) {
-				// console.log("un user s'est déconnecté", data.id);
 				toast.info(`${data.pseudo} vient de se déconnecter`, toastOptions);
-				deleteUserFromGame(data.id);
+				setOtherUsers((prev) => prev.filter((user) => user.id !== data.id));
+			}
+			if (
+				data["@context"]?.includes("GameHasUser") &&
+				// &&
+				// data["@context"]?.includes("User") &&
+				// && userId !== data.userId.id
+				data.is_game_master === true
+			) {
+				const newGM = await checkNewGM();
+
+				//TODO : REMETTRE TOAST
+				// toast.info(
+				// 	`${players[0].pseudo} est le nouveau maître du jeu`,
+				// 	toastOptions
+				// );
+
+				setOtherUsers((prev) =>
+					prev?.map((user) => {
+						if (user.id === newGM.userId.id) {
+							return { ...user, isGameMaster: true };
+						} else {
+							return { ...user };
+						}
+					})
+				);
 			}
 		};
 		return () => {
@@ -226,45 +259,19 @@ const Lobby = () => {
 		};
 	}, [otherUsers]);
 
-	const deleteUserFromGame = async (userIDToDelete) => {
+	const checkNewGM = async () => {
 		try {
-			const { data: userInThisGame } = await axiosJWT.get(
-				`${gameHasUsersRoute}?game=${gameId}&userId=${userIDToDelete}`
+			const { data: usersInThisGame } = await axiosJWT.get(
+				`${gameHasUsersRoute}?game=${gameId}`
 			);
-			const idToDelete = userInThisGame["hydra:member"][0].id;
-			console.log(idToDelete);
-			await axiosJWT.delete(`${gameHasUsersRoute}/${idToDelete}`);
 
-			if (userInThisGame["hydra:member"][0].is_game_master) {
-				const { data: newGM } = await axiosJWT.get(
-					`${gameHasUsersRoute}?game=${gameId}&userId=${players[0].id}`
-				);
+			// console.log("usersInThisGame", usersInThisGame);
 
-				toast.info(
-					`${players[0].pseudo} est le nouveau maître du jeu`,
-					toastOptions
-				);
-				await axiosJWT.patch(
-					`${gameHasUsersRoute}/${newGM["hydra:member"][0].id}`,
-					{
-						isGameMaster: true,
-					},
-					{ headers: { "Content-Type": "application/merge-patch+json" } }
-				);
-				return setOtherUsers((prev) =>
-					prev
-						.filter((user) => user.id !== userIDToDelete)
-						.map((newGm) => {
-							if (newGm.id === players[0].id) {
-								return { ...newGm, isGameMaster: true };
-							}
-						})
-				);
-			}
-
-			setOtherUsers((prev) =>
-				prev.filter((user) => user.id !== userIDToDelete)
+			const newGM = usersInThisGame["hydra:member"].filter(
+				(user) => user.is_game_master === true
 			);
+
+			return newGM[0];
 		} catch (error) {
 			console.log(error);
 		}
@@ -322,7 +329,7 @@ const Lobby = () => {
 				<Lobbyskel />
 			) : (
 				<>
-					<Header gameId={gameId} />
+					<Header gameId={gameId} players={players} />
 					<main>
 						<div className="lobby-content">
 							<div className="lobby-title">

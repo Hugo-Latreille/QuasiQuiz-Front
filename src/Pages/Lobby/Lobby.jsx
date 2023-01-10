@@ -232,6 +232,7 @@ const Lobby = () => {
 				`${gameHasUsersRoute}?game=${gameId}&userId=${userIDToDelete}`
 			);
 			const idToDelete = userInThisGame["hydra:member"][0].id;
+			console.log(idToDelete);
 			await axiosJWT.delete(`${gameHasUsersRoute}/${idToDelete}`);
 
 			if (userInThisGame["hydra:member"][0].is_game_master) {

@@ -236,12 +236,10 @@ const Lobby = () => {
 				data.is_game_master === true
 			) {
 				const newGM = await checkNewGM();
-
-				//TODO : REMETTRE TOAST
-				// toast.info(
-				// 	`${players[0].pseudo} est le nouveau maître du jeu`,
-				// 	toastOptions
-				// );
+				toast.info(
+					`${newGM.userId.pseudo} est le nouveau maître du jeu`,
+					toastOptions
+				);
 
 				setOtherUsers((prev) =>
 					prev?.map((user) => {

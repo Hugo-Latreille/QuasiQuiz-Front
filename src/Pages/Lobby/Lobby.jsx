@@ -180,7 +180,7 @@ const Lobby = () => {
 		url.searchParams.append("topic", `${host}${usersRoute}/{id}`);
 		const eventSource = new EventSource(url);
 		eventSource.onmessage = async (e) => {
-			console.log("EVENT", JSON.parse(e.data));
+			// console.log("EVENT", JSON.parse(e.data));
 			const data = JSON.parse(e.data);
 
 			if (
@@ -226,7 +226,6 @@ const Lobby = () => {
 				userId !== data.id
 			) {
 				toast.info(`${data.pseudo} vient de se déconnecter`, toastOptions);
-				console.log("ICI PAS GM");
 				setOtherUsers((prev) => prev.filter((user) => user.id !== data.id));
 			}
 			if (
@@ -237,7 +236,7 @@ const Lobby = () => {
 				data.is_game_master === true
 			) {
 				const newGM = await checkNewGM();
-				console.log("ICI GM");
+
 				//TODO : REMETTRE TOAST
 				// toast.info(
 				// 	`${players[0].pseudo} est le nouveau maître du jeu`,
@@ -246,8 +245,6 @@ const Lobby = () => {
 
 				setOtherUsers((prev) =>
 					prev?.map((user) => {
-						console.log("prevUser", user);
-						console.log("NewGM", newGM);
 						if (user.id === newGM.userId.id) {
 							return { ...user, isGameMaster: true };
 						} else {

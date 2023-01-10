@@ -188,19 +188,27 @@ const Lobby = () => {
 				otherUsers &&
 				userId !== data.userId.id
 			) {
+				if (
+					otherUsers.filter((user) => user.id === data.userId.id).length === 0
+				) {
+					toast.info(
+						`${data.userId.pseudo} vient de se connecter`,
+						toastOptions
+					);
+
+					return setOtherUsers((prev) => [
+						...prev,
+						{
+							id: data.userId.id,
+							pseudo: data.userId.pseudo,
+							avatar: data.userId.avatar,
+							email: data.userId.email,
+							isGameMaster: data.is_game_master,
+						},
+					]);
+				}
 				// console.log(userId, data.userId.id);
 				// console.log("GameUserEvent", data);
-				toast.info(`${data.userId.pseudo} vient de se connecter`, toastOptions);
-				return setOtherUsers((prev) => [
-					...prev,
-					{
-						id: data.userId.id,
-						pseudo: data.userId.pseudo,
-						avatar: data.userId.avatar,
-						email: data.userId.email,
-						isGameMaster: data.is_game_master,
-					},
-				]);
 			}
 			if (
 				data["@context"]?.includes("Game") &&
@@ -217,25 +225,33 @@ const Lobby = () => {
 				data.is_ready === false &&
 				userId !== data.id
 			) {
-				// console.log("un user s'est déconnecté", data.id);
 				toast.info(`${data.pseudo} vient de se déconnecter`, toastOptions);
 				console.log("ICI PAS GM");
 				setOtherUsers((prev) => prev.filter((user) => user.id !== data.id));
 			}
 			if (
 				data["@context"]?.includes("GameHasUser") &&
-				data["@context"]?.includes("User") &&
-				// && userId !== data.userId.id &&
+				// &&
+				// data["@context"]?.includes("User") &&
+				// && userId !== data.userId.id
 				data.is_game_master === true
 			) {
 				const newGM = await checkNewGM();
 				console.log("ICI GM");
 				//TODO : REMETTRE TOAST
+				// toast.info(
+				// 	`${players[0].pseudo} est le nouveau maître du jeu`,
+				// 	toastOptions
+				// );
 
 				setOtherUsers((prev) =>
-					prev?.map((newGm) => {
-						if (newGm.id === newGM.userId.id) {
-							return { ...newGm, isGameMaster: true };
+					prev?.map((user) => {
+						console.log("prevUser", user);
+						console.log("NewGM", newGM);
+						if (user.id === newGM.userId.id) {
+							return { ...user, isGameMaster: true };
+						} else {
+							return { ...user };
 						}
 					})
 				);

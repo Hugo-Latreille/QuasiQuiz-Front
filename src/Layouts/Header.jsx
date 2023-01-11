@@ -111,7 +111,7 @@ const Header = ({ gameId, players }) => {
 				{ headers: { "Content-Type": "application/merge-patch+json" } }
 			);
 		} else {
-			if (isGameMaster) {
+			if (isGameMaster && gameId) {
 				const { data: newGM } = await axiosJWT.get(
 					`${gameHasUsersRoute}?game=${gameId}&userId=${players[0].id}`
 				);

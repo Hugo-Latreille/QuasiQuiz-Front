@@ -236,6 +236,7 @@ const Lobby = () => {
 				data.is_game_master === true
 			) {
 				const newGM = await checkNewGM();
+
 				toast.info(
 					`${newGM.userId.pseudo} est le nouveau maître du jeu`,
 					toastOptions

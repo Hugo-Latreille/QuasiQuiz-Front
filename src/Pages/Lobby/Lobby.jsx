@@ -36,8 +36,6 @@ const Lobby = () => {
 		(otherUser) => otherUser?.isGameMaster === false
 	);
 
-	//! pb de mise à jour quand on arrive dans salon déjà peuplé
-
 	useEffect(() => {
 		let isMounted = true;
 		const controller = new AbortController();
@@ -233,9 +231,14 @@ const Lobby = () => {
 				// &&
 				// data["@context"]?.includes("User") &&
 				// && userId !== data.userId.id
-				data.is_game_master === true
+				data.is_game_master === true &&
+				gameId
 			) {
 				const newGM = await checkNewGM();
+
+				console.log("GameID", gameId);
+				console.log("ICI", data);
+				console.log("GM", newGM);
 
 				toast.info(
 					`${newGM.userId.pseudo} est le nouveau maître du jeu`,
@@ -263,8 +266,6 @@ const Lobby = () => {
 			const { data: usersInThisGame } = await axiosJWT.get(
 				`${gameHasUsersRoute}?game=${gameId}`
 			);
-
-			// console.log("usersInThisGame", usersInThisGame);
 
 			const newGM = usersInThisGame["hydra:member"].filter(
 				(user) => user.is_game_master === true
